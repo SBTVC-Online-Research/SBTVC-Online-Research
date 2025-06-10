@@ -57,33 +57,125 @@
             transition: opacity 0.3s ease;
         }
 
-        
+        .research-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
 
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: #10B981;
+        }
+
+        .toast.error {
+            background-color: #EF4444;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 
 <body class="bg-gray-50">
+     <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
     <!-- Header -->
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-                <div class="bg-white
-                -primary rounded-full p-2 mr-3">
-                  
+                <div class="bg-white rounded-full p-2 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                 </div>
                 <h1 class="text-2xl font-bold text-gray-800">SBTVC <span class="text-orange-primary">Online Research</span></h1>
             </div>
             <div class="hidden md:flex items-center space-x-6">
-                <a href="index.html">หน้าหลัก</a>
-                 <a href="Category folder/Category.html">หมวดหมู่</a>
-                <a href="#" class="text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
-                <a href="#" class="text-gray-700 hover:text-orange-primary">ติดต่อ</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
+                <a href="Category folder/Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">เกี่ยวกับเรา</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อ</a>
             </div>
-            <div class="flex items-center space-x-3">
+            <div id="auth-buttons" class="flex items-center space-x-3">
                 <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
-                <button onclick="openModal('registerModal')" class="px-4 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">สมัครสมาชิก</button>
+                <button onclick="openModal('registerModal')" class="px-4 py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
                 <button class="md:hidden text-gray-700" id="menuButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <div id="user-profile" class="hidden items-center space-x-3">
+                <div class="dropdown">
+                    <button class="flex items-center space-x-2 px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">
+                        <span id="username-display">ชื่อผู้ใช้</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="p-4 border-b border-gray-200">
+                            <p class="text-sm text-gray-500">ยินดีต้อนรับ</p>
+                            <p id="fullname-display" class="font-medium text-gray-800">ชื่อ-นามสกุล</p>
+                            <p id="email-display" class="text-sm text-gray-500">อีเมล</p>
+                        </div>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-cog mr-2"></i> ตั้งค่า
+                        </a>
+                        <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                            <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
+                        </button>
+                    </div>
+                </div>
+                <button class="md:hidden text-gray-700" id="menuButtonLoggedIn">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -96,6 +188,21 @@
             <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
             <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
             <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">ติดต่อ</a>
+            <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
+                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-username-display">ชื่อผู้ใช้</span></p>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
+                </a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
+                </a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-cog mr-2"></i> ตั้งค่า
+                </a>
+                <button onclick="logout()" class="block w-full text-left py-2 text-red-600 hover:text-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
+                </button>
+            </div>
         </div>
     </header>
 
@@ -104,8 +211,8 @@
         <div class="container mx-auto px-4">
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2 mb-8 md:mb-0">
-                    <h2 class="text-4xl font-bold mb-4">ผลงานวิจัยวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
-                    <p class="text-lg mb-6">ค้นหางานวิจัยที่ SBTVC เพื่อต่อยอดความรู้และพัฒนางานวิจัย</p>
+                    <h2 class="text-4xl font-bold mb-4">แหล่งรวมงานวิจัยคุณภาพ</h2>
+                    <p class="text-lg mb-6">ค้นพบงานวิจัยที่มีคุณภาพจากนักวิจัยทั่วประเทศ เพื่อต่อยอดความรู้และพัฒนาสังคมไทย</p>
                     <div class="flex space-x-4">
                         <button onclick="openModal('uploadModal')" class="px-10 py-3 border-2 border-black text-black font-semibold rounded-md hover:bg-white hover:text-orange-primary transition">อัพโหลดงานวิจัย</button>
                     </div>
@@ -550,24 +657,22 @@
     </footer>
 
     <!-- Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden modal">
-        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">เข้าสู่ระบบ</h3>
-                <button onclick="closeModal('loginModal')" class="text-gray-400 hover:text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <form>
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-center mb-6">เข้าสู่ระบบ</h2>
+            <form id="loginForm">
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">อีเมล</label>
-                    <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="login-email" class="block text-gray-700 mb-2">อีเมล</label>
+                    <input type="email" id="login-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-gray-700 mb-2">รหัสผ่าน</label>
-                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="login-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
                 </div>
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center">
@@ -576,179 +681,217 @@
                     </div>
                     <a href="#" class="text-orange-primary hover:underline">ลืมรหัสผ่าน?</a>
                 </div>
-                <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition mb-4">เข้าสู่ระบบ</button>
-                <p class="text-center text-gray-600">ยังไม่มีบัญชี? <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-orange-primary hover:underline">สมัครสมาชิก</a></p>
+                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">เข้าสู่ระบบ</button>
             </form>
+            <div class="mt-4 text-center">
+                <p class="text-gray-700">ยังไม่มีบัญชี? <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-orange-primary hover:underline">สมัครสมาชิก</a></p>
+            </div>
         </div>
     </div>
 
     <!-- Register Modal -->
-    <div id="registerModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden modal">
-        <div class="bg-white rounded-lg shadow-xl p-8 max-w-md w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">สมัครสมาชิก</h3>
-                <button onclick="closeModal('registerModal')" class="text-gray-400 hover:text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-            <form>
+    <div id="registerModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-center mb-6">สมัครสมาชิก</h2>
+            <form id="registerForm">
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="fullname" class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                    <input type="text" id="fullname" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ชื่อ-นามสกุลของคุณ" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">อีเมล</label>
-                    <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="register-email" class="block text-gray-700 mb-2">อีเมล</label>
+                    <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">รหัสผ่าน</label>
-                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="register-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
                 </div>
                 <div class="mb-6">
-                    <label class="block text-gray-700 mb-2">ยืนยันรหัสผ่าน</label>
-                    <input type="password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <label for="confirm-password" class="block text-gray-700 mb-2">ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ยืนยันรหัสผ่านของคุณ" required>
                 </div>
                 <div class="flex items-center mb-6">
-                    <input type="checkbox" id="terms" class="mr-2">
-                    <label for="terms" class="text-gray-700">ฉันยอมรับ <a href="#" class="text-orange-primary hover:underline">เงื่อนไขการใช้งาน</a> และ <a href="#" class="text-orange-primary hover:underline">นโยบายความเป็นส่วนตัว</a></label>
+                    <input type="checkbox" id="terms" class="mr-2" required>
+                    <label for="terms" class="text-gray-700">ฉันยอมรับ <a href="#" class="text-orange-primary hover:underline">ข้อกำหนดและเงื่อนไข</a></label>
                 </div>
-                <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition mb-4">สมัครสมาชิก</button>
-                <p class="text-center text-gray-600">มีบัญชีอยู่แล้ว? <a href="#" onclick="switchModal('registerModal', 'loginModal')" class="text-orange-primary hover:underline">เข้าสู่ระบบ</a></p>
+                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
             </form>
-        </div>
-    </div>
-
-    <!-- Upload Modal -->
-    <div id="uploadModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden modal">
-        <div class="bg-white rounded-lg shadow-xl p-8 max-w-2xl w-full mx-4">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-2xl font-bold text-gray-800">อัพโหลดงานวิจัย</h3>
-                <button onclick="closeModal('uploadModal')" class="text-gray-400 hover:text-gray-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            <div class="mt-4 text-center">
+                <p class="text-gray-700">มีบัญชีอยู่แล้ว? <a href="#" onclick="switchModal('registerModal', 'loginModal')" class="text-orange-primary hover:underline">เข้าสู่ระบบ</a></p>
             </div>
-            <form>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-gray-700 mb-2">ชื่องานวิจัย</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">ชื่อผู้วิจัย</label>
-                        <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-gray-700 mb-2">หมวดหมู่</label>
-                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">เลือกหมวดหมู่</option>
-                            <option value="education">สำรวจ</option>
-                            <option value="science">ทฤษฎี</option>
-                            <option value="technology">ทดลอง</option>
-                            <option value="agriculture">ประดิษฐ์</option>
-                            </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">ปีงานวิจัย</label>
-                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">เลือกปี</option>
-                            <option value="2023">2566</option>
-                            <option value="2022">2565</option>
-                            <option value="2021">2564</option>
-                            <option value="2020">2563</option>
-                            <option value="2019">2562</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-gray-700 mb-2">ระดับผลงาน</label>
-                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">เลือกระดับ</option>
-                            <option value="national">ระดับชาติ</option>
-                            <option value="international">ระดับนานาชาติ</option>
-                            <option value="regional">ระดับภูมิภาค</option>
-                             </select>
-                    </div>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">บทคัดย่อ</label>
-                    <textarea rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary"></textarea>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">คำสำคัญ (คั่นด้วยเครื่องหมายคอมม่า)</label>
-                    <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="เช่น การศึกษา, เทคโนโลยี, นวัตกรรม">
-                </div>
-                
-                <div class="mb-6">
-                    <label class="block text-gray-700 mb-2">อัพโหลดไฟล์ (PDF เท่านั้น)</label>
-                    <div class="border-2 border-dashed border-gray-300 rounded-md p-6 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        <p class="text-gray-600 mb-2">ลากไฟล์มาวางที่นี่ หรือ</p>
-                        <button type="button" class="px-4 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">เลือกไฟล์</button>
-                        <input type="file" class="hidden" accept=".pdf">
-                    </div>
-                </div>
-                
-                <div class="flex items-center mb-6">
-                    <input type="checkbox" id="uploadTerms" class="mr-2">
-                    <label for="uploadTerms" class="text-gray-700">ฉันยืนยันว่าเป็นเจ้าของลิขสิทธิ์งานวิจัยนี้ และยอมรับ <a href="#" class="text-orange-primary hover:underline">เงื่อนไขการเผยแพร่</a></label>
-                </div>
-                
-                <div class="flex justify-end space-x-4">
-                    <button type="button" onclick="closeModal('uploadModal')" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-100 transition">ยกเลิก</button>
-                    <button type="submit" class="px-6 py-3 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">อัพโหลด</button>
-                </div>
-            </form>
         </div>
     </div>
 
     <script>
-        // Mobile menu toggle
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
+
+        // Mobile Menu Toggle
         document.getElementById('menuButton').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobileMenu');
             mobileMenu.classList.toggle('hidden');
         });
-        
-        // Modal functions
+
+        document.getElementById('menuButtonLoggedIn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Modal Functions
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
-            document.getElementById(modalId).classList.add('flex');
             document.body.style.overflow = 'hidden';
         }
-        
+
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
-            document.getElementById(modalId).classList.remove('flex');
             document.body.style.overflow = 'auto';
         }
-        
+
         function switchModal(closeModalId, openModalId) {
             closeModal(closeModalId);
-            setTimeout(() => {
-                openModal(openModalId);
-            }, 300);
+            openModal(openModalId);
         }
-        
-        // Close modal when clicking outside
+
+        // Close modals when clicking outside
         window.addEventListener('click', function(event) {
             const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
+            modals.forEach(function(modal) {
                 if (event.target === modal) {
                     modal.classList.add('hidden');
-                    modal.classList.remove('flex');
                     document.body.style.overflow = 'auto';
                 }
             });
         });
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // User Registration
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Validate passwords match
+            if (password !== confirmPassword) {
+                showToast('รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง', 'error');
+                return;
+            }
+            
+            // Check if email already exists
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(user => user.email === email)) {
+                showToast('อีเมลนี้มีผู้ใช้งานแล้ว กรุณาใช้อีเมลอื่น', 'error');
+                return;
+            }
+            
+            // Add new user
+            const newUser = {
+                fullname,
+                email,
+                password, // In a real app, you should hash this password
+                registeredAt: new Date().toISOString()
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // Show success message and close modal
+            showToast('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+            closeModal('registerModal');
+            openModal('loginModal');
+        });
+
+        // User Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            // Check credentials
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(user => user.email === email && user.password === password);
+            
+            if (user) {
+                // Store logged in user info
+                localStorage.setItem('currentUser', JSON.stringify({
+                    fullname: user.fullname,
+                    email: user.email,
+                    loggedInAt: new Date().toISOString()
+                }));
+                
+                // Update UI
+                updateUIForLoggedInUser(user);
+                
+                // Close modal and show success message
+                closeModal('loginModal');
+                showToast('เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ ' + user.fullname);
+            } else {
+                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+            }
+        });
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateUIForLoggedOutUser();
+            showToast('ออกจากระบบสำเร็จ');
+        }
+
+        // Check login status on page load
+        function checkLoginStatus() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (currentUser) {
+                updateUIForLoggedInUser(currentUser);
+            }
+        }
+
+        // Update UI for logged in user
+        function updateUIForLoggedInUser(user) {
+            // Update header
+            document.getElementById('auth-buttons').classList.add('hidden');
+            document.getElementById('user-profile').classList.remove('hidden');
+            
+            // Update username display
+            document.getElementById('username-display').textContent = user.fullname.split(' ')[0]; // Show first name only
+            document.getElementById('fullname-display').textContent = user.fullname;
+            document.getElementById('email-display').textContent = user.email;
+            
+            // Update mobile menu
+            document.getElementById('mobile-user-menu').classList.remove('hidden');
+            document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
+        }
+
+        // Update UI for logged out user
+        function updateUIForLoggedOutUser() {
+            // Update header
+            document.getElementById('auth-buttons').classList.remove('hidden');
+            document.getElementById('user-profile').classList.add('hidden');
+            
+            // Update mobile menu
+            document.getElementById('mobile-user-menu').classList.add('hidden');
+        }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94ac6f3d51e4893f',t:'MTc0OTA5MjU4Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
