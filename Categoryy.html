@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สำรวจ - Explore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #f8fafc;
+            overflow-x: hidden;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, #ff8c42 0%, #ff5722 100%);
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+        }
+        
+        .explore-card {
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .explore-card.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .explore-icon {
+            transition: all 0.4s ease;
+        }
+        
+        .explore-card:hover .explore-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .compass-needle {
+            transform-origin: center;
+            animation: compass-spin 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes compass-spin {
+            0% {
+                transform: rotate(-20deg);
+            }
+            100% {
+                transform: rotate(20deg);
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(255, 87, 34, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 87, 34, 0);
+            }
+        }
+        
+        .search-bar {
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.8s ease-out 0.3s;
+        }
+        
+        .search-bar.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .title-text {
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .title-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .subtitle-text {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out 0.2s;
+        }
+        
+        .subtitle-text.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero-bg min-h-[50vh] relative">
+        <div class="container mx-auto px-4 py-16 md:py-24">
+            <div class="max-w-4xl mx-auto text-center text-white">
+                <h1 class="title-text text-4xl md:text-6xl font-bold mb-4">สำรวจโลกแห่งการเรียนรู้</h1>
+                <p class="subtitle-text text-lg md:text-xl opacity-90 mb-8">ค้นพบความรู้ใหม่ ๆ และเปิดประสบการณ์การเรียนรู้ที่ไม่มีที่สิ้นสุด</p>
+                
+                <!-- Search Bar -->
+                <div class="search-bar relative max-w-2xl mx-auto">
+                    <input type="text" placeholder="ค้นหาสิ่งที่คุณสนใจ..." class="w-full py-4 px-6 pr-12 rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-400 text-gray-700">
+                    <button class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white p-2 rounded-full transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Animated Compass -->
+        <div class="absolute top-10 right-10 hidden md:block floating">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="60" cy="60" r="55" stroke="white" stroke-width="2" fill="rgba(255,255,255,0.1)"/>
+                <circle cx="60" cy="60" r="5" fill="white"/>
+                <path class="compass-needle" d="M60 20L70 60L60 100L50 60L60 20Z" fill="white"/>
+                <path class="compass-needle" d="M20 60L60 50L100 60L60 70L20 60Z" fill="rgba(255,255,255,0.7)"/>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- Categories Section -->
+    <div class="container mx-auto px-4 py-12 -mt-10 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Category 1 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="p-6">
+                    <div class="explore-icon bg-orange-100 inline-flex p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">บทความวิชาการ</h3>
+                    <p class="text-gray-600">ค้นพบบทความวิชาการที่น่าสนใจจากผู้เชี่ยวชาญ</p>
+                </div>
+                <div class="bg-orange-50 py-3 px-6 border-t border-orange-100">
+                    <div class="flex justify-between items-center">
+                        <span class="text-orange-600 font-medium">124 บทความ</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category 2 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="p-6">
+                    <div class="explore-icon bg-orange-100 inline-flex p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">วิดีโอการสอน</h3>
+                    <p class="text-gray-600">เรียนรู้ผ่านวิดีโอการสอนที่เข้าใจง่ายและน่าสนใจ</p>
+                </div>
+                <div class="bg-orange-50 py-3 px-6 border-t border-orange-100">
+                    <div class="flex justify-between items-center">
+                        <span class="text-orange-600 font-medium">86 วิดีโอ</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category 3 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="p-6">
+                    <div class="explore-icon bg-orange-100 inline-flex p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">การทดลอง</h3>
+                    <p class="text-gray-600">สำรวจการทดลองที่น่าสนใจและเรียนรู้จากผลลัพธ์</p>
+                </div>
+                <div class="bg-orange-50 py-3 px-6 border-t border-orange-100">
+                    <div class="flex justify-between items-center">
+                        <span class="text-orange-600 font-medium">52 การทดลอง</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category 4 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="p-6">
+                    <div class="explore-icon bg-orange-100 inline-flex p-4 rounded-full mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">ชุมชนนักวิจัย</h3>
+                    <p class="text-gray-600">เข้าร่วมชุมชนนักวิจัยและแลกเปลี่ยนความรู้</p>
+                </div>
+                <div class="bg-orange-50 py-3 px-6 border-t border-orange-100">
+                    <div class="flex justify-between items-center">
+                        <span class="text-orange-600 font-medium">18 กลุ่ม</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Section -->
+    <div class="container mx-auto px-4 py-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-8">แนะนำสำหรับคุณ</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Featured Item 1 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="h-48 bg-orange-100 relative overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                    </div>
+                    <div class="absolute top-3 right-3 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                        ใหม่
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">การทดลองเกี่ยวกับพลังงานทดแทน</h3>
+                    <p class="text-gray-600 mb-4">เรียนรู้เกี่ยวกับการทดลองพลังงานทดแทนที่สามารถนำไปประยุกต์ใช้ได้จริง</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        อัพเดทล่าสุด: 3 วันที่แล้ว
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Featured Item 2 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="h-48 bg-orange-100 relative overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">ทฤษฎีการเรียนรู้แบบลงมือปฏิบัติ</h3>
+                    <p class="text-gray-600 mb-4">ศึกษาทฤษฎีการเรียนรู้แบบลงมือปฏิบัติและประโยชน์ต่อการพัฒนาทักษะ</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        อัพเดทล่าสุด: 1 สัปดาห์ที่แล้ว
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Featured Item 3 -->
+            <div class="explore-card bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer">
+                <div class="h-48 bg-orange-100 relative overflow-hidden">
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                        </svg>
+                    </div>
+                    <div class="absolute top-3 right-3 bg-orange-500 text-white text-xs px-2 py-1 rounded-full">
+                        ยอดนิยม
+                    </div>
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">นวัตกรรมการเรียนรู้ในศตวรรษที่ 21</h3>
+                    <p class="text-gray-600 mb-4">ค้นพบนวัตกรรมการเรียนรู้ที่จะช่วยพัฒนาทักษะสำหรับอนาคต</p>
+                    <div class="flex items-center text-sm text-gray-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        อัพเดทล่าสุด: 2 สัปดาห์ที่แล้ว
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Call to Action -->
+    <div class="bg-orange-500 py-12 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-white mb-4">เริ่มต้นการสำรวจของคุณวันนี้</h2>
+            <p class="text-white text-lg opacity-90 mb-8 max-w-2xl mx-auto">เข้าร่วมชุมชนนักสำรวจและค้นพบความรู้ใหม่ ๆ ที่จะช่วยพัฒนาทักษะและความเข้าใจของคุณ</p>
+            <button class="pulse bg-white text-orange-600 font-medium py-3 px-8 rounded-full hover:bg-orange-50 transition-all duration-300 transform hover:scale-105">
+                เริ่มต้นเรียนรู้
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.explore-card');
+            const titleText = document.querySelector('.title-text');
+            const subtitleText = document.querySelector('.subtitle-text');
+            const searchBar = document.querySelector('.search-bar');
+            
+            // Function to check if element is in viewport
+            function isInViewport(element) {
+                const rect = element.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // Function to handle animation
+            function animateElements() {
+                // Animate hero elements
+                titleText.classList.add('show');
+                subtitleText.classList.add('show');
+                searchBar.classList.add('show');
+                
+                // Animate cards
+                cards.forEach((card, index) => {
+                    if (isInViewport(card)) {
+                        setTimeout(() => {
+                            card.classList.add('show');
+                        }, 100 + index * 150); // Stagger the animations
+                    }
+                });
+            }
+            
+            // Initial animation
+            setTimeout(animateElements, 100);
+            
+            // Check on scroll
+            window.addEventListener('scroll', function() {
+                cards.forEach((card, index) => {
+                    if (isInViewport(card) && !card.classList.contains('show')) {
+                        setTimeout(() => {
+                            card.classList.add('show');
+                        }, 50 * index); // Smaller delay on scroll
+                    }
+                });
+            });
+            
+            // Make cards clickable
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    // Add click effect
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        const cardTitle = this.querySelector('h3')?.textContent || 'รายการนี้';
+                        alert(`คุณเลือก: ${cardTitle}`);
+                    }, 200);
+                });
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d76f59c32445b1',t:'MTc0OTU0MzQ3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
