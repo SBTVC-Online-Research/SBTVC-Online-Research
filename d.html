@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload to Cloudinary</title>
+</head>
+<body>
+  <h2>เพิ่มโครงงาน</h2>
+
+  <input type="text" id="title" placeholder="ชื่อโครงงาน"><br>
+  <input type="text" id="description" placeholder="รายละเอียด"><br>
+  <input type="file" id="image"><br>
+  <button onclick="upload()">บันทึก</button>
+
+  <script>
+    async function upload() {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const file = document.getElementById("image").files[0];
+
+      // 🟡 อัปโหลดรูปไป Cloudinary
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "STVC_preset"); // 🔁 เปลี่ยนให้ตรงกับที่คุณตั้ง
+
+      const response = await fetch("https://api.cloudinary.com/v1_1/STVC_preset/image/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      const imageUrl = data.secure_url;
+
+      // ✅ ได้ URL แล้ว สามารถบันทึกลง Firestore หรือแสดงผลได้
+      console.log("Image URL:", imageUrl);
+
+      // 🔁 ถ้าคุณใช้ Firebase Firestore:
+      // saveToFirestore(title, description, imageUrl);
+    }
+  </script>
+</body>
+</html>
