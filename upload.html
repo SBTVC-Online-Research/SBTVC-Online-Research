@@ -2,173 +2,290 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>อัปโหลดผลงานวิจัย</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ระบบอัพโหลดผลงานวิจัย</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .selected {
-      background-color: #4ade80;
+    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background-color: #f0f4f8;
+    }
+    .upload-box {
+      border: 2px dashed hsl(27, 93%, 49%);
+      transition: all 0.3s ease;
+    }
+    .upload-box:hover {
+      border-color: #db7c0ed5;
+      background-color: rgba(231, 134, 23, 0.89);
+    }
+    .category-item {
+      transition: all 0.2s ease;
+    }
+    .category-item:hover {
+      transform: translateY(-2px);
+    }
+    .category-item.selected {
+      border-color: #d47a13;
+      background-color: rgb(233, 55, 11);
       color: white;
     }
   </style>
 </head>
 <body>
-  <form id="research-form">
-    <label>เลือกหมวดหมู่:</label>
-    <div id="category-list">
-      <button type="button" class="category-item" data-category="วิทยาศาสตร์">วิทยาศาสตร์</button>
-      <button type="button" class="category-item" data-category="เทคโนโลยี">เทคโนโลยี</button>
-      <button type="button" class="category-item" data-category="ศิลปกรรม">ศิลปกรรม</button>
-    </div>
-    <input type="hidden" name="category" id="selected-category" />
 
-    <hr>
+<header class="bg-gradient-to-r from-orange-600 to-indigo-700 text-white py-6 shadow-lg">
+  <div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold">ระบบอัพโหลดผลงานวิจัย</h1>
+    <p class="mt-2 text-orange-100">อัพโหลดและจัดการผลงานวิจัยของคุณได้อย่างง่ายดาย</p>
+  </div>
+</header>
 
-    <label>เลือกไฟล์ (PDF, Word):</label>
-    <input type="file" id="file-upload" accept=".pdf,.doc,.docx" multiple />
-    <ul id="file-list"></ul>
-
-    <hr>
-
-    <div id="author-list">
-      <div class="author-entry">
-        <input type="text" name="authors[]" placeholder="ชื่อผู้จัดทำ" />
+<main class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">อัพโหลดผลงานวิจัยใหม่</h2>
+    <form id="research-form">
+      <!-- ชื่อผลงาน -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-medium mb-2">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
+        <input type="text" id="title" name="title" class="w-full px-4 py-2 border rounded-lg focus:ring-orange-500 focus:border-orange-500 outline-none" required>
       </div>
-    </div>
-    <button type="button" id="add-author">เพิ่มผู้จัดทำ</button>
 
-    <hr>
-    <button type="submit" id="submit-btn">อัพโหลดผลงานวิจัย</button>
-  </form>
+      <!-- หมวดหมู่ -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="survey">สำรวจ</div>
+          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="theory">ทฤษฎี</div>
+          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="experiment">ทดลอง</div>
+          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="invention">ประดิษฐ์</div>
+        </div>
+        <input type="hidden" id="selected-category" name="category" required>
+      </div>
 
-  <script>
-    let uploadedFiles = [];
+      <!-- กลุ่มข้อมูลอื่น -->
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">สาขาวิชา <span class="text-red-500">*</span></label>
+          <select id="department" name="department" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>เลือกสาขาวิชา</option>
+            <option value="computer">คอมพิวเตอร์ธุรกิจ</option>
+            <!-- ... -->
+          </select>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">สาขางาน <span class="text-red-500">*</span></label>
+          <select id="field" name="field" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>เลือกสาขางาน</option>
+            <option value="programming">การเขียนโปรแกรม</option>
+            <!-- ... -->
+          </select>
+        </div>
+      </div>
 
-    async function uploadToCloudinary(file) {
-      const url = "https://api.cloudinary.com/v1_1/STVC_preset/upload";
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "STVC_preset");
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">ชั้นปี <span class="text-red-500">*</span></label>
+          <select id="year" name="year" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>เลือกชั้นปี</option>
+            <option>ปวช.1</option><option>ปวช.2</option><option>ปวช.3</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">ปีการศึกษา <span class="text-red-500">*</span></label>
+          <select id="academic-year" name="academic-year" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>เลือกปีการศึกษา</option>
+            <option>2566</option><option>2565</option><option>2564</option><option>2563</option>
+          </select>
+        </div>
+      </div>
 
-      const response = await fetch(url, {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      return data.secure_url;
-    }
+      <!-- รายชื่อผู้จัดทำ -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
+        <div id="authors-container">
+          <div class="author-entry flex items-center gap-4 mb-2">
+            <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500" placeholder="ชื่อ-นามสกุล" required>
+            <button type="button" class="add-author bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600">
+              ＋
+            </button>
+          </div>
+        </div>
+      </div>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const categoryItems = document.querySelectorAll('.category-item');
-      const selectedCategoryInput = document.getElementById('selected-category');
-      const fileUpload = document.getElementById('file-upload');
-      const fileList = document.getElementById('file-list');
-      const authorList = document.getElementById('author-list');
-      const addAuthorBtn = document.getElementById('add-author');
-      const form = document.getElementById('research-form');
-      const submitBtn = document.getElementById('submit-btn');
+      <!-- อาจารย์ที่ปรึกษา -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
+        <input type="text" id="advisor" name="advisor" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+      </div>
 
-      categoryItems.forEach(item => {
-        item.addEventListener('click', () => {
-          categoryItems.forEach(i => i.classList.remove('selected'));
-          item.classList.add('selected');
-          selectedCategoryInput.value = item.dataset.category;
-        });
-      });
+      <!-- บทคัดย่อ -->
+      <div class="mb-6">
+        <label class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
+        <textarea id="abstract" name="abstract" rows="4" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required></textarea>
+      </div>
 
-      fileUpload.addEventListener('change', () => {
-        const files = fileUpload.files;
-        handleFiles(files);
-      });
+      <!-- อัปโหลดไฟล์ -->
+      <div class="mb-8">
+        <label class="block text-gray-700 font-medium mb-2">อัพโหลดไฟล์ <span class="text-red-500">*</span></label>
+        <div class="upload-box bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+          <input type="file" id="file-upload" class="hidden" multiple accept=".pdf,.doc,.docx">
+          <div><svg class="h-12 w-12 mx-auto text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path /></svg></div>
+          <p class="font-medium text-gray-700">ลากไฟล์หรือคลิกเพื่อเลือก</p>
+          <p class="text-sm text-gray-500">รองรับ: PDF, DOC, DOCX (≤10MB/ไฟล์)</p>
+        </div>
+        <div id="file-list" class="mt-4 space-y-2"></div>
+      </div>
 
-      function handleFiles(files) {
-        for (const file of files) {
-          const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-          if (!validTypes.includes(file.type)) {
-            alert('กรุณาอัพโหลดไฟล์ PDF หรือ Word เท่านั้น');
-            continue;
-          }
+      <div class="flex justify-end">
+        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4">ยกเลิก</button>
+        <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-600 rounded-lg text-white hover:bg-blue-700">อัพโหลดผลงานวิจัย</button>
+      </div>
+    </form>
+  </div>
+</main>
 
-          if (file.size > 10 * 1024 * 1024) {
-            alert('ขนาดไฟล์ต้องไม่เกิน 10MB');
-            continue;
-          }
+<script>
+let uploadedFiles = [];
 
-          uploadedFiles.push(file);
-          const li = document.createElement('li');
-          li.textContent = file.name;
-          fileList.appendChild(li);
-        }
+// ฟังก์ชันอัปโหลดไป Cloudinary
+async function uploadToCloudinary(file) {
+  const url = "https://api.cloudinary.com/v1_1/STVC_preset/upload";
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", "STVC_preset");
+  const res = await fetch(url, { method: "POST", body: fd });
+  const data = await res.json();
+  return data.secure_url;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const categories = document.querySelectorAll('.category-item');
+  const selectedCat = document.getElementById('selected-category');
+  categories.forEach(el => el.addEventListener('click', () => {
+    categories.forEach(i=>i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCat.value = el.dataset.category;
+  }));
+
+  const uploadBox = document.querySelector('.upload-box');
+  const fileInput = document.getElementById('file-upload');
+  const fileList = document.getElementById('file-list');
+
+  uploadBox.addEventListener('click', () => fileInput.click());
+  uploadBox.addEventListener('dragover', e => { e.preventDefault(); uploadBox.classList.add('bg-blue-50','border-blue-500'); });
+  uploadBox.addEventListener('dragleave', () => { uploadBox.classList.remove('bg-blue-50','border-blue-500'); });
+  uploadBox.addEventListener('drop', e => { e.preventDefault(); fileInput.files = e.dataTransfer.files; handleFiles(e.dataTransfer.files); });
+
+  fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+  function formatFileSize(b) {
+    if (b<1024) return b+' B';
+    if (b<1048576) return (b/1024).toFixed(1)+' KB';
+    return (b/1048576).toFixed(1)+' MB';
+  }
+
+  function handleFiles(files) {
+    [...files].forEach(file => {
+      if (!['application/pdf','application/msword','application/vnd.openxmlformats-officedocument.wordprocessingml.document'].includes(file.type)) {
+        return alert('รองรับ PDF หรือ Word เท่านั้น');
       }
+      if (file.size > 10 * 1024 * 1024) {
+        return alert('ไฟล์ต้องไม่เกิน 10MB');
+      }
+      uploadedFiles.push(file);
 
-      addAuthorBtn.addEventListener('click', () => {
-        const entry = document.createElement('div');
-        entry.classList.add('author-entry');
-        entry.innerHTML = `<input type="text" name="authors[]" placeholder="ชื่อผู้จัดทำ" />`;
-        authorList.appendChild(entry);
-      });
+      const wrap = document.createElement('div');
+      wrap.className = 'flex items-center justify-between bg-blue-50 p-3 rounded-lg';
 
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+      const left = document.createElement('div');
+      left.className = 'flex items-center';
 
-        if (!selectedCategoryInput.value) {
-          alert('กรุณาเลือกหมวดหมู่');
-          return;
-        }
+      const icon = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      icon.setAttribute('class','h-5 w-5 '+(file.type==='application/pdf'?'text-red-500':'text-blue-500'));
+      icon.setAttribute('viewBox','0 0 20 20');
+      icon.innerHTML = '<path fill-rule="evenodd" clip-rule="evenodd" d="M4 4a2 2..."></path>';
 
-        if (uploadedFiles.length === 0) {
-          alert('กรุณาอัพโหลดไฟล์อย่างน้อย 1 ไฟล์');
-          return;
-        }
+      const name = document.createElement('span');
+      name.className = 'ml-2 text-gray-700';
+      name.textContent = file.name;
+      const size = document.createElement('span');
+      size.className='ml-2 text-gray-500 text-sm';
+      size.textContent = `(${formatFileSize(file.size)})`;
 
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `
-          <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg> กำลังอัพโหลด...`;
+      left.append(icon, name, size);
 
-        try {
-          const uploadedUrls = [];
-          for (const file of uploadedFiles) {
-            const url = await uploadToCloudinary(file);
-            uploadedUrls.push(url);
-          }
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'remove-file text-gray-500 hover:text-red-500';
+      btn.innerHTML = '<svg class="h-5 w-5" viewBox="0 0 20..."><path fill-rule="evenodd" clip-rule="evenodd" d="M4.293 4.293..."></path></svg>';
+      btn.addEventListener('click', () => wrap.remove());
 
-          console.log('🟢 URL ที่อัปโหลด:', uploadedUrls);
-
-          // ล้างข้อมูลหลังอัปโหลดสำเร็จ
-          form.reset();
-          fileList.innerHTML = '';
-          uploadedFiles = [];
-          categoryItems.forEach(i => i.classList.remove('selected'));
-
-          // ล้างผู้จัดทำเพิ่มเติม
-          const authorEntries = document.querySelectorAll('.author-entry');
-          for (let i = 1; i < authorEntries.length; i++) {
-            authorEntries[i].remove();
-          }
-
-          // แสดงข้อความสำเร็จ
-          const successMessage = document.createElement('div');
-          successMessage.className = 'fixed top-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg z-50';
-          successMessage.innerHTML = `
-            <div class="flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-              </svg>
-              <p>อัพโหลดผลงานวิจัยสำเร็จ!</p>
-            </div>`;
-          document.body.appendChild(successMessage);
-          setTimeout(() => successMessage.remove(), 3000);
-
-        } catch (err) {
-          alert('เกิดข้อผิดพลาดในการอัปโหลด กรุณาลองใหม่');
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'อัพโหลดผลงานวิจัย';
-        }
-      });
+      wrap.append(left, btn);
+      fileList.appendChild(wrap);
     });
-  </script>
+  }
+
+  document.getElementById('research-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!selectedCat.value) return alert('กรุณาเลือกหมวดหมู่');
+    if (!uploadedFiles.length) return alert('กรุณาอัพโหลดไฟล์อย่างน้อย 1 ไฟล์');
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="animate-spin mr-2">⏳</span>กำลังอัพโหลด...';
+
+    try {
+      const urls = [];
+      for (const f of uploadedFiles) {
+        urls.push(await uploadToCloudinary(f));
+      }
+      console.log('✅ อัปโหลดสำเร็จ!', urls);
+
+      e.target.reset();
+      fileList.innerHTML = '';
+      uploadedFiles = [];
+      categories.forEach(c => c.classList.remove('selected'));
+
+      const authors = document.querySelectorAll('.author-entry');
+      authors.forEach((el,i) => { if (i>0) el.remove(); });
+
+      alert('อัพโหลดสำเร็จ 🎉');
+    } catch(err) {
+      console.error(err);
+      alert('เกิดข้อผิดพลาดในการอัพโหลด');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'อัพโหลดผลงานวิจัย';
+    }
+  });
+
+  document.getElementById('cancel-btn').addEventListener('click', () => {
+    if (confirm('ต้องการยกเลิกหรือไม่?')) {
+      document.getElementById('research-form').reset();
+      fileList.innerHTML = '';
+      uploadedFiles = [];
+      categories.forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('.author-entry').forEach((el,i) => { if (i>0) el.remove(); });
+    }
+  });
+
+  document.getElementById('authors-container').addEventListener('click', e => {
+    if (e.target.matches('.add-author')) {
+      const div = document.createElement('div');
+      div.className = 'author-entry flex items-center gap-4 mb-2';
+      div.innerHTML = '<input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2" placeholder="ชื่อ-นามสกุล" required />' +
+                      '<button type="button" class="remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">－</button>';
+      e.currentTarget.append(div);
+    }
+    if (e.target.matches('.remove-author')) {
+      if (document.querySelectorAll('#authors-container .author-entry').length >1) {
+        e.target.closest('.author-entry').remove();
+      }
+    }
+  });
+});
+</script>
+
 </body>
 </html>
