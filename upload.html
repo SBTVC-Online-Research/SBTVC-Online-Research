@@ -1,0 +1,421 @@
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>อัพโหลดผลงานวิจัย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .upload-box {
+            border: 2px dashed hsl(27, 93%, 49%);
+            transition: all 0.3s ease;
+        }
+        .upload-box:hover {
+            border-color: #db7c0ed5;
+            background-color: rgba(231, 134, 23, 0.89);
+        }
+        .category-item {
+            transition: all 0.2s ease;
+        }
+        .category-item:hover {
+            transform: translateY(-2px);
+        }
+        .category-item.selected {
+            border-color: #d47a13;
+            background-color: rgb(233, 55, 11);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen">
+        <header class="bg-gradient-to-r from-orange-600 to-indigo-700 text-white py-6 shadow-lg">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold">ระบบอัพโหลดผลงานวิจัย</h1>
+                <p class="mt-2 text-orange-100">อัพโหลดและจัดการผลงานวิจัยของคุณได้อย่างง่ายดาย</p>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-8">
+            <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">อัพโหลดผลงานวิจัยใหม่</h2>
+                
+                <form id="research-form">
+                    <!-- ชื่อผลงานวิจัย -->
+                    <div class="mb-6">
+                        <label for="title" class="block text-gray-700 font-medium mb-2">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
+                        <input type="text" id="title" name="title" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition" required>
+                    </div>
+                    
+                    <!-- หมวดหมู่ -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="category-item border border-gray-300 rounded-lg p-4 cursor-pointer text-center" data-category="survey">
+                                <div class="bg-orange-100 text-blue-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium">สำรวจ</span>
+                            </div>
+                            <div class="category-item border border-gray-300 rounded-lg p-4 cursor-pointer text-center" data-category="theory">
+                                <div class="bg-green-100 text-green-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium">ทฤษฎี</span>
+                            </div>
+                            <div class="category-item border border-gray-300 rounded-lg p-4 cursor-pointer text-center" data-category="experiment">
+                                <div class="bg-purple-100 text-purple-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium">ทดลอง</span>
+                            </div>
+                            <div class="category-item border border-gray-300 rounded-lg p-4 cursor-pointer text-center" data-category="invention">
+                                <div class="bg-amber-100 text-amber-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                                    </svg>
+                                </div>
+                                <span class="font-medium">ประดิษฐ์</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-category" name="category" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- สาขาวิชา -->
+                        <div>
+                            <label for="department" class="block text-gray-700 font-medium mb-2">สาขาวิชา <span class="text-red-500">*</span></label>
+                            <select id="department" name="department" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required>
+                                <option value="" disabled selected>เลือกสาขาวิชา</option>
+                                <option value="computer">คอมพิวเตอร์ธุรกิจ</option>
+                                <option value="accounting">การบัญชี</option>
+                                <option value="marketing">การตลาด</option>
+                                <option value="electronics">อิเล็กทรอนิกส์</option>
+                                <option value="mechanics">ช่างยนต์</option>
+                                <option value="electricity">ไฟฟ้ากำลัง</option>
+                                <option value="other">อื่นๆ</option>
+                            </select>
+                        </div>
+                        
+                        <!-- สาขางาน -->
+                        <div>
+                            <label for="field" class="block text-gray-700 font-medium mb-2">สาขางาน <span class="text-red-500">*</span></label>
+                            <select id="field" name="field" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required>
+                                <option value="" disabled selected>เลือกสาขางาน</option>
+                                <option value="programming">การเขียนโปรแกรม</option>
+                                <option value="network">เครือข่ายคอมพิวเตอร์</option>
+                                <option value="multimedia">มัลติมีเดีย</option>
+                                <option value="finance">การเงิน</option>
+                                <option value="tax">ภาษีอากร</option>
+                                <option value="digital-marketing">การตลาดดิจิทัล</option>
+                                <option value="other">อื่นๆ</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <!-- ชั้นปี -->
+                        <div>
+                            <label for="year" class="block text-gray-700 font-medium mb-2">ชั้นปี <span class="text-red-500">*</span></label>
+                            <select id="year" name="year" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required>
+                                <option value="" disabled selected>เลือกชั้นปี</option>
+                                <option value="ปวช.1">ปวช.1</option>
+                                <option value="ปวช.2">ปวช.2</option>
+                                <option value="ปวช.3">ปวช.3</option>
+                            </select>
+                        </div>
+                        
+                        <!-- ปีการศึกษา -->
+                        <div>
+                            <label for="academic-year" class="block text-gray-700 font-medium mb-2">ปีการศึกษา <span class="text-red-500">*</span></label>
+                            <select id="academic-year" name="academic-year" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required>
+                                <option value="" disabled selected>เลือกปีการศึกษา</option>
+                                <option value="2566">2566</option>
+                                <option value="2565">2565</option>
+                                <option value="2564">2564</option>
+                                <option value="2563">2563</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- ชื่อผู้จัดทำ -->
+                    <div class="mb-6">
+                        <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
+                        <div id="authors-container">
+                            <div class="author-entry flex items-center gap-4 mb-2">
+                                <input type="text" name="authors[]" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="ชื่อ-นามสกุล" required>
+                                <button type="button" class="add-author bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- อาจารย์ที่ปรึกษา -->
+                    <div class="mb-6">
+                        <label for="advisor" class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
+                        <input type="text" id="advisor" name="advisor" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required>
+                    </div>
+                    
+                    <!-- บทคัดย่อ -->
+                    <div class="mb-6">
+                        <label for="abstract" class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
+                        <textarea id="abstract" name="abstract" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" required></textarea>
+                    </div>
+                    
+                    <!-- อัพโหลดไฟล์ -->
+                    <div class="mb-8">
+                        <label class="block text-gray-700 font-medium mb-2">อัพโหลดไฟล์ <span class="text-red-500">*</span></label>
+                        <div class="upload-box bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+                            <input type="file" id="file-upload" class="hidden" multiple>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            <p class="text-gray-700 font-medium mb-1">ลากไฟล์มาวางที่นี่ หรือ คลิกเพื่อเลือกไฟล์</p>
+                            <p class="text-gray-500 text-sm">รองรับไฟล์ PDF, DOC, DOCX (ขนาดไม่เกิน 10MB)</p>
+                        </div>
+                        <div id="file-list" class="mt-4 space-y-2"></div>
+                    </div>
+                    
+                    <!-- ปุ่มส่ง -->
+                    <div class="flex justify-end">
+                        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded-lg mr-4 transition">ยกเลิก</button>
+                        <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">อัพโหลดผลงานวิจัย</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Category selection
+            const categoryItems = document.querySelectorAll('.category-item');
+            const selectedCategoryInput = document.getElementById('selected-category');
+            
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove selected class from all items
+                    categoryItems.forEach(i => i.classList.remove('selected'));
+                    
+                    // Add selected class to clicked item
+                    this.classList.add('selected');
+                    
+                    // Update hidden input
+                    selectedCategoryInput.value = this.dataset.category;
+                });
+            });
+            
+            // File upload handling
+            const uploadBox = document.querySelector('.upload-box');
+            const fileInput = document.getElementById('file-upload');
+            const fileList = document.getElementById('file-list');
+            
+            uploadBox.addEventListener('click', () => {
+                fileInput.click();
+            });
+            
+            uploadBox.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadBox.classList.add('border-blue-500', 'bg-blue-50');
+            });
+            
+            uploadBox.addEventListener('dragleave', () => {
+                uploadBox.classList.remove('border-blue-500', 'bg-blue-50');
+            });
+            
+            uploadBox.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadBox.classList.remove('border-blue-500', 'bg-blue-50');
+                
+                if (e.dataTransfer.files.length) {
+                    handleFiles(e.dataTransfer.files);
+                }
+            });
+            
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length) {
+                    handleFiles(fileInput.files);
+                }
+            });
+            
+            function handleFiles(files) {
+                for (const file of files) {
+                    // Check file type
+                    const validTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                    if (!validTypes.includes(file.type)) {
+                        alert('กรุณาอัพโหลดไฟล์ PDF หรือ Word เท่านั้น');
+                        continue;
+                    }
+                    
+                    // Check file size (10MB max)
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert('ขนาดไฟล์ต้องไม่เกิน 10MB');
+                        continue;
+                    }
+                    
+                    // Create file item
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between bg-blue-50 p-3 rounded-lg';
+                    
+                    // File icon based on type
+                    let fileIcon = '';
+                    if (file.type === 'application/pdf') {
+                        fileIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" />
+                        </svg>`;
+                    } else {
+                        fileIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd" />
+                        </svg>`;
+                    }
+                    
+                    fileItem.innerHTML = `
+                        <div class="flex items-center">
+                            ${fileIcon}
+                            <span class="ml-2 text-gray-700">${file.name}</span>
+                            <span class="ml-2 text-gray-500 text-sm">(${formatFileSize(file.size)})</span>
+                        </div>
+                        <button type="button" class="remove-file text-gray-500 hover:text-red-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    `;
+                    
+                    fileList.appendChild(fileItem);
+                    
+                    // Add remove functionality
+                    const removeBtn = fileItem.querySelector('.remove-file');
+                    removeBtn.addEventListener('click', () => {
+                        fileItem.remove();
+                    });
+                }
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+                else return (bytes / 1048576).toFixed(1) + ' MB';
+            }
+            
+            // Add author functionality
+            const addAuthorBtn = document.querySelector('.add-author');
+            const authorsContainer = document.getElementById('authors-container');
+            
+            addAuthorBtn.addEventListener('click', () => {
+                const authorEntry = document.createElement('div');
+                authorEntry.className = 'author-entry flex items-center gap-4 mb-2';
+                authorEntry.innerHTML = `
+                    <input type="text" name="authors[]" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-orange-500 outline-none transition" placeholder="ชื่อ-นามสกุล" required>
+                    <button type="button" class="remove-author bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-lg transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                `;
+                authorsContainer.appendChild(authorEntry);
+                
+                // Add remove functionality
+                const removeBtn = authorEntry.querySelector('.remove-author');
+                removeBtn.addEventListener('click', () => {
+                    authorEntry.remove();
+                });
+            });
+            
+            // Form submission
+            const form = document.getElementById('research-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const cancelBtn = document.getElementById('cancel-btn');
+            
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Validate form
+                if (!selectedCategoryInput.value) {
+                    alert('กรุณาเลือกหมวดหมู่');
+                    return;
+                }
+                
+                if (fileList.children.length === 0) {
+                    alert('กรุณาอัพโหลดไฟล์อย่างน้อย 1 ไฟล์');
+                    return;
+                }
+                
+                // Show success message
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    กำลังอัพโหลด...
+                `;
+                
+                setTimeout(() => {
+                    // Reset form
+                    form.reset();
+                    fileList.innerHTML = '';
+                    categoryItems.forEach(i => i.classList.remove('selected'));
+                    
+                    // Show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'fixed top-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-lg z-50';
+                    successMessage.innerHTML = `
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <p>อัพโหลดผลงานวิจัยสำเร็จ!</p>
+                        </div>
+                    `;
+                    document.body.appendChild(successMessage);
+                    
+                    // Remove success message after 3 seconds
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 3000);
+                    
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'อัพโหลดผลงานวิจัย';
+                    
+                    // Remove all authors except the first one
+                    const authorEntries = document.querySelectorAll('.author-entry');
+                    for (let i = 1; i < authorEntries.length; i++) {
+                        authorEntries[i].remove();
+                    }
+                }, 1500);
+            });
+            
+            cancelBtn.addEventListener('click', () => {
+                if (confirm('คุณต้องการยกเลิกการกรอกข้อมูลหรือไม่?')) {
+                    form.reset();
+                    fileList.innerHTML = '';
+                    categoryItems.forEach(i => i.classList.remove('selected'));
+                    
+                    // Remove all authors except the first one
+                    const authorEntries = document.querySelectorAll('.author-entry');
+                    for (let i = 1; i < authorEntries.length; i++) {
+                        authorEntries[i].remove();
+                    }
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94e662cba271895d',t:'MTc0OTcwMDI0Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
