@@ -141,4 +141,152 @@
 
       <div class="flex justify-end">
         <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4">ยกเลิก</button>
-        <
+        <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">อัพโหลด</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<script>
+  // เลือกหมวดหมู่
+  const categoryItems = document.querySelectorAll('.category-item');
+  const selectedCategoryInput = document.getElementById('selected-category');
+
+  categoryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      categoryItems.forEach(i => i.classList.remove('selected'));
+      item.classList.add('selected');
+      selectedCategoryInput.value = item.dataset.category;
+    });
+  });
+
+  // เพิ่ม/ลบรายชื่อผู้จัดทำ
+  const authorsContainer = document.getElementById('authors-container');
+  authorsContainer.addEventListener('click', e => {
+    if(e.target.classList.contains('add-author')) {
+      const newAuthorDiv = document.createElement('div');
+      newAuthorDiv.className = 'author-entry flex items-center gap-4 mb-2';
+      newAuthorDiv.innerHTML = `
+        <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500" placeholder="ชื่อ-นามสกุล" required>
+        <button type="button" class="remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">－</button>
+      `;
+      authorsContainer.appendChild(newAuthorDiv);
+    }
+    if(e.target.classList.contains('remove-author')) {
+      e.target.parentElement.remove();
+    }
+  });
+
+  // การเลือกไฟล์และแสดงรายการไฟล์
+  const uploadBox = document.querySelector('.upload-box');
+  const fileInput = document.getElementById('file-upload');
+  const fileListDiv = document.getElementById('file-list');
+
+  uploadBox.addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', () => {
+    fileListDiv.innerHTML = '';
+    for(const file of fileInput.files) {
+      if(file.size > 10 * 1024 * 1024) {
+        alert(`ไฟล์ "${file.name}" ขนาดเกิน 10MB`);
+        fileInput.value = '';
+        fileListDiv.innerHTML = '';
+        return;
+      }
+      const fileDiv = document.createElement('div');
+      fileDiv.textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+      fileDiv.className = 'text-gray-700';
+      fileListDiv.appendChild(fileDiv);
+    }
+  });
+
+  // ปุ่มยกเลิก
+  document.getElementById('cancel-btn').addEventListener('click', () => {
+    if(confirm('ต้องการยกเลิกและล้างข้อมูลหรือไม่?')) {
+      document.getElementById('research-form').reset();
+      fileListDiv.innerHTML = '';
+      categoryItems.forEach(i => i.classList.remove('selected'));
+      selectedCategoryInput.value = '';
+      // ลบผู้จัดทำเกินอันแรก
+      const authors = authorsContainer.querySelectorAll('.author-entry');
+      authors.forEach((author, idx) => {
+        if(idx > 0) author.remove();
+      });
+    }
+  });
+
+  // ส่งข้อมูลแบบจำลอง (จะอัปโหลดไฟล์ขึ้น Cloudinary)
+  document.getElementById('research-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // ตรวจสอบว่าเลือกหมวดหมู่
+    if (!selectedCategoryInput.value) {
+      alert('กรุณาเลือกหมวดหมู่');
+      return;
+    }
+    if(fileInput.files.length === 0) {
+      alert('กรุณาเลือกไฟล์อัพโหลด');
+      return;
+    }
+
+    // เตรียมข้อมูลสำหรับอัพโหลดไฟล์ขึ้น Cloudinary
+    const cloudName = 'your_cloud_name';  // แก้ไขเป็น Cloudinary cloud name ของคุณ
+    const uploadPreset = 'your_unsigned_upload_preset';  // ตั้งค่า unsigned upload preset ใน Cloudinary
+
+    const uploadedFiles = [];
+
+    for(const file of fileInput.files) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+        const data = await response.json();
+        if(data.secure_url) {
+          uploadedFiles.push(data.secure_url);
+        } else {
+          alert(`อัพโหลดไฟล์ ${file.name} ล้มเหลว`);
+          return;
+        }
+      } catch(err) {
+        alert(`เกิดข้อผิดพลาดในการอัพโหลดไฟล์ ${file.name}`);
+        return;
+      }
+    }
+
+    // ข้อมูลอื่น ๆ จากฟอร์ม
+    const formDataToSend = {
+      title: document.getElementById('title').value,
+      category: selectedCategoryInput.value,
+      department: document.getElementById('department').value,
+      field: document.getElementById('field').value,
+      year: document.getElementById('year').value,
+      academicYear: document.getElementById('academic-year').value,
+      authors: Array.from(document.querySelectorAll('input[name="authors[]"]')).map(input => input.value),
+      advisor: document.getElementById('advisor').value,
+      abstract: document.getElementById('abstract').value,
+      files: uploadedFiles,
+    };
+
+    // จำลองส่งข้อมูลฟอร์มไป server
+    console.log('ส่งข้อมูลฟอร์ม', formDataToSend);
+    alert('ส่งข้อมูลเรียบร้อยแล้ว! ตรวจสอบ Console log');
+
+    // ล้างฟอร์ม
+    document.getElementById('research-form').reset();
+    fileListDiv.innerHTML = '';
+    categoryItems.forEach(i => i.classList.remove('selected'));
+    selectedCategoryInput.value = '';
+    const authors = authorsContainer.querySelectorAll('.author-entry');
+    authors.forEach((author, idx) => {
+      if(idx > 0) author.remove();
+    });
+  });
+</script>
+
+</body>
+</html>
