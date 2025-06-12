@@ -136,7 +136,7 @@
                 <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
                 <a href="Category folder/Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
                 <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">เกี่ยวกับเรา</a>
-                <a href="d.html" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อ</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อ</a>
             </div>
             <div id="auth-buttons" class="flex items-center space-x-3">
                 <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
@@ -214,10 +214,7 @@
                     <h2 class="text-4xl font-bold mb-4">ผลงานวิจัยวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
                     <p class="text-lg mb-6">ค้นพบงานวิจัยที่ SBTVC เพื่อต่อยอดความรู้และพัฒนางานวิจัย</p>
                     <div class="flex space-x-4">
-<a href="upload.html" class="px-10 py-3 border-2 border-black text-black font-semibold rounded-md hover:bg-white hover:text-orange-primary transition inline-block">
-  อัพโหลดงานวิจัย
-</a>
-
+                        <button onclick="openModal('uploadModal')" class="px-10 py-3 border-2 border-black text-black font-semibold rounded-md hover:bg-white hover:text-orange-primary transition">อัพโหลดงานวิจัย</button><a href="bbb.html">
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center">
@@ -275,6 +272,7 @@
         </div>
     </section>
 
+    
     <!-- Featured Research -->
     <section class="py-12">
         <div class="container mx-auto px-4">
@@ -495,6 +493,43 @@
             </div>
         </div>
     </section>
+ 
+<!-- Editor Section at Footer -->
+<footer class="bg-white border-t mt-16">
+  <div class="container mx-auto px-4 py-8">
+    <h3 class="text-lg font-semibold text-gray-700 mb-10 text-center">บรรณาธิการ</h3>
+    <div class="flex flex-wrap justify-center gap-8">
+      <div class="flex flex-col items-center w-32">
+        <div class="w-32 h-40 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1749704812/S__20357152_0_qp5cqf.jpg" alt="Editor 1" class="w-full h-full object-cover">
+        </div>
+        <p class="mt-3 text-sm text-gray-600 text-center">นายชุติเดช พนิชธนาดล</p>
+      </div>
+      <div class="flex flex-col items-center w-32">
+        <div class="w-32 h-40 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1749704812/S__20357156_0_vtxl4h.jpg" alt="Editor 2" class="w-full h-full object-cover">
+        </div>
+        <p class="mt-3 text-sm text-gray-600 text-center">นายเตชิน การะกรณ์</p>
+      </div>
+      <div class="flex flex-col items-center w-32">
+        <div class="w-32 h-40 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1749705178/S__20357159_cdielw.jpg" alt="Editor 3" class="w-full h-full object-cover">
+        </div>
+        <p class="mt-3 text-sm text-gray-600 text-center">นายธนวิชญ์ จันทร์โชติ</p>
+      </div>
+      <div class="flex flex-col items-center w-32">
+        <div class="w-32 h-40 rounded-2xl overflow-hidden shadow-lg">
+          <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1749704809/S__20357154_0_ow5uby.jpg" alt="Editor 4" class="w-full h-full object-cover">
+        </div>
+        <p class="mt-3 text-sm text-gray-600 text-center">นายพัชราพงศ์ พนธ์พันธกุล</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+
+
 
     <!-- Contact Section -->
     <section class="py-12 bg-gray-50">
@@ -582,6 +617,7 @@
         </div>
     </section>
 
+    
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-4">
