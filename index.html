@@ -710,171 +710,131 @@
         </div>
     </div>
 
-    <script>
-        // Check if user is already logged in
-        document.addEventListener('DOMContentLoaded', function() {
-            checkLoginStatus();
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        checkLoginStatus();
+
+        document.getElementById('menuButton')?.addEventListener('click', function () {
+            document.getElementById('mobileMenu')?.classList.toggle('hidden');
         });
 
-        // Mobile Menu Toggle
-        document.getElementById('menuButton').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('hidden');
+        document.getElementById('menuButtonLoggedIn')?.addEventListener('click', function () {
+            document.getElementById('mobileMenu')?.classList.toggle('hidden');
         });
 
-        document.getElementById('menuButtonLoggedIn').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobileMenu');
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Modal Functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        function switchModal(closeModalId, openModalId) {
-            closeModal(closeModalId);
-            openModal(openModalId);
-        }
-
-        // Close modals when clicking outside
-        window.addEventListener('click', function(event) {
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(function(modal) {
-                if (event.target === modal) {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                }
-            });
-        });
-
-        // Toast notification
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast ${type}`;
-            toast.classList.add('show');
-            
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // User Registration
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm')?.addEventListener('submit', function (e) {
             e.preventDefault();
-            
             const fullname = document.getElementById('fullname').value;
             const email = document.getElementById('register-email').value;
             const password = document.getElementById('register-password').value;
             const confirmPassword = document.getElementById('confirm-password').value;
-            
-            // Validate passwords match
+
             if (password !== confirmPassword) {
                 showToast('รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง', 'error');
                 return;
             }
-            
-            // Check if email already exists
+
             const users = JSON.parse(localStorage.getItem('users') || '[]');
             if (users.some(user => user.email === email)) {
                 showToast('อีเมลนี้มีผู้ใช้งานแล้ว กรุณาใช้อีเมลอื่น', 'error');
                 return;
             }
-            
-            // Add new user
-            const newUser = {
-                fullname,
-                email,
-                password, // In a real app, you should hash this password
-                registeredAt: new Date().toISOString()
-            };
-            
+
+            const newUser = { fullname, email, password, registeredAt: new Date().toISOString() };
             users.push(newUser);
             localStorage.setItem('users', JSON.stringify(users));
-            
-            // Show success message and close modal
+
             showToast('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
             closeModal('registerModal');
             openModal('loginModal');
         });
 
-        // User Login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm')?.addEventListener('submit', function (e) {
             e.preventDefault();
-            
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
-            
-            // Check credentials
+
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(user => user.email === email && user.password === password);
-            
+            const user = users.find(u => u.email === email && u.password === password);
+
             if (user) {
-                // Store logged in user info
-                localStorage.setItem('currentUser', JSON.stringify({
+                sessionStorage.setItem('currentUser', JSON.stringify({
                     fullname: user.fullname,
                     email: user.email,
                     loggedInAt: new Date().toISOString()
                 }));
-                
-                // Update UI
+
                 updateUIForLoggedInUser(user);
-                
-                // Close modal and show success message
                 closeModal('loginModal');
-                showToast('เข้าสู่ระบบสำเร็จ! ยินดีต้อนรับ ' + user.fullname);
+                showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + user.fullname);
             } else {
                 showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
             }
         });
+    });
 
-        // Logout function
-        function logout() {
-            localStorage.removeItem('currentUser');
-            updateUIForLoggedOutUser();
-            showToast('ออกจากระบบสำเร็จ');
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function logout() {
+        sessionStorage.removeItem('currentUser');
+        updateUIForLoggedOutUser();
+        showToast('ออกจากระบบสำเร็จ');
+    }
+
+    function checkLoginStatus() {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser) {
+            updateUIForLoggedInUser(currentUser);
         }
+    }
 
-        // Check login status on page load
-        function checkLoginStatus() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            if (currentUser) {
-                updateUIForLoggedInUser(currentUser);
+    function updateUIForLoggedInUser(user) {
+        document.getElementById('auth-buttons')?.classList.add('hidden');
+        document.getElementById('user-profile')?.classList.remove('hidden');
+        document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
+        document.getElementById('fullname-display').textContent = user.fullname;
+        document.getElementById('email-display').textContent = user.email;
+        document.getElementById('mobile-user-menu')?.classList.remove('hidden');
+        document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
+    }
+
+    function updateUIForLoggedOutUser() {
+        document.getElementById('auth-buttons')?.classList.remove('hidden');
+        document.getElementById('user-profile')?.classList.add('hidden');
+        document.getElementById('mobile-user-menu')?.classList.add('hidden');
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId)?.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId)?.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function switchModal(closeModalId, openModalId) {
+        closeModal(closeModalId);
+        openModal(openModalId);
+    }
+
+    window.addEventListener('click', function (event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(function (modal) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             }
-        }
+        });
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 
-        // Update UI for logged in user
-        function updateUIForLoggedInUser(user) {
-            // Update header
-            document.getElementById('auth-buttons').classList.add('hidden');
-            document.getElementById('user-profile').classList.remove('hidden');
-            
-            // Update username display
-            document.getElementById('username-display').textContent = user.fullname.split(' ')[0]; // Show first name only
-            document.getElementById('fullname-display').textContent = user.fullname;
-            document.getElementById('email-display').textContent = user.email;
-            
-            // Update mobile menu
-            document.getElementById('mobile-user-menu').classList.remove('hidden');
-            document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
-        }
-
-        // Update UI for logged out user
-        function updateUIForLoggedOutUser() {
-            // Update header
-            document.getElementById('auth-buttons').classList.remove('hidden');
-            document.getElementById('user-profile').classList.add('hidden');
-            
-            // Update mobile menu
-            document.getElementById('mobile-user-menu').classList.add('hidden');
-        }
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>
