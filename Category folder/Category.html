@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -31,56 +29,56 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap');
-        
+
         body {
             font-family: 'Prompt', sans-serif;
             background: linear-gradient(135deg, #fffaf0 0%, #fff0e6 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
         .category-card {
             transform: translateY(60px);
             opacity: 0;
             transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
         }
-        
+
         .category-card.show {
             transform: translateY(0);
             opacity: 1;
         }
-        
+
         .category-icon {
             transition: all 0.4s ease;
         }
-        
+
         .category-card:hover .category-icon {
             transform: scale(1.15);
         }
-        
+
         .category-card:hover {
             transform: translateY(-8px);
         }
-        
+
         .category-card:active {
             transform: scale(0.97);
         }
-        
+
         .category-description {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s ease-out;
         }
-        
+
         .category-card:hover .category-description {
             max-height: 80px;
         }
-        
+
         .shine {
             position: relative;
             overflow: hidden;
         }
-        
+
         .shine::after {
             content: '';
             position: absolute;
@@ -99,7 +97,7 @@
                 rgba(255, 255, 255, 0.0) 100%
             );
         }
-        
+
         .category-card:hover .shine::after {
             opacity: 1;
             left: 130%;
@@ -113,13 +111,14 @@
             <h1 class="text-4xl md:text-5xl font-bold text-primary-800 mb-3">หมวดหมู่งานวิจัย</h1>
             <p class="text-primary-700 text-lg">เลือกหมวดหมู่งานวิจัยที่คุณสนใจเพื่อเริ่มต้นการค้นคว้า</p>
         </header>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-6">
             <!-- Category 1: สำรวจ (Explore) -->
 
 
 
-<a href = "Category-explore.html" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
+
+<a <div onclick="window.location.href='Categoryy.html'" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
     <div class="p-6 text-center relative shine">
         <div class="category-icon bg-primary-500 inline-flex p-5 rounded-full mb-5 text-white shadow-md">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,9 +139,9 @@
 </div>
     </a>
 
-            
+
             <!-- Category 2: ทฤษฎี (Theory) -->
-    <a href = ".html"        <div class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
+    <a        <div class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
                 <div class="p-6 text-center relative shine">
                     <div class="category-icon bg-primary-500 inline-flex p-5 rounded-full mb-5 text-white shadow-md">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -162,7 +161,7 @@
                 </div>
             </div>
 </a>
-            
+
             <!-- Category 3: ทดลอง (Experiment) -->
             <div class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
                 <div class="p-6 text-center relative shine">
@@ -183,7 +182,7 @@
                     เลือกหมวดหมู่นี้
                 </div>
             </div>
-            
+
             <!-- Category 4: ประดิษฐ์ (Create/Invent) -->
             <div class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
                 <div class="p-6 text-center relative shine">
@@ -208,7 +207,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.category-card');
-            
+
             // Function to check if element is in viewport
             function isInViewport(element) {
                 const rect = element.getBoundingClientRect();
@@ -219,7 +218,7 @@
                     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
                 );
             }
-            
+
             // Function to handle animation
             function animateCards() {
                 cards.forEach((card, index) => {
@@ -230,21 +229,21 @@
                     }
                 });
             }
-            
+
             // Initial check
             setTimeout(animateCards, 100);
-            
+
             // Check on scroll
             window.addEventListener('scroll', animateCards);
-            
+
             // Make cards clickable
             cards.forEach(card => {
                 card.addEventListener('click', function() {
                     const categoryName = this.querySelector('h3').textContent;
-                    
+
                     // Add click effect
                     this.style.transform = 'scale(0.95)';
-                    
+
                     // Create ripple effect
                     const ripple = document.createElement('div');
                     ripple.className = 'absolute rounded-full bg-primary-200';
@@ -254,9 +253,9 @@
                     ripple.style.left = '50%';
                     ripple.style.transform = 'translate(-50%, -50%)';
                     ripple.style.animation = 'ripple 0.8s linear';
-                    
+
                     this.querySelector('.shine').appendChild(ripple);
-                    
+
                     // Highlight selected card
                     cards.forEach(c => {
                         if (c !== this) {
@@ -264,11 +263,11 @@
                             c.style.transform = 'scale(0.95)';
                         }
                     });
-                    
+
                     setTimeout(() => {
                         ripple.remove();
                         alert(`คุณเลือกหมวดหมู่งานวิจัย: ${categoryName}`);
-                        
+
                         // Reset other cards
                         cards.forEach(c => {
                             if (c !== this) {
@@ -280,7 +279,7 @@
                     }, 500);
                 });
             });
-            
+
             // Add ripple animation
             const style = document.createElement('style');
             style.textContent = `
@@ -301,4 +300,4 @@
         });
     </script>
 <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94ad73da518b8957',t:'MTc0OTEwMzI1Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
-</html>    
+</html>   
