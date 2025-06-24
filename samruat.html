@@ -894,6 +894,21 @@
                             <li>ได้แนวทางในการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาผ่านกิจกรรมการเรียนรู้แบบ Active Learning</li>
                             <li>ครูผู้สอนสามารถนำกิจกรรมการเรียนร
                 <script>
+                    
+                    function updateUIForLoggedInUser(user) {
+  document.getElementById('auth-buttons')?.classList.add('hidden');
+  document.getElementById('user-profile')?.classList.remove('hidden');
+  document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
+}
+
+function checkLoginStatus() {
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+  if (currentUser) {
+    updateUIForLoggedInUser(currentUser);
+  }
+}
+
+                    
 document.addEventListener('DOMContentLoaded', function () {
   const user = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -905,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function () {
       el.textContent = name;
     });
 
+      
     const welcomeEl = document.getElementById('dashboard-username');
     if (welcomeEl) {
       welcomeEl.textContent = `ยินดีต้อนรับคุณ ${name}`;
