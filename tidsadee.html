@@ -762,6 +762,18 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
                                 </script>
+                                <script>
+  const user = JSON.parse(localStorage.getItem('currentUser'));
+  if (user && user.fullname) {
+    document.querySelectorAll('.user-name').forEach(el => {
+      el.textContent = user.fullname;
+    });
+  } else {
+    // กรณียังไม่ login
+    location.href = 'index.html';
+  }
+</script>
+
                             
                             </li>
                         </ol>
