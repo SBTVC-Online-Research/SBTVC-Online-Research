@@ -59,6 +59,109 @@
         .research-card:hover .research-card-overlay {
             opacity: 1;
         }
+           * {
+            font-family: 'Prompt', sans-serif;
+        }
+        
+        .bg-orange-primary {
+            background-color: #FF7A00;
+        }
+        
+        .bg-orange-secondary {
+            background-color: #FFA149;
+        }
+        
+        .bg-orange-light {
+            background-color: #FFE0C2;
+        }
+        
+        .text-orange-primary {
+            color: #FF7A00;
+        }
+        
+        .border-orange-primary {
+            border-color: #FF7A00;
+        }
+        
+        .hover-bg-orange-dark:hover {
+            background-color: #E56E00;
+        }
+        
+        .active-tab {
+            border-bottom: 3px solid #FF7A00;
+            color: #FF7A00;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+
+        .research-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: #10B981;
+        }
+
+        .toast.error {
+            background-color: #EF4444;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
