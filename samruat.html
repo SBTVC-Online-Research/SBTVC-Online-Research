@@ -895,18 +895,7 @@
                             <li>ครูผู้สอนสามารถนำกิจกรรมการเรียนร
                 <script>
                     
-                    function updateUIForLoggedInUser(user) {
-  document.getElementById('auth-buttons')?.classList.add('hidden');
-  document.getElementById('user-profile')?.classList.remove('hidden');
-  document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
-}
-
-function checkLoginStatus() {
-  const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-  if (currentUser) {
-    updateUIForLoggedInUser(currentUser);
-  }
-}
+                  
 
                     
 document.addEventListener('DOMContentLoaded', function () {
