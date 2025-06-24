@@ -218,7 +218,34 @@
             </div>
         </div>
     </header>
-
+ <div id="user-profile" class="hidden items-center space-x-3">
+                <div class="dropdown">
+                    <button class="flex items-center space-x-2 px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">
+                        <span id="username-display">ชื่อผู้ใช้</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="p-4 border-b border-gray-200">
+                            <p class="text-sm text-gray-500">ยินดีต้อนรับ</p>
+                            <p id="fullname-display" class="font-medium text-gray-800">ชื่อ-นามสกุล</p>
+                            <p id="email-display" class="text-sm text-gray-500">อีเมล</p>
+                        </div>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-cog mr-2"></i> ตั้งค่า
+                        </a>
+                        <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                            <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
+                        </button>
+                    </div>
+                </div>
     <!-- Page Title -->
     <section class="bg-gradient-to-r from-orange-primary to-orange-secondary text-white py-12">
         <div class="container mx-auto px-4">
