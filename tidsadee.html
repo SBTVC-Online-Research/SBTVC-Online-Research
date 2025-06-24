@@ -762,15 +762,22 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
                                 
-  const user = JSON.parse(localStorage.getItem('currentUser'));
-  if (user && user.fullname) {
-    document.querySelectorAll('.user-name').forEach(el => {
-      el.textContent = user.fullname;
-    });
-  } else {
-    // กรณียังไม่ login
-    location.href = 'index.html';
-  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+
+    if (user && user.fullname) {
+      document.querySelectorAll('.user-name').forEach(el => {
+        el.textContent = user.fullname;
+      });
+    } else {
+      console.log('ยังไม่มีผู้ใช้ login');
+      // ถ้าต้องการแสดงชื่อเป็น "ผู้เยี่ยมชม" ก็ทำแบบนี้
+      document.querySelectorAll('.user-name').forEach(el => {
+        el.textContent = 'ผู้เยี่ยมชม';
+      });
+    }
+  });
 </script>
 
                             
