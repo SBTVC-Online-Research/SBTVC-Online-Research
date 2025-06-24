@@ -710,7 +710,7 @@
         </div>
     </div>
 
-  <script>
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         checkLoginStatus();
 
@@ -758,7 +758,7 @@
             const user = users.find(u => u.email === email && u.password === password);
 
             if (user) {
-                sessionStorage.setItem('currentUser', JSON.stringify({
+                localStorage.setItem('currentUser', JSON.stringify({
                     fullname: user.fullname,
                     email: user.email,
                     loggedInAt: new Date().toISOString()
@@ -783,13 +783,13 @@
     }
 
     function logout() {
-        sessionStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUser');
         updateUIForLoggedOutUser();
         showToast('ออกจากระบบสำเร็จ');
     }
 
     function checkLoginStatus() {
-        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
         if (currentUser) {
             updateUIForLoggedInUser(currentUser);
         }
@@ -798,17 +798,26 @@
     function updateUIForLoggedInUser(user) {
         document.getElementById('auth-buttons')?.classList.add('hidden');
         document.getElementById('user-profile')?.classList.remove('hidden');
-        document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
-        document.getElementById('fullname-display').textContent = user.fullname;
-        document.getElementById('email-display').textContent = user.email;
+        document.getElementById('username-display') && (document.getElementById('username-display').textContent = user.fullname.split(' ')[0]);
+        document.getElementById('fullname-display') && (document.getElementById('fullname-display').textContent = user.fullname);
+        document.getElementById('email-display') && (document.getElementById('email-display').textContent = user.email);
         document.getElementById('mobile-user-menu')?.classList.remove('hidden');
-        document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
+        document.getElementById('mobile-username-display') && (document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0]);
+
+        // ถ้าใช้คลาส .user-name หลายที่
+        document.querySelectorAll('.user-name').forEach(el => {
+            el.textContent = user.fullname;
+        });
     }
 
     function updateUIForLoggedOutUser() {
         document.getElementById('auth-buttons')?.classList.remove('hidden');
         document.getElementById('user-profile')?.classList.add('hidden');
         document.getElementById('mobile-user-menu')?.classList.add('hidden');
+
+        document.querySelectorAll('.user-name').forEach(el => {
+            el.textContent = 'ผู้เยี่ยมชม';
+        });
     }
 
     function openModal(modalId) {
@@ -836,5 +845,5 @@
         });
     });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-
+</body>
+</html>
