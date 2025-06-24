@@ -747,14 +747,17 @@
                         <ol class="list-decimal pl-5 text-gray-700 space-y-2">
                             <li>ได้แนวทางในการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาผ่านกิจกรรมการเรียนรู้แบบ Active Learning</li>
                             <li>ครูผู้สอนสามารถนำกิจกรรมการเรียนร
-                             <script>
+                <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const user = JSON.parse(localStorage.getItem('currentUser')); // ใช้ localStorage
+  const user = JSON.parse(localStorage.getItem('currentUser'));
 
   if (user && user.fullname) {
     const name = user.fullname;
-    const usernameEls = document.querySelectorAll('.user-name');
-    usernameEls.forEach(el => el.textContent = name);
+
+    // ใส่ชื่อผู้ใช้ในจุดต่าง ๆ ที่กำหนด class
+    document.querySelectorAll('.user-name').forEach(el => {
+      el.textContent = name;
+    });
 
     const welcomeEl = document.getElementById('dashboard-username');
     if (welcomeEl) {
@@ -762,8 +765,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
   } else {
-    // ยังไม่ได้ล็อกอิน → redirect หรือแสดงข้อความ
-    window.location.href = 'index.html';
+    // ไม่มีผู้ใช้ที่ล็อกอิน → แสดงชื่อว่า "ผู้เยี่ยมชม" แทน
+    document.querySelectorAll('.user-name').forEach(el => {
+      el.textContent = 'ผู้เยี่ยมชม';
+    });
+
+    const welcomeEl = document.getElementById('dashboard-username');
+    if (welcomeEl) {
+      welcomeEl.textContent = `ยินดีต้อนรับผู้เยี่ยมชม`;
+    }
   }
 });
 </script>
