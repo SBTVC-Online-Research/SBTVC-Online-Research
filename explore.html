@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -11,49 +13,49 @@
         * {
             font-family: 'Prompt', sans-serif;
         }
-
+        
         .bg-orange-primary {
             background-color: #FF7A00;
         }
-
+        
         .bg-orange-secondary {
             background-color: #FFA149;
         }
-
+        
         .bg-orange-light {
             background-color: #FFE0C2;
         }
-
+        
         .text-orange-primary {
             color: #FF7A00;
         }
-
+        
         .border-orange-primary {
             border-color: #FF7A00;
         }
-
+        
         .hover-bg-orange-dark:hover {
             background-color: #E56E00;
         }
-
+        
         .active-tab {
             border-bottom: 3px solid #FF7A00;
             color: #FF7A00;
             font-weight: 600;
         }
-
+        
         .tab-content {
             display: none;
         }
-
+        
         .tab-content.active {
             display: block;
         }
-
+        
         .modal {
             transition: opacity 0.3s ease;
         }
-
+        
         .research-card:hover .research-card-overlay {
             opacity: 1;
         }
@@ -72,7 +74,7 @@
                 <h1 class="text-2xl font-bold text-gray-800">SBTVC <span class="text-orange-primary">Online Research</span></h1>
             </div>
             <div class="hidden md:flex items-center space-x-6">
-                <a href="#" onclick="window.location.href='index.html'" class="text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
+                <a href="#" onclick="window.location.href='main.html'" class="text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
                 <a href="#" class="text-orange-primary font-semibold">งานวิจัย</a>
                 <a href="#" class="text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
                 <a href="#" class="text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
@@ -101,7 +103,7 @@
     <!-- Page Title -->
     <section class="bg-gradient-to-r from-orange-primary to-orange-secondary text-white py-12">
         <div class="container mx-auto px-4">
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black">สำรวจงานวิจัย</h1>
+            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black">สำรวจ</h1>
             <div class="flex flex-wrap items-center text-sm md:text-base">
             </div>
         </div>
@@ -148,62 +150,8 @@
                     </div>
                     <button class="px-6 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ค้นหา</button>
                 </div>
-
-                <!-- Advanced Filters (Collapsible) -->
-                <div class="mt-4">
-                    <button id="advancedFilterBtn" class="flex items-center text-orange-primary hover:underline">
-                        <span>ตัวกรองขั้นสูง</span>
-                        <svg id="advancedFilterIcon" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1 transform transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
-
-                    <div id="advancedFilterContent" class="hidden mt-4 border-t pt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div>
-                                <label class="block text-gray-700 mb-2">ผู้วิจัย</label>
-                                <input type="text" placeholder="ชื่อผู้วิจัย..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 mb-2">สถาบัน</label>
-                                <input type="text" placeholder="ชื่อสถาบัน..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 mb-2">คำสำคัญ</label>
-                                <input type="text" placeholder="คำสำคัญ..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            </div>
-                        </div>
-
-                        <div class="mt-4">
-                            <label class="block text-gray-700 mb-2">เรียงลำดับตาม</label>
-                            <div class="flex flex-wrap gap-3">
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="sort" value="newest" class="form-radio text-orange-primary" checked>
-                                    <span class="ml-2">ล่าสุด</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="sort" value="oldest" class="form-radio text-orange-primary">
-                                    <span class="ml-2">เก่าสุด</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="sort" value="az" class="form-radio text-orange-primary">
-                                    <span class="ml-2">ชื่อ (ก-ฮ)</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="sort" value="za" class="form-radio text-orange-primary">
-                                    <span class="ml-2">ชื่อ (ฮ-ก)</span>
-                                </label>
-                                <label class="inline-flex items-center">
-                                    <input type="radio" name="sort" value="popular" class="form-radio text-orange-primary">
-                                    <span class="ml-2">ยอดนิยม</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+                
+               
 
     <!-- Research Display Options -->
     <section class="py-8">
@@ -213,7 +161,7 @@
                     <h2 class="text-2xl font-bold text-gray-800">ผลการค้นหา</h2>
                     <p class="text-gray-600">พบ 48 รายการ</p>
                 </div>
-
+                
                 <div class="flex items-center space-x-4">
                     <span class="text-gray-700">มุมมอง:</span>
                     <button id="gridViewBtn" class="p-2 bg-orange-primary text-white rounded">
@@ -228,7 +176,7 @@
                     </button>
                 </div>
             </div>
-
+            
             <!-- Grid View (Default) -->
             <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Research Card 1 -->
@@ -258,7 +206,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Research Card 2 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
                     <div class="h-48 bg-orange-light flex items-center justify-center relative">
@@ -286,7 +234,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Research Card 3 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
                     <div class="h-48 bg-orange-light flex items-center justify-center relative">
@@ -314,7 +262,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Research Card 4 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
                     <div class="h-48 bg-orange-light flex items-center justify-center relative">
@@ -342,7 +290,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Research Card 5 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
                     <div class="h-48 bg-orange-light flex items-center justify-center relative">
@@ -370,7 +318,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Research Card 6 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
                     <div class="h-48 bg-orange-light flex items-center justify-center relative">
@@ -399,7 +347,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <!-- List View (Hidden by default) -->
             <div id="listView" class="hidden">
                 <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -485,7 +433,7 @@
                     </table>
                 </div>
             </div>
-
+            
             <!-- Pagination -->
             <div class="mt-8 flex justify-center">
                 <nav class="flex items-center space-x-2">
@@ -513,7 +461,7 @@
     <section class="py-12 bg-gray-50">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold text-gray-800 mb-8">หมวดหมู่ยอดนิยม</h2>
-
+            
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <!-- Category 1 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
@@ -525,7 +473,7 @@
                     <h3 class="font-semibold text-gray-800">การศึกษา</h3>
                     <p class="text-gray-500 text-sm mt-2">142 งานวิจัย</p>
                 </div>
-
+                
                 <!-- Category 2 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
                     <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -536,7 +484,7 @@
                     <h3 class="font-semibold text-gray-800">วิทยาศาสตร์</h3>
                     <p class="text-gray-500 text-sm mt-2">98 งานวิจัย</p>
                 </div>
-
+                
                 <!-- Category 3 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
                     <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -547,7 +495,7 @@
                     <h3 class="font-semibold text-gray-800">เทคโนโลยี</h3>
                     <p class="text-gray-500 text-sm mt-2">124 งานวิจัย</p>
                 </div>
-
+                
                 <!-- Category 4 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
                     <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -558,7 +506,7 @@
                     <h3 class="font-semibold text-gray-800">เกษตรกรรม</h3>
                     <p class="text-gray-500 text-sm mt-2">87 งานวิจัย</p>
                 </div>
-
+                
                 <!-- Category 5 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
                     <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -569,7 +517,7 @@
                     <h3 class="font-semibold text-gray-800">สังคมศาสตร์</h3>
                     <p class="text-gray-500 text-sm mt-2">76 งานวิจัย</p>
                 </div>
-
+                
                 <!-- Category 6 -->
                 <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
                     <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -600,7 +548,7 @@
                     <p class="text-gray-400 mb-4">แหล่งรวมงานวิจัยคุณภาพเพื่อการพัฒนาประเทศไทย</p>
                     <p class="text-gray-400">© 2023 SBTVC Online Research. สงวนลิขสิทธิ์</p>
                 </div>
-
+                
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
                     <div>
                         <h3 class="text-lg font-semibold mb-4">เมนูหลัก</h3>
@@ -612,7 +560,7 @@
                             <li><a href="#" class="text-gray-400 hover:text-orange-primary">ติดต่อ</a></li>
                         </ul>
                     </div>
-
+                    
                     <div>
                         <h3 class="text-lg font-semibold mb-4">หมวดหมู่</h3>
                         <ul class="space-y-2">
@@ -623,7 +571,7 @@
                             <li><a href="#" class="text-gray-400 hover:text-orange-primary">สังคมศาสตร์</a></li>
                         </ul>
                     </div>
-
+                    
                     <div>
                         <h3 class="text-lg font-semibold mb-4">ช่วยเหลือ</h3>
                         <ul class="space-y-2">
@@ -650,7 +598,7 @@
                     </svg>
                 </button>
             </div>
-
+            
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="md:w-1/3">
                     <div class="bg-orange-light rounded-lg p-6 flex items-center justify-center">
@@ -658,7 +606,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
-
+                    
                     <div class="mt-6 space-y-4">
                         <div>
                             <h4 class="text-gray-600 font-medium">หมวดหมู่</h4>
@@ -690,16 +638,16 @@
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="mt-6">
                         <button class="w-full px-4 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition mb-3">ดาวน์โหลด PDF</button>
                         <button class="w-full px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">อ้างอิงงานวิจัย</button>
                     </div>
                 </div>
-
+                
                 <div class="md:w-2/3">
                     <h2 class="text-2xl font-bold text-gray-800 mb-4">การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา</h2>
-
+                    
                     <div class="flex items-center mb-6">
                         <div class="w-10 h-10 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold mr-3">ส</div>
                         <div>
@@ -707,7 +655,7 @@
                             <p class="text-gray-600 text-sm">คณะศึกษาศาสตร์ มหาวิทยาลัยเชียงใหม่</p>
                         </div>
                     </div>
-
+                    
                     <div class="mb-6">
                         <h3 class="text-xl font-semibold mb-2">บทคัดย่อ</h3>
                         <p class="text-gray-700 mb-4">
@@ -717,7 +665,7 @@
                             ผลการวิจัยพบว่า 1) นักเรียนระดับมัธยมศึกษามีทักษะการคิดวิเคราะห์อยู่ในระดับปานกลาง 2) กิจกรรมการเรียนรู้แบบ Active Learning ที่พัฒนาขึ้นมีประสิทธิภาพตามเกณฑ์ 80/80 และนักเรียนกลุ่มทดลองมีคะแนนทักษะการคิดวิเคราะห์หลังเรียนสูงกว่าก่อนเรียนและสูงกว่ากลุ่มควบคุมอย่างมีนัยสำคัญทางสถิติที่ระดับ .05 และ 3) นักเรียนมีความพึงพอใจต่อกิจกรรมการเรียนรู้ที่พัฒนาขึ้นในระดับมาก
                         </p>
                     </div>
-
+                    
                     <div class="mb-6">
                         <h3 class="text-xl font-semibold mb-2">วัตถุประสงค์การวิจัย</h3>
                         <ol class="list-decimal pl-5 text-gray-700 space-y-2">
@@ -726,7 +674,7 @@
                             <li>เพื่อศึกษาความพึงพอใจของนักเรียนที่มีต่อกิจกรรมการเรียนรู้ที่พัฒนาขึ้น</li>
                         </ol>
                     </div>
-
+                    
                     <div class="mb-6">
                         <h3 class="text-xl font-semibold mb-2">ขอบเขตการวิจัย</h3>
                         <p class="text-gray-700 mb-2">
@@ -739,15 +687,26 @@
                             <span class="font-medium">ระยะเวลาในการวิจัย:</span> ภาคเรียนที่ 1 ปีการศึกษา 2566 (พฤษภาคม - กันยายน 2566)
                         </p>
                     </div>
-
+                    
                     <div>
                         <h3 class="text-xl font-semibold mb-2">ประโยชน์ที่คาดว่าจะได้รับ</h3>
                         <ol class="list-decimal pl-5 text-gray-700 space-y-2">
                             <li>ได้แนวทางในการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาผ่านกิจกรรมการเรียนรู้แบบ Active Learning</li>
                             <li>ครูผู้สอนสามารถนำกิจกรรมการเรียนร
                                 <script>
-                  
+                                (function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d7723631ab45b1',t:'MTc0OTU0MzU5MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
+                                // ในหน้า dashboard.html
+window.addEventListener('DOMContentLoaded', () => {
+    const user = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (user) {
+        document.getElementById('dashboard-username').textContent = `ยินดีต้อนรับคุณ ${user.fullname}`;
+    } else {
+        
+    }
+});
 
+                                </script>
+                            
                             </li>
                         </ol>
                     </div>
