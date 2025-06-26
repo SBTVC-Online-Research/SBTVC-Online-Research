@@ -1,1 +1,818 @@
+<!DOCTYPE html>More actions
+<html lang="th">
+<head>
+    <meta name="google-site-verification" content="B4grT7s_R1qrFTOC99J3Eog2AsfSQ216CbTPTs1jOUs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SBTVC Online Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            font-family: 'Prompt', sans-serif;
+        }
 
+        .bg-orange-primary {
+            background-color: #FF7A00;
+        }
+
+        .bg-orange-secondary {
+            background-color: #FFA149;
+        }
+
+        .bg-orange-light {
+            background-color: #FFE0C2;
+        }
+
+        .text-orange-primary {
+            color: #FF7A00;
+        }
+
+        .border-orange-primary {
+            border-color: #FF7A00;
+        }
+
+        .hover-bg-orange-dark:hover {
+            background-color: #E56E00;
+        }
+
+        .active-tab {
+            border-bottom: 3px solid #FF7A00;
+            color: #FF7A00;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+
+        .research-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .toast.success {
+            background-color: #10B981;
+        }
+
+        .toast.error {
+            background-color: #EF4444;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+     <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="bg-white rounded-full p-2 mr-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-gray-800">SBTVC <span class="text-orange-primary">Online Research</span></h1>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
+                <a href="Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">เกี่ยวกับเรา</a>
+                <a href="#" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อ</a>
+            </div>
+            <div id="auth-buttons" class="flex items-center space-x-3">
+                <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
+                <button onclick="openModal('registerModal')" class="px-4 py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
+                <button class="md:hidden text-gray-700" id="menuButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+            <div id="user-profile" class="hidden items-center space-x-3">
+                <div class="dropdown">
+                    <button class="flex items-center space-x-2 px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">
+                        <span id="username-display">ชื่อผู้ใช้</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+                    <div class="dropdown-content">
+                        <div class="p-4 border-b border-gray-200">
+                            <p class="text-sm text-gray-500">ยินดีต้อนรับ</p>
+                            <p id="fullname-display" class="font-medium text-gray-800">ชื่อ-นามสกุล</p>
+                            <p id="email-display" class="text-sm text-gray-500">อีเมล</p>
+                        </div>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
+                        </a>
+                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            <i class="fas fa-cog mr-2"></i> ตั้งค่า
+                        </a>
+                        <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                            <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
+                        </button>
+                    </div>
+                </div>
+                <button class="md:hidden text-gray-700" id="menuButtonLoggedIn">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white px-4 py-2 shadow-md">
+            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
+            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">ติดต่อ</a>
+            <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
+                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-username-display">ชื่อผู้ใช้</span></p>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
+                </a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
+                </a>
+                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                    <i class="fas fa-cog mr-2"></i> ตั้งค่า
+                </a>
+                <button onclick="logout()" class="block w-full text-left py-2 text-red-600 hover:text-red-700">
+                    <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-r from-orange-primary to-orange-secondary text-black py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-8 md:mb-0">
+                    <h2 class="text-4xl font-bold mb-4">ผลงานวิจัยวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
+                    <p class="text-lg mb-6">ค้นพบงานวิจัยที่ SBTVC เพื่อต่อยอดความรู้และพัฒนางานวิจัย</p>
+                    <div class="flex space-x-4">
+<a href="upload.html" class="inline-block px-10 py-3 border-2 border-black text-black font-semibold rounded-md hover:bg-white hover:text-orange-primary transition">อัพโหลดงานวิจัย</a>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgKRjxoTvT4mcjFO5CGdPiCJA4AsPxvbvIMw&s" alt="คำอธิบายรูปภาพ" width="200">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        <circle cx="12" cy="8" r="2"></circle>
+                        <path d="M12 12v4"></path>
+                        <line x1="8" y1="18" x2="16" y2="18"></line>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="py-8 bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-lg p-6">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">ค้นหางานวิจัย</h3>
+                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+                    <div class="flex-grow">
+                        <input type="text" placeholder="คำค้นหา..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    </div>
+                    <div class="md:w-1/5">
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                            <option value="">หมวดหมู่ทั้งหมด</option>
+                            <option value="education">สำรวจ</option>
+                            <option value="science">ทฤษฎี</option>
+                            <option value="technology">ทดลอง</option>
+                            <option value="agriculture">ประดิษฐ์</option>
+                            </select>
+                    </div>
+                    <div class="md:w-1/5">
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                            <option value="">ปีงานวิจัย</option>
+                            <option value="2023">2566</option>
+                            <option value="2022">2565</option>
+                            <option value="2021">2564</option>
+                            <option value="2020">2563</option>
+                            <option value="2019">2562</option>
+                        </select>
+                    </div>
+                    <div class="md:w-1/5">
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                            <option value="">ระดับผลงาน</option>
+                            <option value="national">ระดับชาติ</option>
+                            <option value="international">ระดับนานาชาติ</option>
+                            <option value="regional">ระดับภูมิภาค</option>
+                            </select>
+                    </div>
+                    <button class="px-6 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ค้นหา</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Featured Research -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">งานวิจัยแนะนำ</h2>
+                <a href="#" class="text-orange-primary hover:underline">ดูทั้งหมด</a>
+            </div>
+
+            <!-- Research Card -->
+<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
+    <a href="OnlineMMM.html">
+        <div class="h-40 bg-orange-light flex items-center justify-center hover:opacity-90 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+        </div>
+    </a>
+    <div class="p-10">
+        <div class="flex justify-between mb-2">
+            <span class="px-3 py-1 bg-orange-light text-orange-primary text-sm rounded-full">สำรวจ</span>
+            <span class="text-gray-500 text-sm">2568</span>
+        </div>
+        <h3 class="text-lg font-semibold mb-2 leading-snug">
+            ระบบเว็บไซต์จัดเก็บผลงานวิจัย<br>
+            การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ （ชลบุรี）
+        </h3>
+        <p class="text-gray-600 mb-4 line-clamp-2">งานวิจัยเชิงสำรวจ รวบรวม และ การ ค้นหา</p>
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold">ส</div>
+                <span class="ml-2 text-gray-700">นายธนวิชญ์ จันทร์โชติ</span>
+            </div>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับวิลัย</span>
+        </div>
+    </div>
+</div>
+
+ <!-- Categories Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8">หมวดหมู่งานวิจัย</h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                <!-- Category 1 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
+                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">การสำรวจ</h3>
+                    <p class="text-gray-500 text-sm mt-2">0 งานวิจัย</p>
+                    <p class="text-gray-500 text-sm mt-2">1 งานวิจัย</p>
+                </div>
+
+                <!-- Category 2 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
+                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">ทฤษฎี</h3>
+                    <p class="text-gray-500 text-sm mt-2">0 งานวิจัย</p>
+                </div>
+
+                <!-- Category 3 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
+                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">ทดลอง</h3>
+                    <p class="text-gray-500 text-sm mt-2">0 งานวิจัย</p>
+                </div>
+
+                <!-- Category 4 -->
+                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
+                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 class="font-semibold text-gray-800">ประดิษฐ์</h3>
+                    <p class="text-gray-500 text-sm mt-2">0 งานวิจัย</p>
+                </div>
+             </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-12 bg-orange-primary text-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-8 text-center">สถิติงานวิจัย SBTVC</h2>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">0</div>
+                    <div class="text-4xl font-bold mb-2">1</div>
+                    <p>งานวิจัยทั้งหมด</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">0</div>
+                    <div class="text-4xl font-bold mb-2">4</div>
+                    <p>นักวิจัย</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">0</div>
+                    <p>รางวัลระดับชาติ</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold mb-2">0</div>
+                    <p>รางวัลระดับนานาชาติ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recent Research -->
+    <section class="py-12">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">งานวิจัยล่าสุด</h2>
+                <a href="#" class="text-orange-primary hover:underline">ดูทั้งหมด</a>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead class="bg-orange-light">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ชื่องานวิจัย</th>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ผู้วิจัย</th>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">หมวดหมู่</th>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ปี</th>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ระดับ</th>
+                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">การดำเนินการ</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</td>
+                            <td class="px-6 py-4">นายธนวิชญ์ จันทร์โชติ</td>
+                            <td class="px-6 py-4">สำรวจ</td>
+                            <td class="px-6 py-4">2568</td>
+                            <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับชาติ</span></td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-600 hover:text-blue-800 mr-2">ดู</button>
+                                <button class="text-orange-primary hover:text-orange-700">ดาวน์โหลด</button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"><span class="bg-white-100 text-blue-800 px-2 py-1 rounded text-xs"></span></td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
+                                <button class="text-orange-primary hover:text-orange-700"></button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"><span class="bg-white-100 text-green-800 px-2 py-1 rounded text-xs"></span></td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
+                                <button class="text-orange-primary hover:text-orange-700"></button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"><span class="bg-white-100 text-yellow-800 px-2 py-1 rounded text-xs"></span></td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
+                                <button class="text-orange-primary hover:text-orange-700"></button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"></td>
+                            <td class="px-6 py-4"><span class="bg-white-100 text-green-800 px-2 py-1 rounded text-xs"></span></td>
+                            <td class="px-6 py-4">
+                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
+                                <button class="text-orange-primary hover:text-orange-700"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+
+    <!-- Contact Section -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">ติดต่อเรา</h2>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">ส่งข้อความถึงเรา</h3>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">อีเมล</label>
+                            <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">หัวข้อ</label>
+                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 mb-2">ข้อความ</label>
+                            <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary"></textarea>
+                        </div>
+                        <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ส่งข้อความ</button>
+                    </form>
+                </div>
+
+                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-semibold mb-4">ข้อมูลการติดต่อ</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-orange-light p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">ที่อยู่</h4>
+                                <p class="text-gray-600">37 หมู่ 3 ต.บ้านเก่า อ.พานทอง จ.ชลบุรี 20160</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="bg-orange-light p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">อีเมล</h4>
+                                <p class="text-gray-600">l3k@pume.com</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="bg-orange-light p-3 rounded-full mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">โทรศัพท์</h4>
+                                <p class="text-gray-600">053-123456</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-gray-800 mb-3">ติดตามเรา</h4>
+                            <div class="flex space-x-4">
+                                <a href="#" class="bg-orange-light p-3 rounded-full text-orange-primary hover:bg-orange-primary hover:text-white transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                                    </svg>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-primary rounded-full p-2 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold">SBTVC <span class="text-orange-primary">Online Research</span></h2>
+                    </div>
+                    <p class="text-gray-400 mb-4">แหล่งรวมงานวิจัยคุณภาพเพื่อการพัฒนาประเทศไทย</p>
+                    <p class="text-gray-400">© 2023 SBTVC Online Research. สงวนลิขสิทธิ์</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">เมนูหลัก</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">หน้าหลัก</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">หมวดหมู่</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">เกี่ยวกับเรา</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">ติดต่อ</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">หมวดหมู่</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">สำรวจ</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">ทฤษฤี</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">ทดลอง</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">ประดิษฐ์</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">ช่วยเหลือ</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">คำถามที่พบบ่อย</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">นโยบายความเป็นส่วนตัว</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">เงื่อนไขการใช้งาน</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">วิธีการใช้งาน</a></li>
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">ติดต่อสนับสนุน</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-center mb-6">เข้าสู่ระบบ</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="login-email" class="block text-gray-700 mb-2">อีเมล</label>
+                    <input type="email" id="login-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
+                </div>
+                <div class="mb-6">
+                    <label for="login-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
+                </div>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <input type="checkbox" id="remember" class="mr-2">
+                        <label for="remember" class="text-gray-700">จดจำฉัน</label>
+                    </div>
+                    <a href="#" class="text-orange-primary hover:underline">ลืมรหัสผ่าน?</a>
+                </div>
+                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">เข้าสู่ระบบ</button>
+            </form>
+            <div class="mt-4 text-center">
+                <p class="text-gray-700">ยังไม่มีบัญชี? <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-orange-primary hover:underline">สมัครสมาชิก</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+            <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 class="text-2xl font-bold text-center mb-6">สมัครสมาชิก</h2>
+            <form id="registerForm">
+                <div class="mb-4">
+                    <label for="fullname" class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+                    <input type="text" id="fullname" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ชื่อ-นามสกุลของคุณ" required>
+                </div>
+                <div class="mb-4">
+                    <label for="register-email" class="block text-gray-700 mb-2">อีเมล</label>
+                    <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
+                </div>
+                <div class="mb-4">
+                    <label for="register-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
+                </div>
+                <div class="mb-6">
+                    <label for="confirm-password" class="block text-gray-700 mb-2">ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ยืนยันรหัสผ่านของคุณ" required>
+                </div>
+                <div class="flex items-center mb-6">
+                    <input type="checkbox" id="terms" class="mr-2" required>
+                    <label for="terms" class="text-gray-700">ฉันยอมรับ <a href="#" class="text-orange-primary hover:underline">ข้อกำหนดและเงื่อนไข</a></label>
+                </div>
+                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
+            </form>
+            <div class="mt-4 text-center">
+                <p class="text-gray-700">มีบัญชีอยู่แล้ว? <a href="#" onclick="switchModal('registerModal', 'loginModal')" class="text-orange-primary hover:underline">เข้าสู่ระบบ</a></p>
+            </div>
+        </div>
+    </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        checkLoginStatus();
+
+        document.getElementById('menuButton')?.addEventListener('click', function () {
+            document.getElementById('mobileMenu')?.classList.toggle('hidden');
+        });
+
+        document.getElementById('menuButtonLoggedIn')?.addEventListener('click', function () {
+            document.getElementById('mobileMenu')?.classList.toggle('hidden');
+        });
+
+        document.getElementById('registerForm')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fullname = document.getElementById('fullname').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+
+            if (password !== confirmPassword) {
+                showToast('รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(user => user.email === email)) {
+                showToast('อีเมลนี้มีผู้ใช้งานแล้ว กรุณาใช้อีเมลอื่น', 'error');
+                return;
+            }
+
+            const newUser = { fullname, email, password, registeredAt: new Date().toISOString() };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            showToast('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
+            closeModal('registerModal');
+            openModal('loginModal');
+        });
+
+        document.getElementById('loginForm')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                sessionStorage.setItem('currentUser', JSON.stringify({
+                    fullname: user.fullname,
+                    email: user.email,
+                    loggedInAt: new Date().toISOString()
+                }));
+
+                updateUIForLoggedInUser(user);
+                closeModal('loginModal');
+                showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + user.fullname);
+            } else {
+                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+            }
+        });
+    });
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.className = `toast ${type}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function logout() {More actions
+        sessionStorage.removeItem('currentUser');
+        updateUIForLoggedOutUser();
+        showToast('ออกจากระบบสำเร็จ');
+    }
+
+    function checkLoginStatus() {
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+        if (currentUser) {
+            updateUIForLoggedInUser(currentUser);
+        }
+    }
+
+    function updateUIForLoggedInUser(user) {
+        document.getElementById('auth-buttons')?.classList.add('hidden');
+        document.getElementById('user-profile')?.classList.remove('hidden');
+        document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
+        document.getElementById('fullname-display').textContent = user.fullname;
+        document.getElementById('email-display').textContent = user.email;
+        document.getElementById('mobile-user-menu')?.classList.remove('hidden');
+        document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
+    }
+
+    function updateUIForLoggedOutUser() {
+        document.getElementById('auth-buttons')?.classList.remove('hidden');
+        document.getElementById('user-profile')?.classList.add('hidden');
+        document.getElementById('mobile-user-menu')?.classList.add('hidden');
+    }
+
+    function openModal(modalId) {
+        document.getElementById(modalId)?.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId)?.classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    function switchModal(closeModalId, openModalId) {
+        closeModal(closeModalId);
+        openModal(openModalId);
+    }
+
+    window.addEventListener('click', function (event) {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(function (modal) {
+            if (event.target === modal) {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        });
+    });
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+        
