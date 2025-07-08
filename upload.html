@@ -172,7 +172,7 @@
       <div class="mb-8">
         <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
         <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="research-file-upload" class="hidden" multiple accept=".pdf,.doc,.docx">
+          <input type="file" id="research-file-upload" class="hidden" multiple accept="jpg,.pdf,.doc,.docx">
           <div>
             <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
           </div>
@@ -196,8 +196,8 @@
 <script>
   // **Cloudinary Configuration** (เปลี่ยนเป็น Cloud name และ Upload preset ของคุณ)
   const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <--- **แก้ไข: เปลี่ยนเป็น Cloud name ของคุณ**
-  const CLOUDINARY_COVER_UPLOAD_PRESET = 'your_cover_image_preset_name'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับรูปภาพปก**
-  const CLOUDINARY_FILE_UPLOAD_PRESET = 'your_document_preset_name'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับไฟล์เอกสาร**
+  const CLOUDINARY_COVER_UPLOAD_PRESET = 'STVC_preset'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับรูปภาพปก**
+  const CLOUDINARY_FILE_UPLOAD_PRESET = 'STVC_preset'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับไฟล์เอกสาร**
 
   // Select Category (unchanged)
   const categoryItems = document.querySelectorAll('.category-item');
