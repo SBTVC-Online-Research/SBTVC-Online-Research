@@ -460,91 +460,117 @@
 
 
 
-    <!-- Contact Section -->
-    <section class="py-12 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">ติดต่อเรา</h2>
+   <!-- Contact Section -->
+<section class="py-12 bg-gray-50">
+  <div class="container mx-auto px-4">
+    <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">ติดต่อเรา</h2>
 
-            <div class="flex flex-col md:flex-row gap-8">
-                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-xl font-semibold mb-4">ส่งข้อความถึงเรา</h3>
-                    <form>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">อีเมล</label>
-                            <input type="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">หัวข้อ</label>
-                            <input type="text" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                        </div>
-                        <div class="mb-4">
-                            <label class="block text-gray-700 mb-2">ข้อความ</label>
-                            <textarea rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary"></textarea>
-                        </div>
-                        <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ส่งข้อความ</button>
-                    </form>
-                </div>
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- ฟอร์มส่งข้อความ -->
+      <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-semibold mb-4">ส่งข้อความถึงเรา</h3>
+        <form id="contactForm">
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
+            <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">อีเมล</label>
+            <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">หัวข้อ</label>
+            <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">ข้อความ</label>
+            <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary"></textarea>
+          </div>
+          <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover:bg-orange-dark transition">ส่งข้อความ</button>
+        </form>
+      </div>
 
-                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
-                    <h3 class="text-xl font-semibold mb-4">ข้อมูลการติดต่อ</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-start">
-                            <div class="bg-orange-light p-3 rounded-full mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">ที่อยู่</h4>
-                                <p class="text-gray-600">37 หมู่ 3 ต.บ้านเก่า อ.พานทอง จ.ชลบุรี 20160</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start">
-                            <div class="bg-orange-light p-3 rounded-full mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">อีเมล</h4>
-                                <p class="text-gray-600">-</p>
-                            </div>
-                        </div>
-
-                        <div class="flex items-start">
-                            <div class="bg-orange-light p-3 rounded-full mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h4 class="font-semibold text-gray-800">โทรศัพท์</h4>
-                                <p class="text-gray-600">038 447 241</p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6">
-                            <h4 class="font-semibold text-gray-800 mb-3">ติดตามเรา</h4>
-                            <div class="flex space-x-4">
-                                <a href="https://www.facebook.com/sbtvc/?locale=th_TH" class="bg-orange-light p-3 rounded-full text-orange-primary hover:bg-orange-primary hover:text-white transition">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                                    </svg>
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
+      <!-- ข้อมูลการติดต่อ -->
+      <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-xl font-semibold mb-4">ข้อมูลการติดต่อ</h3>
+        <div class="space-y-4">
+          <div class="flex items-start">
+            <div class="bg-orange-light p-3 rounded-full mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
             </div>
+            <div>
+              <h4 class="font-semibold text-gray-800">ที่อยู่</h4>
+              <p class="text-gray-600">37 หมู่ 3 ต.บ้านเก่า อ.พานทอง จ.ชลบุรี 20160</p>
+            </div>
+          </div>
+
+          <div class="flex items-start">
+            <div class="bg-orange-light p-3 rounded-full mr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-800">โทรศัพท์</h4>
+              <p class="text-gray-600">038 447 241</p>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h4 class="font-semibold text-gray-800 mb-3">ติดตามเรา</h4>
+            <div class="flex space-x-4">
+              <a href="https://web.facebook.com/sbtvc/?_rdc=1&_rdr" class="bg-orange-light p-3 rounded-full text-orange-primary hover:bg-orange-primary hover:text-white transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
+                </svg>
+              </a>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JavaScript ส่วนส่งข้อมูล -->
+<script>
+  const form = document.getElementById('contactForm');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const data = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      subject: document.getElementById('subject').value,
+      message: document.getElementById('message').value,
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbzdqEVtcDSHYhjBMQoyyYq7vyyuSlUpfjqEnK1afNblAjllz1f6Lm7vGuSqOyEhppXN0w/exec', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.result === 'success') {
+        alert('ส่งข้อความเรียบร้อยแล้ว ขอบคุณครับ!');
+        form.reset();
+      } else {
+        alert('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      }
+    })
+    .catch((err) => {
+      alert('เกิดข้อผิดพลาดในการเชื่อมต่อ');
+      console.error(err);
+    });
+  });
+</script>
 
 
     <!-- Footer -->
