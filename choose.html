@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Review System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+        }
+        .image-card {
+            transition: all 0.3s ease;
+        }
+        .image-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .correct-selected {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+        .incorrect-selected {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .checkbox-correct:checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+        .checkbox-incorrect:checked {
+            background-color: #ef4444;
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบรูปภาพ</h1>
+            <p class="text-gray-600 text-lg">เลือกรูปภาพที่ถูกต้องหรือผิด</p>
+        </div>
+
+        <!-- Cloudinary URL Input -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary</h2>
+            <div class="flex gap-3">
+                <input 
+                    type="url" 
+                    id="cloudinaryUrl" 
+                    placeholder="ใส่ URL รูปภาพจาก Cloudinary..." 
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
+                <button 
+                    onclick="addImage()" 
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+                >
+                    เพิ่มรูป
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-4xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-4 text-center">
+                <div class="text-2xl font-bold text-gray-800" id="totalCount">0</div>
+                <div class="text-gray-600">รูปทั้งหมด</div>
+            </div>
+            <div class="bg-green-50 rounded-lg shadow-md p-4 text-center">
+                <div class="text-2xl font-bold text-green-600" id="correctCount">0</div>
+                <div class="text-green-700">ถูกต้อง</div>
+            </div>
+            <div class="bg-red-50 rounded-lg shadow-md p-4 text-center">
+                <div class="text-2xl font-bold text-red-600" id="incorrectCount">0</div>
+                <div class="text-red-700">ผิด</div>
+            </div>
+        </div>
+
+        <!-- Images Grid -->
+        <div id="imagesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <!-- Sample images will be added here -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="text-center mt-8 space-x-4">
+            <button 
+                onclick="clearAll()" 
+                class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+            >
+                ล้างทั้งหมด
+            </button>
+            <button 
+                onclick="exportResults()" 
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+            >
+                ส่งออกผลลัพธ์
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let images = [];
+        let imageCounter = 0;
+
+        // Sample Cloudinary images for demonstration
+        const sampleImages = [
+            'https://res.cloudinary.com/demo/image/upload/sample.jpg',
+            'https://res.cloudinary.com/demo/image/upload/w_400/sample.jpg',
+            'https://res.cloudinary.com/demo/image/upload/c_fill,h_400,w_400/sample.jpg'
+        ];
+
+        // Initialize with sample images
+        function initializeSampleImages() {
+            sampleImages.forEach(url => {
+                addImageToGrid(url);
+            });
+        }
+
+        function addImage() {
+            const urlInput = document.getElementById('cloudinaryUrl');
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                alert('กรุณาใส่ URL รูปภาพ');
+                return;
+            }
+
+            if (!isValidCloudinaryUrl(url)) {
+                alert('กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary');
+                return;
+            }
+
+            addImageToGrid(url);
+            urlInput.value = '';
+        }
+
+        function isValidCloudinaryUrl(url) {
+            return url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
+        }
+
+        function addImageToGrid(imageUrl) {
+            const imageId = ++imageCounter;
+            const imageData = {
+                id: imageId,
+                url: imageUrl,
+                status: 'pending' // pending, correct, incorrect
+            };
+            
+            images.push(imageData);
+            
+            const grid = document.getElementById('imagesGrid');
+            const imageCard = createImageCard(imageData);
+            grid.appendChild(imageCard);
+            
+            updateStatistics();
+        }
+
+        function createImageCard(imageData) {
+            const card = document.createElement('div');
+            card.className = 'image-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
+            card.id = `image-${imageData.id}`;
+            
+            card.innerHTML = `
+                <div class="relative">
+                    <img 
+                        src="${imageData.url}" 
+                        alt="Image ${imageData.id}"
+                        class="w-full h-64 object-cover"
+                        onerror="handleImageError(this)"
+                    >
+                    <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
+                        #${imageData.id}
+                    </div>
+                </div>
+                <div class="p-4">
+                    <div class="flex justify-center space-x-6">
+                        <label class="flex items-center cursor-pointer group">
+                            <input 
+                                type="radio" 
+                                name="status-${imageData.id}" 
+                                value="correct"
+                                class="checkbox-correct w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
+                                onchange="updateImageStatus(${imageData.id}, 'correct')"
+                            >
+                            <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ ถูกต้อง</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer group">
+                            <input 
+                                type="radio" 
+                                name="status-${imageData.id}" 
+                                value="incorrect"
+                                class="checkbox-incorrect w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
+                                onchange="updateImageStatus(${imageData.id}, 'incorrect')"
+                            >
+                            <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ผิด</span>
+                        </label>
+                    </div>
+                    <button 
+                        onclick="removeImage(${imageData.id})"
+                        class="w-full mt-3 text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
+                    >
+                        ลบรูปภาพ
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function handleImageError(img) {
+            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTUwTDE3MCA4MEwyMzAgODBMMjAwIDE1MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIxODAiIHk9IjEzMCI+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjIwIiBmaWxsPSIjRUY0NDQ0Ii8+CjxwYXRoIGQ9Ik0yNiAxNEwxNCAyNk0xNCAyNkwyNiAxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHN2Zz4KPHRleHQgeD0iMjAwIiB5PSIyMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2QjcyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+ไม่สามารถโหลดรูปภาพได้PC90ZXh0Pgo8L3N2Zz4K';
+            img.parentElement.parentElement.classList.add('border-red-300', 'bg-red-50');
+        }
+
+        function updateImageStatus(imageId, status) {
+            const imageIndex = images.findIndex(img => img.id === imageId);
+            if (imageIndex !== -1) {
+                images[imageIndex].status = status;
+                
+                const card = document.getElementById(`image-${imageId}`);
+                card.classList.remove('correct-selected', 'incorrect-selected');
+                
+                if (status === 'correct') {
+                    card.classList.add('correct-selected');
+                } else if (status === 'incorrect') {
+                    card.classList.add('incorrect-selected');
+                }
+                
+                updateStatistics();
+            }
+        }
+
+        function removeImage(imageId) {
+            const imageIndex = images.findIndex(img => img.id === imageId);
+            if (imageIndex !== -1) {
+                images.splice(imageIndex, 1);
+                const card = document.getElementById(`image-${imageId}`);
+                card.remove();
+                updateStatistics();
+            }
+        }
+
+        function updateStatistics() {
+            const total = images.length;
+            const correct = images.filter(img => img.status === 'correct').length;
+            const incorrect = images.filter(img => img.status === 'incorrect').length;
+            
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = incorrect;
+        }
+
+        function clearAll() {
+            if (confirm('คุณต้องการลบรูปภาพทั้งหมดหรือไม่?')) {
+                images = [];
+                document.getElementById('imagesGrid').innerHTML = '';
+                updateStatistics();
+            }
+        }
+
+        function exportResults() {
+            if (images.length === 0) {
+                alert('ไม่มีรูปภาพให้ส่งออก');
+                return;
+            }
+            
+            const results = {
+                timestamp: new Date().toISOString(),
+                total: images.length,
+                correct: images.filter(img => img.status === 'correct').length,
+                incorrect: images.filter(img => img.status === 'incorrect').length,
+                pending: images.filter(img => img.status === 'pending').length,
+                images: images.map(img => ({
+                    id: img.id,
+                    url: img.url,
+                    status: img.status
+                }))
+            };
+            
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `image-review-results-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+        }
+
+        // Allow Enter key to add image
+        document.getElementById('cloudinaryUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addImage();
+            }
+        });
+
+        // Initialize the app
+        initializeSampleImages();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95bd9ef4356299a6',t:'MTc1MTk1NzE0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
