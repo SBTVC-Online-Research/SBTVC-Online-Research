@@ -172,7 +172,7 @@
       <div class="mb-8">
         <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
         <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="research-file-upload" class="hidden" multiple accept="jpg,.pdf,.doc,.docx">
+          <input type="file" id="research-file-upload" class="hidden" multiple accept=".pdf,.doc,.docx">
           <div>
             <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
           </div>
@@ -194,12 +194,12 @@
 </main>
 
 <script>
-  // **Cloudinary Configuration** (เปลี่ยนเป็น Cloud name และ Upload preset ของคุณ)
-  const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <--- **แก้ไข: เปลี่ยนเป็น Cloud name ของคุณ**
-  const CLOUDINARY_COVER_UPLOAD_PRESET = 'STVC_preset'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับรูปภาพปก**
-  const CLOUDINARY_FILE_UPLOAD_PRESET = 'STVC_preset'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับไฟล์เอกสาร**
+  // **Cloudinary Configuration** // ตรวจสอบให้แน่ใจว่าค่าเหล่านี้ถูกต้องและ Unsigned Upload Presets ถูกสร้างไว้ใน Cloudinary แล้ว
+  const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- Cloud name ของคุณ
+  const CLOUDINARY_COVER_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพปก
+  const CLOUDINARY_FILE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับไฟล์เอกสาร
 
-  // Select Category (unchanged)
+  // Select Category
   const categoryItems = document.querySelectorAll('.category-item');
   const selectedCategoryInput = document.getElementById('selected-category');
 
@@ -211,7 +211,7 @@
     });
   });
 
-  // Add/Remove Authors (unchanged)
+  // Add/Remove Authors
   const authorsContainer = document.getElementById('authors-container');
   authorsContainer.addEventListener('click', e => {
     if(e.target.classList.contains('add-author')) {
@@ -228,7 +228,7 @@
     }
   });
 
-  // Message Display Functions (New/Improved)
+  // Message Display Functions
   const formMessage = document.getElementById('form-message');
   function showFormMessage(msg, type) {
       formMessage.textContent = msg;
@@ -250,7 +250,7 @@
       fileUploadMessage.classList.remove('hidden');
   }
 
-  // --- Handle Cover Image Upload to Cloudinary (New Logic) ---
+  // --- Handle Cover Image Upload to Cloudinary ---
   const coverImageUploadBox = document.querySelector('#cover-image-upload').parentElement;
   const coverImageInput = document.getElementById('cover-image-upload');
   const coverImagePreview = document.getElementById('cover-image-preview');
@@ -313,7 +313,7 @@
   });
 
 
-  // --- Handle Research File Upload to Cloudinary (Improved Logic) ---
+  // --- Handle Research File Upload to Cloudinary ---
   const researchFileUploadBox = document.querySelector('#research-file-upload').parentElement;
   const researchFileInput = document.getElementById('research-file-upload');
   const researchFileListDiv = document.getElementById('research-file-list');
@@ -368,7 +368,6 @@
           fileDiv.textContent = `❌ ${file.name} - อัปโหลดล้มเหลว: ${data.error.message || 'ไม่ทราบข้อผิดพลาด'}`;
           fileDiv.classList.remove('text-gray-700');
           fileDiv.classList.add('text-red-700');
-          // If any file fails, stop the process or handle as needed
           showFileUploadMessage('มีบางไฟล์อัปโหลดล้มเหลว', 'error');
           researchFileInput.disabled = false;
           return; // Stop processing further files if one fails
@@ -390,7 +389,7 @@
   });
 
 
-  // Cancel button (Improved)
+  // Cancel button
   document.getElementById('cancel-btn').addEventListener('click', () => {
     if(confirm('ต้องการยกเลิกและล้างข้อมูลทั้งหมดหรือไม่?')) {
       document.getElementById('research-form').reset();
@@ -417,11 +416,11 @@
     }
   });
 
-  // Form Submission (Improved)
+  // Form Submission Logic: Send data to display_research_info.html via URL parameters
   document.getElementById('research-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Basic form validation for required fields (unchanged)
+    // Basic form validation for required fields
     if (!selectedCategoryInput.value) {
       showFormMessage('กรุณาเลือกหมวดหมู่ผลงานวิจัย', 'error');
       return;
@@ -475,7 +474,7 @@
       return;
     }
 
-    showFormMessage('กำลังส่งข้อมูล... กรุณารอสักครู่', 'info');
+    showFormMessage('กำลังเตรียมข้อมูล... กรุณารอสักครู่', 'info');
     document.getElementById('submit-btn').disabled = true; // Disable submit button
 
     // Collect all form data including Cloudinary URLs
@@ -493,37 +492,22 @@
       researchFileUrls: researchFileUrls, // Array of URLs for research files from Cloudinary
     };
 
-    // --- Simulation of Sending Data to a Backend (No actual Backend call in this version) ---
-    // In a real application, you would use fetch() to send this data to your actual backend server.
-    // Example:
-    // try {
-    //     const response = await fetch('http://your-backend-api.com/submit-research', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(formDataToSend)
-    //     });
-    //     const result = await response.json();
-    //     if (response.ok && result.success) {
-    //         showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว!', 'success');
-    //         // Then reset form
-    //     } else {
-    //         showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
-    //     }
-    // } catch (error) {
-    //     console.error('Error submitting research:', error);
-    //     showFormMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
-    // } finally {
-    //     document.getElementById('submit-btn').disabled = false;
-    // }
+    // --- Prepare data for URL parameters ---
+    const params = new URLSearchParams();
+    for (const key in formDataToSend) {
+        if (Array.isArray(formDataToSend[key])) {
+            // Stringify arrays to JSON string to pass in URL
+            params.append(key, JSON.stringify(formDataToSend[key]));
+        } else {
+            params.append(key, formDataToSend[key]);
+        }
+    }
 
-    // Simulate success for this example
-    console.log('--- Data ready to be sent to Backend (Check Console Log) ---');
-    console.log(formDataToSend);
-    showFormMessage('ข้อมูลถูกเตรียมพร้อมและแสดงใน Console Log แล้ว! (จำลองการส่งข้อมูล)', 'success');
+    // Redirect to the display page with parameters
+    window.location.href = `display_research_info.html?${params.toString()}`;
 
-    // Reset form after successful submission (or simulated success)
+    // Note: Since we are redirecting, the code below this will not execute immediately.
+    // However, including reset here for completeness if you change navigation method.
     document.getElementById('research-form').reset();
     categoryItems.forEach(i => i.classList.remove('selected'));
     selectedCategoryInput.value = '';
@@ -541,7 +525,7 @@
     
     showImageUploadMessage('', 'hidden');
     showFileUploadMessage('', 'hidden');
-    document.getElementById('submit-btn').disabled = false; // Re-enable submit button
+    document.getElementById('submit-btn').disabled = false; // Re-enable submit button (though page will redirect)
   });
 </script>
 
