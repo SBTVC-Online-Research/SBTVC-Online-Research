@@ -88,7 +88,6 @@
 
 <script>
   // **Cloudinary Configuration** //
-  // ตรวจสอบให้แน่ใจว่าค่าเหล่านี้ถูกต้องและ Unsigned Upload Preset ถูกสร้างไว้ใน Cloudinary แล้ว
   const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- Cloud name ของคุณ
   const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพ
 
@@ -189,7 +188,7 @@
     }
   });
 
-  // --- Form Submission Logic: Display success message on the same page ---
+  // --- Form Submission Logic: Save to localStorage ---
   uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -204,9 +203,22 @@
       return;
     }
 
-    // This is where you would typically send data to a backend server.
-    // For this example, we'll just simulate a successful submission by displaying a message.
-    showMessage(formMessage, 'ข้อมูลและรูปภาพของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ', 'success');
+    // Prepare data to save
+    const newImageEntry = {
+        username: usernameInput.value.trim(),
+        imageUrl: uploadedImageUrlInput.value,
+        timestamp: new Date().toISOString(),
+        status: 'pending' // Default status for new uploads
+    };
+
+    // Get existing data from localStorage or initialize an empty array
+    let existingImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+    existingImages.push(newImageEntry);
+
+    // Save updated data back to localStorage
+    localStorage.setItem('uploadedImages', JSON.stringify(existingImages));
+
+    showMessage(formMessage, 'ข้อมูลและรูปภาพของคุณถูกบันทึกเรียบร้อยแล้ว!', 'success');
     submitBtn.disabled = true; // Disable the button after successful submission
 
     // Optional: Reset form after a short delay
