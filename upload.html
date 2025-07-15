@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ระบบอัปโหลดผลงานวิจัย</title>
+  <title>อัปโหลดรูปโปรไฟล์</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -11,24 +11,13 @@
       font-family: 'Sarabun', sans-serif;
       background-color: #f0f4f8;
     }
-    .upload-box-file {
-      border: 2px dashed hsl(27, 93%, 49%);
+    .upload-box {
+      border: 2px dashed #9CA3AF; /* gray-400 */
       transition: all 0.3s ease;
     }
-    .upload-box-file:hover {
-      border-color: #db7c0ed5;
-      background-color: rgba(231, 134, 23, 0.89);
-    }
-    .category-item {
-      transition: all 0.2s ease;
-    }
-    .category-item:hover {
-      transform: translateY(-2px);
-    }
-    .category-item.selected {
-      border-color: #d47a13;
-      background-color: rgb(233, 55, 11);
-      color: white;
+    .upload-box:hover {
+      border-color: #4F46E5; /* indigo-600 */
+      background-color: #EEF2FF; /* indigo-50 */
     }
     /* Styles for message boxes */
     .message {
@@ -54,237 +43,110 @@
 </head>
 <body>
 
-<header class="bg-gradient-to-r from-orange-600 to-indigo-700 text-white py-6 shadow-lg">
+<header class="bg-gradient-to-r from-indigo-600 to-blue-700 text-white py-6 shadow-lg">
   <div class="container mx-auto px-4">
-    <h1 class="text-3xl font-bold">ระบบอัปโหลดผลงานวิจัย</h1>
-    <p class="mt-2 text-orange-100">อัปโหลดและจัดการผลงานวิจัยของคุณได้อย่างง่ายดาย</p>
+    <h1 class="text-3xl font-bold">ระบบอัปโหลดรูปโปรไฟล์</h1>
+    <p class="mt-2 text-indigo-100">กรอกข้อมูลและอัปโหลดรูปภาพของคุณ</p>
   </div>
 </header>
 
 <main class="container mx-auto px-4 py-8">
-  <div class="flex justify-end mb-4">
-    <a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      ← กลับหน้าหลัก
-    </a>
-  </div>
-
-  <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">อัปโหลดผลงานวิจัยใหม่</h2>
-    <form id="research-form">
+  <div class="bg-white rounded-lg shadow-lg p-6 md:p-8 max-w-2xl mx-auto">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-6">กรอกข้อมูลผู้ใช้และอัปโหลดรูป</h2>
+    <form id="upload-form">
       <div class="mb-6">
-        <label for="title" class="block text-gray-700 font-medium mb-2">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
-        <input type="text" id="title" name="title" class="w-full px-4 py-2 border rounded-lg focus:ring-orange-500 focus:border-orange-500 outline-none" required>
-      </div>
-
-      <div class="mb-6">
-        <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="survey">สำรวจ</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="theory">ทฤษฎี</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="experiment">ทดลอง</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="invention">ประดิษฐ์</div>
-        </div>
-        <input type="hidden" id="selected-category" name="category" required>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label for="department" class="block text-gray-700 font-medium mb-2">สาขาวิชา <span class="text-red-500">*</span></label>
-          <select id="department" name="department" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกสาขาวิชา</option>
-            <option value="computer">คอมพิวเตอร์ธุรกิจ</option>
-            <option value="accounting">การบัญชี</option>
-            <option value="marketing">การตลาด</option>
-            <option value="electronics">อิเล็กทรอนิกส์</option>
-            <option value="mechanics">ช่างยนต์</option>
-          </select>
-        </div>
-        <div>
-          <label for="field" class="block text-gray-700 font-medium mb-2">สาขางาน <span class="text-red-500">*</span></label>
-          <select id="field" name="field" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกสาขางาน</option>
-            <option value="programming">การเขียนโปรแกรม</option>
-            <option value="network">เครือข่าย</option>
-            <option value="web-design">การออกแบบเว็บไซต์</option>
-            <option value="multimedia">มัลติมีเดีย</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label for="year" class="block text-gray-700 font-medium mb-2">ชั้นปี <span class="text-red-500">*</span></label>
-          <select id="year" name="year" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกชั้นปี</option>
-            <option>ปวช.1</option><option>ปวช.2</option><option>ปวช.3</option>
-            <option>ปวส.1</option><option>ปวส.2</option>
-          </select>
-        </div>
-        <div>
-          <label for="academic-year" class="block text-gray-700 font-medium mb-2">ปีการศึกษา <span class="text-red-500">*</span></label>
-          <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกปีการศึกษา</option>
-            <option>2567</option><option>2566</option><option>2565</option><option>2564</option><option>2563</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
-        <div id="authors-container">
-          <div class="author-entry flex items-center gap-4 mb-2">
-            <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500" placeholder="ชื่อ-นามสกุล" required>
-            <button type="button" class="add-author bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600">
-              ＋
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-6">
-        <label for="advisor" class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
-        <input type="text" id="advisor" name="advisor" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-      </div>
-
-      <div class="mb-6">
-        <label for="abstract" class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
-        <textarea id="abstract" name="abstract" rows="4" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required></textarea>
+        <label for="username" class="block text-gray-700 font-medium mb-2">ชื่อผู้ใช้ <span class="text-red-500">*</span></label>
+        <input type="text" id="username" name="username" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none" required>
       </div>
 
       <div class="mb-8">
-        <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพปกผลงาน (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
-        <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="cover-image-upload" class="hidden" accept="image/*">
+        <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปโปรไฟล์ (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
+        <div class="upload-box bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+          <input type="file" id="profile-image-upload" class="hidden" accept="image/*">
           <div>
-            <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+            <svg class="h-12 w-12 mx-auto text-blue-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
           </div>
           <p class="font-medium text-gray-700">ลากรูปภาพหรือคลิกเพื่อเลือก</p>
           <p class="text-sm text-gray-500">รองรับ: JPG, PNG, GIF (สูงสุด 5MB/ไฟล์)</p>
         </div>
-        <div id="cover-image-preview" class="mt-4 text-center hidden">
-            <img id="uploaded-image-display" src="" alt="รูปภาพปก" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
+        <div id="image-preview" class="mt-4 text-center hidden">
+            <img id="uploaded-image-display" src="" alt="รูปโปรไฟล์" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
             <p id="image-url-display" class="text-sm text-blue-600 truncate"></p>
         </div>
-        <input type="hidden" id="uploaded-cover-image-url" name="coverImageUrl">
+        <input type="hidden" id="uploaded-image-url" name="imageUrl">
         <div id="image-upload-message" class="message hidden"></div>
       </div>
 
-      <div class="mb-8">
-        <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
-        <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="research-file-upload" class="hidden" multiple accept=".pdf,.doc,.docx">
-          <div>
-            <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
-          </div>
-          <p class="font-medium text-gray-700">ลากไฟล์หรือคลิกเพื่อเลือก</p>
-          <p class="text-sm text-gray-500">รองรับ: PDF, DOC, DOCX (สูงสุด 10MB/ไฟล์)</p>
-        </div>
-        <div id="research-file-list" class="mt-4 space-y-2"></div>
-        <input type="hidden" id="uploaded-research-files-url" name="researchFileUrls">
-        <div id="file-upload-message" class="message hidden"></div>
-      </div>
-
       <div id="form-message" class="message hidden"></div>
-      <div class="flex justify-end">
-        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4">ยกเลิก</button>
-        <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">อัปโหลด</button>
+      <div class="flex justify-end space-x-4">
+        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">ยกเลิก</button>
+        <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">ส่งข้อมูล</button>
       </div>
     </form>
   </div>
 </main>
 
 <script>
-  // **Cloudinary Configuration** (เปลี่ยนเป็น Cloud name และ Upload preset ของคุณ)
-  const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <--- **แก้ไข: เปลี่ยนเป็น Cloud name ของคุณ**
-  const CLOUDINARY_COVER_UPLOAD_PRESET = 'your_cover_image_preset_name'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับรูปภาพปก**
-  const CLOUDINARY_FILE_UPLOAD_PRESET = 'your_document_preset_name'; // <--- **แก้ไข: เปลี่ยนเป็นชื่อ Unsigned preset สำหรับไฟล์เอกสาร**
+  // **Cloudinary Configuration** //
+  // ตรวจสอบให้แน่ใจว่าค่าเหล่านี้ถูกต้องและ Unsigned Upload Preset ถูกสร้างไว้ใน Cloudinary แล้ว
+  const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- Cloud name ของคุณ
+  const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพ
 
-  // Select Category (unchanged)
-  const categoryItems = document.querySelectorAll('.category-item');
-  const selectedCategoryInput = document.getElementById('selected-category');
-
-  categoryItems.forEach(item => {
-    item.addEventListener('click', () => {
-      categoryItems.forEach(i => i.classList.remove('selected'));
-      item.classList.add('selected');
-      selectedCategoryInput.value = item.dataset.category;
-    });
-  });
-
-  // Add/Remove Authors (unchanged)
-  const authorsContainer = document.getElementById('authors-container');
-  authorsContainer.addEventListener('click', e => {
-    if(e.target.classList.contains('add-author')) {
-      const newAuthorDiv = document.createElement('div');
-      newAuthorDiv.className = 'author-entry flex items-center gap-4 mb-2';
-      newAuthorDiv.innerHTML = `
-        <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500" placeholder="ชื่อ-นามสกุล" required>
-        <button type="button" class="remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600">－</button>
-      `;
-      authorsContainer.appendChild(newAuthorDiv);
-    }
-    if(e.target.classList.contains('remove-author')) {
-      e.target.parentElement.remove();
-    }
-  });
-
-  // Message Display Functions (New/Improved)
-  const formMessage = document.getElementById('form-message');
-  function showFormMessage(msg, type) {
-      formMessage.textContent = msg;
-      formMessage.className = `message ${type}`;
-      formMessage.classList.remove('hidden');
-  }
-
-  const imageUploadMessage = document.getElementById('image-upload-message');
-  function showImageUploadMessage(msg, type) {
-      imageUploadMessage.textContent = msg;
-      imageUploadMessage.className = `message ${type}`;
-      imageUploadMessage.classList.remove('hidden');
-  }
-
-  const fileUploadMessage = document.getElementById('file-upload-message');
-  function showFileUploadMessage(msg, type) {
-      fileUploadMessage.textContent = msg;
-      fileUploadMessage.className = `message ${type}`;
-      fileUploadMessage.classList.remove('hidden');
-  }
-
-  // --- Handle Cover Image Upload to Cloudinary (New Logic) ---
-  const coverImageUploadBox = document.querySelector('#cover-image-upload').parentElement;
-  const coverImageInput = document.getElementById('cover-image-upload');
-  const coverImagePreview = document.getElementById('cover-image-preview');
+  // DOM Elements
+  const uploadForm = document.getElementById('upload-form');
+  const usernameInput = document.getElementById('username');
+  const profileImageUploadBox = document.querySelector('#profile-image-upload').parentElement;
+  const profileImageInput = document.getElementById('profile-image-upload');
+  const imagePreviewDiv = document.getElementById('image-preview');
   const uploadedImageDisplay = document.getElementById('uploaded-image-display');
   const imageUrlDisplay = document.getElementById('image-url-display');
-  const uploadedCoverImageUrlInput = document.getElementById('uploaded-cover-image-url'); // Hidden input to store URL
+  const uploadedImageUrlInput = document.getElementById('uploaded-image-url'); // Hidden input to store URL
+  const formMessage = document.getElementById('form-message');
+  const imageUploadMessage = document.getElementById('image-upload-message');
+  const submitBtn = document.getElementById('submit-btn');
+  const cancelBtn = document.getElementById('cancel-btn');
 
-  coverImageUploadBox.addEventListener('click', () => coverImageInput.click());
+  // --- Message Display Functions ---
+  function showMessage(element, msg, type) {
+      element.textContent = msg;
+      element.className = `message ${type}`;
+      element.classList.remove('hidden');
+  }
 
-  coverImageInput.addEventListener('change', async () => {
-    const file = coverImageInput.files[0];
+  function hideMessage(element) {
+      element.classList.add('hidden');
+      element.textContent = '';
+  }
+
+  // --- Handle Profile Image Upload to Cloudinary ---
+  profileImageUploadBox.addEventListener('click', () => profileImageInput.click());
+
+  profileImageInput.addEventListener('change', async () => {
+    const file = profileImageInput.files[0];
     if (!file) {
-        uploadedCoverImageUrlInput.value = ''; // Clear if no file selected
-        coverImagePreview.classList.add('hidden');
-        showImageUploadMessage('', 'hidden'); // Clear message
+        uploadedImageUrlInput.value = ''; // Clear if no file selected
+        imagePreviewDiv.classList.add('hidden');
+        hideMessage(imageUploadMessage); // Clear message
         return;
     }
 
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
-      showImageUploadMessage('ขนาดรูปภาพต้องไม่เกิน 5MB', 'error');
-      coverImageInput.value = ''; // Clear selected file
-      coverImagePreview.classList.add('hidden');
-      uploadedCoverImageUrlInput.value = '';
+      showMessage(imageUploadMessage, 'ขนาดรูปภาพต้องไม่เกิน 5MB', 'error');
+      profileImageInput.value = ''; // Clear selected file
+      imagePreviewDiv.classList.add('hidden');
+      uploadedImageUrlInput.value = '';
       return;
     }
 
-    showImageUploadMessage('กำลังอัปโหลดรูปภาพ...', 'info');
-    coverImageInput.disabled = true; // Disable input during upload
-    uploadedCoverImageUrlInput.value = ''; // Clear old URL
-    coverImagePreview.classList.add('hidden'); // Hide old preview during upload
+    showMessage(imageUploadMessage, 'กำลังอัปโหลดรูปภาพ...', 'info');
+    profileImageInput.disabled = true; // Disable input during upload
+    submitBtn.disabled = true; // Disable submit button during upload
+    uploadedImageUrlInput.value = ''; // Clear old URL
+    imagePreviewDiv.classList.add('hidden'); // Hide old preview during upload
 
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('upload_preset', CLOUDINARY_COVER_UPLOAD_PRESET);
+    formData.append('upload_preset', CLOUDINARY_IMAGE_UPLOAD_PRESET);
 
     try {
       const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -296,252 +158,75 @@
       if (data.secure_url) {
         uploadedImageDisplay.src = data.secure_url;
         imageUrlDisplay.textContent = data.secure_url;
-        uploadedCoverImageUrlInput.value = data.secure_url; // Store URL in hidden input
-        coverImagePreview.classList.remove('hidden');
-        showImageUploadMessage('อัปโหลดรูปภาพสำเร็จ!', 'success');
+        uploadedImageUrlInput.value = data.secure_url; // Store URL in hidden input
+        imagePreviewDiv.classList.remove('hidden');
+        showMessage(imageUploadMessage, 'อัปโหลดรูปภาพสำเร็จ!', 'success');
       } else {
-        showImageUploadMessage(`อัปโหลดรูปภาพล้มเหลว: ${data.error.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
-        coverImagePreview.classList.add('hidden');
+        showMessage(imageUploadMessage, `อัปโหลดรูปภาพล้มเหลว: ${data.error.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+        imagePreviewDiv.classList.add('hidden');
       }
     } catch (error) {
       console.error('Cloudinary image upload error:', error);
-      showImageUploadMessage('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'error');
-      coverImagePreview.classList.add('hidden');
+      showMessage(imageUploadMessage, 'เกิดข้อผิดพลาดในการอัปโหลดรูปภาพ', 'error');
+      imagePreviewDiv.classList.add('hidden');
     } finally {
-      coverImageInput.disabled = false;
+      profileImageInput.disabled = false;
+      submitBtn.disabled = false;
     }
   });
 
-
-  // --- Handle Research File Upload to Cloudinary (Improved Logic) ---
-  const researchFileUploadBox = document.querySelector('#research-file-upload').parentElement;
-  const researchFileInput = document.getElementById('research-file-upload');
-  const researchFileListDiv = document.getElementById('research-file-list');
-  const uploadedResearchFilesUrlInput = document.getElementById('uploaded-research-files-url'); // Hidden input for file URLs
-
-  researchFileUploadBox.addEventListener('click', () => researchFileInput.click());
-
-  researchFileInput.addEventListener('change', async () => {
-    researchFileListDiv.innerHTML = ''; // Clear previous file list display
-    uploadedResearchFilesUrlInput.value = ''; // Clear old URLs in hidden input
-    const uploadedFileUrls = [];
-
-    if (researchFileInput.files.length === 0) {
-      showFileUploadMessage('กรุณาเลือกไฟล์สำหรับอัปโหลด', 'info');
-      return;
-    }
-
-    showFileUploadMessage('กำลังอัปโหลดไฟล์ผลงานวิจัย...', 'info');
-    researchFileInput.disabled = true; // Disable input during upload
-
-    for (const file of researchFileInput.files) {
-      if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        showFileUploadMessage(`ไฟล์ "${file.name}" มีขนาดเกิน 10MB กรุณาเลือกไฟล์ใหม่`, 'error');
-        researchFileInput.value = ''; // Clear all selected files
-        researchFileListDiv.innerHTML = '';
-        researchFileInput.disabled = false;
-        return;
-      }
-      
-      const fileDiv = document.createElement('div');
-      fileDiv.textContent = `⏳ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) - กำลังอัปโหลด...`;
-      fileDiv.className = 'text-gray-700';
-      researchFileListDiv.appendChild(fileDiv);
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', CLOUDINARY_FILE_UPLOAD_PRESET); // Use preset for document files
-
-      try {
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await response.json();
-
-        if (data.secure_url) {
-          uploadedFileUrls.push(data.secure_url);
-          fileDiv.textContent = `✅ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) - อัปโหลดสำเร็จ`;
-          fileDiv.classList.remove('text-gray-700');
-          fileDiv.classList.add('text-green-700');
-        } else {
-          fileDiv.textContent = `❌ ${file.name} - อัปโหลดล้มเหลว: ${data.error.message || 'ไม่ทราบข้อผิดพลาด'}`;
-          fileDiv.classList.remove('text-gray-700');
-          fileDiv.classList.add('text-red-700');
-          // If any file fails, stop the process or handle as needed
-          showFileUploadMessage('มีบางไฟล์อัปโหลดล้มเหลว', 'error');
-          researchFileInput.disabled = false;
-          return; // Stop processing further files if one fails
-        }
-      } catch (error) {
-        console.error('Cloudinary file upload error:', error);
-        fileDiv.textContent = `❌ ${file.name} - เกิดข้อผิดพลาดในการอัปโหลดไฟล์`;
-        fileDiv.classList.remove('text-gray-700');
-        fileDiv.classList.add('text-red-700');
-        showFileUploadMessage('เกิดข้อผิดพลาดในการอัปโหลดไฟล์', 'error');
-        researchFileInput.disabled = false;
-        return; // Stop processing further files if error occurs
-      }
-    }
-    // Store array of URLs as a JSON string in the hidden input
-    uploadedResearchFilesUrlInput.value = JSON.stringify(uploadedFileUrls); 
-    showFileUploadMessage(`อัปโหลดไฟล์ผลงานวิจัย ${uploadedFileUrls.length} ไฟล์สำเร็จ!`, 'success');
-    researchFileInput.disabled = false;
-  });
-
-
-  // Cancel button (Improved)
-  document.getElementById('cancel-btn').addEventListener('click', () => {
+  // --- Cancel Button ---
+  cancelBtn.addEventListener('click', () => {
     if(confirm('ต้องการยกเลิกและล้างข้อมูลทั้งหมดหรือไม่?')) {
-      document.getElementById('research-form').reset();
-      categoryItems.forEach(i => i.classList.remove('selected'));
-      selectedCategoryInput.value = '';
+      uploadForm.reset();
       
-      // Remove all author entries except the first one
-      const authors = authorsContainer.querySelectorAll('.author-entry');
-      authors.forEach((author, idx) => {
-        if(idx > 0) author.remove();
-      });
-
-      // Clear cover image upload state
-      uploadedCoverImageUrlInput.value = '';
-      coverImagePreview.classList.add('hidden');
-      showImageUploadMessage('', 'hidden');
-
-      // Clear research file upload state
-      uploadedResearchFilesUrlInput.value = '';
-      researchFileListDiv.innerHTML = '';
-      showFileUploadMessage('', 'hidden');
-
-      showFormMessage('ข้อมูลถูกล้างแล้ว', 'info');
+      // Clear image upload state
+      uploadedImageUrlInput.value = '';
+      imagePreviewDiv.classList.add('hidden');
+      hideMessage(imageUploadMessage);
+      hideMessage(formMessage);
+      usernameInput.focus(); // Focus back to username field
     }
   });
 
-  // Form Submission (Improved)
-  document.getElementById('research-form').addEventListener('submit', async (e) => {
+  // --- Form Submission Logic: Send data to choose.html via URL parameters ---
+  uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Basic form validation for required fields (unchanged)
-    if (!selectedCategoryInput.value) {
-      showFormMessage('กรุณาเลือกหมวดหมู่ผลงานวิจัย', 'error');
-      return;
-    }
-    if (!document.getElementById('department').value) {
-      showFormMessage('กรุณาเลือกสาขาวิชา', 'error');
-      return;
-    }
-    if (!document.getElementById('field').value) {
-      showFormMessage('กรุณาเลือกสาขางาน', 'error');
-      return;
-    }
-    if (!document.getElementById('year').value) {
-      showFormMessage('กรุณาเลือกชั้นปี', 'error');
-      return;
-    }
-    if (!document.getElementById('academic-year').value) {
-      showFormMessage('กรุณาเลือกปีการศึกษา', 'error');
-      return;
-    }
-    const authorsInputs = Array.from(document.querySelectorAll('input[name="authors[]"]'));
-    if (authorsInputs.some(input => !input.value.trim())) {
-      showFormMessage('กรุณากรอกชื่อผู้จัดทำให้ครบถ้วน', 'error');
-      return;
-    }
-    if (!document.getElementById('advisor').value.trim()) {
-      showFormMessage('กรุณากรอกชื่ออาจารย์ที่ปรึกษา', 'error');
-      return;
-    }
-    if (!document.getElementById('abstract').value.trim()) {
-      showFormMessage('กรุณากรอกบทคัดย่อ', 'error');
+    // Basic form validation for required fields
+    if (!usernameInput.value.trim()) {
+      showMessage(formMessage, 'กรุณากรอกชื่อผู้ใช้', 'error');
       return;
     }
     
-    // Validate Cloudinary uploads
-    if (!uploadedCoverImageUrlInput.value) {
-      showFormMessage('กรุณาอัปโหลดรูปภาพปกผลงานวิจัย', 'error');
+    if (!uploadedImageUrlInput.value) {
+      showMessage(formMessage, 'กรุณาอัปโหลดรูปโปรไฟล์', 'error');
       return;
     }
 
-    let researchFileUrls = [];
-    try {
-        researchFileUrls = JSON.parse(uploadedResearchFilesUrlInput.value || '[]');
-    } catch (e) {
-        showFormMessage('ข้อผิดพลาดในการประมวลผล URL ไฟล์ผลงานวิจัย', 'error');
-        console.error('Error parsing research file URLs:', e);
-        return;
-    }
-    if (researchFileUrls.length === 0) {
-      showFormMessage('กรุณาอัปโหลดไฟล์ผลงานวิจัย', 'error');
-      return;
-    }
+    showMessage(formMessage, 'กำลังเตรียมข้อมูล... กรุณารอสักครู่', 'info');
+    submitBtn.disabled = true; // Disable submit button
 
-    showFormMessage('กำลังส่งข้อมูล... กรุณารอสักครู่', 'info');
-    document.getElementById('submit-btn').disabled = true; // Disable submit button
-
-    // Collect all form data including Cloudinary URLs
+    // Collect all form data including Cloudinary URL
     const formDataToSend = {
-      title: document.getElementById('title').value,
-      category: selectedCategoryInput.value,
-      department: document.getElementById('department').value,
-      field: document.getElementById('field').value,
-      year: document.getElementById('year').value,
-      academicYear: document.getElementById('academic-year').value,
-      authors: authorsInputs.map(input => input.value.trim()),
-      advisor: document.getElementById('advisor').value.trim(),
-      abstract: document.getElementById('abstract').value.trim(),
-      coverImageUrl: uploadedCoverImageUrlInput.value, // URL of the cover image from Cloudinary
-      researchFileUrls: researchFileUrls, // Array of URLs for research files from Cloudinary
+      username: usernameInput.value.trim(),
+      imageUrl: uploadedImageUrlInput.value, // URL of the profile image from Cloudinary
     };
 
-    // --- Simulation of Sending Data to a Backend (No actual Backend call in this version) ---
-    // In a real application, you would use fetch() to send this data to your actual backend server.
-    // Example:
-    // try {
-    //     const response = await fetch('http://your-backend-api.com/submit-research', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(formDataToSend)
-    //     });
-    //     const result = await response.json();
-    //     if (response.ok && result.success) {
-    //         showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว!', 'success');
-    //         // Then reset form
-    //     } else {
-    //         showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
-    //     }
-    // } catch (error) {
-    //     console.error('Error submitting research:', error);
-    //     showFormMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับเซิร์ฟเวอร์', 'error');
-    // } finally {
-    //     document.getElementById('submit-btn').disabled = false;
-    // }
+    // Prepare data for URL parameters
+    const params = new URLSearchParams();
+    for (const key in formDataToSend) {
+        params.append(key, formDataToSend[key]);
+    }
 
-    // Simulate success for this example
-    console.log('--- Data ready to be sent to Backend (Check Console Log) ---');
-    console.log(formDataToSend);
-    showFormMessage('ข้อมูลถูกเตรียมพร้อมและแสดงใน Console Log แล้ว! (จำลองการส่งข้อมูล)', 'success');
+    // Redirect to choose.html with parameters
+    // Note: In a real application, you'd send this to a backend.
+    // For this demonstration, we're sending directly to choose.html.
+    window.location.href = `choose.html?${params.toString()}`;
 
-    // Reset form after successful submission (or simulated success)
-    document.getElementById('research-form').reset();
-    categoryItems.forEach(i => i.classList.remove('selected'));
-    selectedCategoryInput.value = '';
-    
-    const authorsToReset = authorsContainer.querySelectorAll('.author-entry');
-    authorsToReset.forEach((author, idx) => {
-        if(idx > 0) author.remove(); // Keep only the first author input
-    });
-    authorsToReset[0].querySelector('input').value = ''; // Clear the first author input
-
-    uploadedCoverImageUrlInput.value = '';
-    coverImagePreview.classList.add('hidden');
-    uploadedResearchFilesUrlInput.value = '';
-    researchFileListDiv.innerHTML = '';
-    
-    showImageUploadMessage('', 'hidden');
-    showFileUploadMessage('', 'hidden');
-    document.getElementById('submit-btn').disabled = false; // Re-enable submit button
+    // Re-enable button and clear messages (though page will redirect)
+    submitBtn.disabled = false;
+    hideMessage(formMessage);
   });
 </script>
 
