@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบเว็บไซต์จัดเก็บผลงานวิจัย - รายละเอียด</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        orange: {
+                            light: '#FFF0E5',
+                            primary: '#FF6B00',
+                            dark: '#CC5500'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f8fafc;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8C40 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-2.727 1.17 1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+                    </svg>
+                    <div>
+                        <h1 class="text-2xl font-bold">SBTVC Online Research</h1>
+                        <p class="text-orange-100">วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="bg-white text-orange-primary px-4 py-2 rounded-lg font-medium hover:bg-orange-50 transition duration-300">เข้าสู่ระบบ</button>
+                    <button class="bg-orange-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-primary transition duration-100 border border-orange-dark">ลงทะเบียน</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="index.html" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-orange-primary">
+                            <svg class="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            หน้าหลัก
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <a href="research.html" class="ml-1 text-sm font-medium text-gray-700 hover:text-orange-primary md:ml-2">งานวิจัย</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-orange-primary md:ml-2">การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <!-- Research Header -->
+            <div class="bg-orange-light p-8 border-b border-orange-200">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex space-x-3">
+                        <span class="px-3 py-1 bg-orange-primary text-white text-sm rounded-full">สำรวจ</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">ระดับชาติ</span>
+                    </div>
+                    <span class="text-gray-600">ปีที่เผยแพร่: 2566</span>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา</h1>
+                <h2 class="text-xl text-gray-600 mb-6">การวิจัยนี้มุ่งศึกษาวิธีการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาผ่านกิจกรรมการเรียนรู้แบบ Active</h2>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold text-xl">ส</div>
+                    <div class="ml-4">
+                        <p class="font-medium text-gray-800">ดร.สมชาย ใจดี</p>
+                        <p class="text-gray-600 text-sm"> </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Details -->
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Left Column - Main Details -->
+                    <div class="md:col-span-2">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                รายละเอียดงานวิจัย
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ชื่องานวิจัย (ภาษาไทย)</p>
+                                        <p class="font-medium text-gray-800">การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ชื่องานวิจัย (ภาษาอังกฤษ)</p>
+                                        <p class="font-medium text-gray-800">Development of Analytical Thinking Skills in Secondary School Students</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ผู้วิจัย</p>
+                                        <p class="font-medium text-gray-800">ดร.สมชาย ใจดี</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">สาขางานวิจัย</p>
+                                        <p class="font-medium text-gray-800">เทคโนโลยีคอมพิวเตอร์</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ประเภทงานวิจัย</p>
+                                        <p class="font-medium text-gray-800">การศึกษา</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ปีที่เผยแพร่</p>
+                                        <p class="font-medium text-gray-800">2566</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                บทคัดย่อ
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <p class="text-gray-800 leading-relaxed">
+                                    การวิจัยครั้งนี้มีวัตถุประสงค์เพื่อพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา ผ่านการจัดกิจกรรมการเรียนรู้แบบใช้ปัญหาเป็นฐาน (Problem-Based Learning) กลุ่มตัวอย่างได้แก่ นักเรียนชั้นมัธยมศึกษาปีที่ 3 โรงเรียนแห่งหนึ่งในจังหวัดเชียงใหม่ จำนวน 30 คน ซึ่งได้จากการเลือกแบบเจาะจง เครื่องมือที่ใช้ในการวิจัยประกอบด้วย แผนการจัดการเรียนรู้ แบบวัดทักษะการคิดวิเคราะห์ และแบบสังเกตพฤติกรรมการเรียนรู้ วิเคราะห์ข้อมูลโดยใช้สถิติร้อยละ ค่าเฉลี่ย และส่วนเบี่ยงเบนมาตรฐาน ผลการวิจัยพบว่า หลังจากใช้กิจกรรมการเรียนรู้แบบใช้ปัญหาเป็นฐาน นักเรียนมีคะแนนทักษะการคิดวิเคราะห์สูงขึ้นอย่างมีนัยสำคัญทางสถิติที่ระดับ .05 แสดงให้เห็นว่ากิจกรรมดังกล่าวส่งผลต่อการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนได้อย่างมีประสิทธิภาพ
+                                </p>
+                                <p class="text-gray-800 leading-relaxed mt-4">
+                                    
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                วัตถุประสงค์การวิจัย
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                                    <li>เพื่อศึกษาระดับทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาก่อนและหลังการจัดกิจกรรม/การเรียนรู้</li>
+                                    <li>เพื่อประเมินประสิทธิภาพของระบบเว็บไซต์จัดเก็บผลงานวิจัยที่พัฒนาขึ้น</li>
+                                    <li>เพื่อเปรียบเทียบทักษะการคิดวิเคราะห์ของนักเรียนก่อนและหลังการใช้กิจกรรมการเรียนรู้ที่ออกแบบไว้</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                ประโยชน์ที่ได้รับ
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                                    <li>นักเรียนมีทักษะการคิดวิเคราะห์ที่ดีขึ้น ซึ่งจะส่งผลต่อความสามารถในการเรียนรู้ การแก้ปัญหา และการตัดสินใจอย่างมีเหตุผล/li>
+                                    <li>ครูหรือผู้สอนสามารถนำแนวทางหรือกิจกรรมการเรียนรู้ที่พัฒนาขึ้นไปประยุกต์ใช้ในการจัดการเรียนการสอนได้อย่างมีประสิทธิภาพ</li>
+                                    <li>โรงเรียนหรือสถานศึกษาได้รับแนวทางการพัฒนาหลักสูตรหรือกิจกรรมส่งเสริมการคิดวิเคราะห์ที่สอดคล้องกับศตวรรษที่ 21</li>
+                                    <li>ผู้วิจัยหรือผู้สนใจด้านการศึกษาได้รับข้อมูลหรือองค์ความรู้เกี่ยวกับการพัฒนาทักษะการคิดวิเคราะห์ เพื่อนำไปใช้ในการวิจัยหรือการพัฒนาต่อยอด</li>
+                                    <li>สังคมได้เยาวชนที่มีความสามารถในการคิดอย่างมีวิจารณญาณ ซึ่งช่วยส่งเสริมประชาธิปไตยและการดำรงชีวิตในโลกยุคใหม่อย่างมีคุณภาพ
+
+</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Download and Related -->
+                    <div>
+                        <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                ดาวน์โหลดเอกสาร
+                            </h3>
+                            <div class="space-y-4">
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">รายงานฉบับเต็ม</p>
+                                        <p class="text-sm text-gray-500">PDF •  1.4 GB</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">บทคัดย่อ</p>
+                                        <p class="text-sm text-gray-500">PDF • 420 KB</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">นำเสนอผลงาน</p>
+                                        <p class="text-sm text-gray-500">PPTX • 1.8 MB</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                ข้อมูลการอ้างอิง
+                            </h3>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-gray-800 text-sm">ดร.สมชาย ใจดี. (2566). การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา.</p>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button class="text-orange-primary hover:text-orange-dark flex items-center text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    คัดลอกการอ้างอิง
+                                </button>
+                                <button class="text-orange-primary hover:text-orange-dark flex items-center text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    ดาวน์โหลด BibTeX
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                งานวิจัยที่เกี่ยวข้อง
+                            </h3>
+                            <div class="space-y-4">
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <div class="bg-orange-primary rounded-full p-2 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <h2 class="text-xl font-bold">SBTVC <span class="text-orange-primary">Online Research</span></h2>
+                    </div>
+                    <p class="text-gray-400 mb-4">แหล่งรวมงานวิจัยคุณภาพเพื่อการพัฒนาประเทศไทย</p>
+                    <p class="text-gray-400">© 2025 SBTVC Online Research สงวนลิขสิทธิ์</p>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">เมนูหลัก</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">หน้าหลัก</a></li>
+                            <li><a href="Category.html" class="text-gray-400 hover:text-orange-primary">หมวดหมู่</a></li>
+                         
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">หมวดหมู่</h3>
+                        <ul class="space-y-2">
+                            <li><a href="explore.html" class="text-gray-400 hover:text-orange-primary">สำรวจ</a></li>
+                            <li><a href="theory.html" class="text-gray-400 hover:text-orange-primary">ทฤษฤี</a></li>
+                            <li><a href="Experimental.html" class="text-gray-400 hover:text-orange-primary">ทดลอง</a></li>
+                            <li><a href="artificial.html" class="text-gray-400 hover:text-orange-primary">ประดิษฐ์</a></li>
+                        </ul>
+                    </div>
+
+                   
+                </div>
+            </div>
+        </div>
+    </footer>
