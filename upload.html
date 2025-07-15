@@ -94,6 +94,10 @@
   const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- Cloud name ของคุณ
   const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพ
 
+  // **Google Apps Script Web App URL** //
+  // *** สำคัญมาก: URL ที่คุณให้มาถูกนำมาใช้ที่นี่แล้ว ***
+  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmI7QGPqJYPk9LTbl4WZjPn8n2pKSG1P8dlm7sMBxHimOXd3TiDMn0BNvS5BlmWdGp/exec'; 
+
   // DOM Elements
   const uploadForm = document.getElementById('upload-form');
   const usernameInput = document.getElementById('username');
@@ -107,7 +111,7 @@
   const imageUploadMessage = document.getElementById('image-upload-message');
   const submitBtn = document.getElementById('submit-btn');
   const cancelBtn = document.getElementById('cancel-btn');
-  const homeBtn = document.getElementById('home-btn'); // New: Home button
+  const homeBtn = document.getElementById('home-btn');
 
   // --- Message Display Functions ---
   function showMessage(element, msg, type) {
@@ -197,7 +201,7 @@
     window.location.href = 'index.html'; // Redirect to index.html
   });
 
-  // --- Form Submission Logic: Save to localStorage ---
+  // --- Form Submission Logic: Send to Google Apps Script ---
   uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -212,33 +216,42 @@
       return;
     }
 
-    // Prepare data to save
-    const newImageEntry = {
-        username: usernameInput.value.trim(),
-        imageUrl: uploadedImageUrlInput.value,
-        timestamp: new Date().toISOString(),
-        status: 'pending' // Default status for new uploads
-    };
+    showMessage(formMessage, 'กำลังส่งข้อมูล...', 'info');
+    submitBtn.disabled = true;
 
-    // Get existing data from localStorage or initialize an empty array
-    let existingImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
-    existingImages.push(newImageEntry);
+    try {
+        const formData = new FormData();
+        formData.append('action', 'upload'); // Action to tell Apps Script what to do
+        formData.append('username', usernameInput.value.trim());
+        formData.append('imageUrl', uploadedImageUrlInput.value);
+        formData.append('id', `img-${Date.now()}-${Math.floor(Math.random() * 1000)}`); // Unique ID for each entry
 
-    // Save updated data back to localStorage
-    localStorage.setItem('uploadedImages', JSON.stringify(existingImages));
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            body: formData,
+            // headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, // FormData sets this correctly
+        });
+        const result = await response.json();
 
-    showMessage(formMessage, 'ข้อมูลและรูปภาพของคุณถูกบันทึกเรียบร้อยแล้ว!', 'success');
-    submitBtn.disabled = true; // Disable the button after successful submission
-
-    // Optional: Reset form after a short delay
-    setTimeout(() => {
-        uploadForm.reset();
-        uploadedImageUrlInput.value = '';
-        imagePreviewDiv.classList.add('hidden');
-        hideMessage(imageUploadMessage);
-        hideMessage(formMessage);
-        submitBtn.disabled = false; // Re-enable the button to allow new submissions
-    }, 5000); // Reset after 5 seconds
+        if (result.status === 'success') {
+            showMessage(formMessage, 'ข้อมูลและรูปภาพของคุณถูกบันทึกเรียบร้อยแล้ว!', 'success');
+        } else {
+            showMessage(formMessage, `บันทึกข้อมูลล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error submitting data to Google Sheet:', error);
+        showMessage(formMessage, 'เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Google Sheet', 'error');
+    } finally {
+        submitBtn.disabled = false;
+        // Optional: Reset form after a short delay
+        setTimeout(() => {
+            uploadForm.reset();
+            uploadedImageUrlInput.value = '';
+            imagePreviewDiv.classList.add('hidden');
+            hideMessage(imageUploadMessage);
+            hideMessage(formMessage);
+        }, 5000); // Reset after 5 seconds
+    }
   });
 </script>
 
