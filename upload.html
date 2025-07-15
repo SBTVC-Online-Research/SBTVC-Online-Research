@@ -95,8 +95,8 @@
   const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพ
 
   // **Google Apps Script Web App URL** //
-  // *** สำคัญมาก: URL ที่คุณให้มาถูกนำมาใช้ที่นี่แล้ว ***
-  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmI7QGPqJYPk9LTbl4WZjPn8n2pKSG1P8dlm7sMBxHimOXd3TiDMn0BNvS5BlmWdGp/exec'; 
+  // *** สำคัญมาก: URL ของคุณถูกนำมาใช้ที่นี่แล้ว ***
+  const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec'; 
 
   // DOM Elements
   const uploadForm = document.getElementById('upload-form');
@@ -146,8 +146,8 @@
     }
 
     showMessage(imageUploadMessage, 'กำลังอัปโหลดรูปภาพ...', 'info');
-    profileImageInput.disabled = true; // Disable input during upload
     submitBtn.disabled = true; // Disable submit button during upload
+    profileImageInput.disabled = true; // Disable input during upload
     uploadedImageUrlInput.value = ''; // Clear old URL
     imagePreviewDiv.classList.add('hidden'); // Hide old preview during upload
 
