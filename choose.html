@@ -62,6 +62,15 @@
             <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: เพิ่มและตรวจสอบรูปภาพ</p>
         </div>
 
+        <div class="text-center mb-4">
+            <button 
+                onclick="loadImagesFromGoogleSheet()" 
+                class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+            >
+                รีเฟรชข้อมูลล่าสุดจาก Google Sheet
+            </button>
+        </div>
+
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary (ด้วยตนเอง)</h2>
             <div class="flex flex-col md:flex-row gap-3">
@@ -107,10 +116,10 @@
 
         <div class="text-center mt-8 space-x-4">
             <button 
-                onclick="clearAll()" 
+                onclick="clearAllDisplayedImages()" 
                 class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
             >
-                ล้างทั้งหมด
+                ล้างทั้งหมดที่แสดง (ไม่ลบใน Sheet)
             </button>
             <button 
                 onclick="exportResults()" 
@@ -122,10 +131,14 @@
     </div>
 
     <script>
-        let images = []; // Stores all image data
-        let imageCounter = 0; // Use to generate unique IDs for display purposes
+        let images = []; // Stores all image data currently displayed
+        let imageDisplayCounter = 0; // Use to generate unique IDs for display numbering
 
-        // Get DOM elements
+        // **Google Apps Script Web App URL** //
+        // *** สำคัญมาก: URL ที่คุณให้มาถูกนำมาใช้ที่นี่แล้ว ***
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmI7QGPqJYPk9LTbl4WZjPn8n2pKSG1P8dlm7sMBxHimOXd3TiDMn0BNvS5BlmWdGp/exec'; 
+
+        // DOM elements
         const manualUsernameInput = document.getElementById('manualUsername');
         const cloudinaryUrlInput = document.getElementById('cloudinaryUrl');
         const urlMessageDiv = document.getElementById('url-message');
@@ -133,13 +146,6 @@
         const totalCountSpan = document.getElementById('totalCount');
         const correctCountSpan = document.getElementById('correctCount');
         const incorrectCountSpan = document.getElementById('incorrectCount');
-
-        // Sample Cloudinary images for demonstration (will be added after localStorage images)
-        const sampleImages = [
-            { username: 'ตัวอย่าง 1', url: 'https://res.cloudinary.com/demo/image/upload/sample.jpg' },
-            { username: 'ตัวอย่าง 2', url: 'https://res.cloudinary.com/demo/image/upload/w_400/sample.jpg' },
-            { username: 'ตัวอย่าง 3', url: 'https://res.cloudinary.com/demo/image/upload/c_fill,h_400,w_400/sample.jpg' }
-        ];
 
         // --- Message Display Function ---
         function showMessage(element, msg, type) {
@@ -153,43 +159,104 @@
             element.textContent = '';
         }
 
+        // --- Load Images from Google Sheet ---
+        async function loadImagesFromGoogleSheet() {
+            showMessage(urlMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'GET',
+                    redirect: 'follow', 
+                });
+                const data = await response.json();
+                
+                images = []; // Clear current images array
+                imagesGrid.innerHTML = ''; // Clear current display
+                imageDisplayCounter = 0; // Reset display counter
+
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        // Ensure data has the expected properties (ImageUrl, Username, Status, Id)
+                        if (item.ImageUrl && item.Id) {
+                            addImageToGrid({
+                                id: item.Id,
+                                username: item.Username || 'ไม่ระบุ',
+                                imageUrl: item.ImageUrl,
+                                status: item.Status || 'pending', // Default to pending if not set
+                                timestamp: item.Timestamp || new Date().toISOString()
+                            });
+                        }
+                    });
+                    showMessage(urlMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
+                } else {
+                    showMessage(urlMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading images from Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
+            } finally {
+                setTimeout(() => hideMessage(urlMessageDiv), 3000);
+            }
+        }
+
         // --- Add Image Logic (Manual Input from Admin) ---
-        function addManualImage() {
+        async function addManualImage() {
             const username = manualUsernameInput.value.trim();
             const url = cloudinaryUrlInput.value.trim();
-            hideMessage(urlMessageDiv); // Clear previous messages
+            hideMessage(urlMessageDiv); 
 
             if (!url) {
                 showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปภาพ', 'error');
                 return;
             }
             if (!isValidCloudinaryUrl(url)) {
-                showMessage(urlMessageDiv, 'กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary (ต้องมี "cloudinary.com" หรือ "res.cloudinary.com")', 'error');
+                showMessage(urlMessageDiv, 'กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary', 'error');
                 return;
             }
 
-            // Prevent adding duplicate images (check both localStorage images and existing manually added images)
-            if (images.some(img => img.url === url)) {
+            // Check for duplicates before adding to Google Sheet
+            if (images.some(img => img.imageUrl === url)) {
                 showMessage(urlMessageDiv, 'รูปภาพนี้ถูกเพิ่มไปแล้ว', 'info');
                 return;
             }
 
-            // Create a new entry for a manually added image
+            showMessage(urlMessageDiv, 'กำลังเพิ่มรูปภาพ...', 'info');
+
             const newImageEntry = {
-                username: username || 'ผู้ดูแลเพิ่มเอง', // Default username if not provided
+                id: `manual-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+                username: username || 'ผู้ดูแลเพิ่มเอง',
                 imageUrl: url,
-                timestamp: new Date().toISOString(),
-                status: 'pending'
+                status: 'pending',
+                timestamp: new Date().toISOString()
             };
 
-            addImageToGrid(newImageEntry);
-            cloudinaryUrlInput.value = ''; // Clear input after adding
-            manualUsernameInput.value = ''; // Clear username input
-            showMessage(urlMessageDiv, 'เพิ่มรูปภาพสำเร็จ!', 'success');
-            setTimeout(() => hideMessage(urlMessageDiv), 3000); // Hide message after 3 seconds
+            try {
+                const formData = new FormData();
+                formData.append('action', 'upload');
+                formData.append('username', newImageEntry.username);
+                formData.append('imageUrl', newImageEntry.imageUrl);
+                formData.append('id', newImageEntry.id);
 
-            // Also save manually added images to localStorage so they persist
-            saveImagesToLocalStorage();
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    // Re-load all images from Google Sheet to ensure display is in sync
+                    await loadImagesFromGoogleSheet(); 
+                    cloudinaryUrlInput.value = ''; 
+                    manualUsernameInput.value = ''; 
+                    showMessage(urlMessageDiv, 'เพิ่มรูปภาพสำเร็จ!', 'success');
+                } else {
+                    showMessage(urlMessageDiv, `เพิ่มรูปภาพล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error adding manual image to Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการเพิ่มรูปภาพ', 'error');
+            } finally {
+                setTimeout(() => hideMessage(urlMessageDiv), 3000);
+            }
         }
 
         function isValidCloudinaryUrl(url) {
@@ -197,25 +264,21 @@
                 const urlObj = new URL(url);
                 return urlObj.hostname.includes('cloudinary.com') || urlObj.hostname.includes('res.cloudinary.com');
             } catch (e) {
-                return false; // Invalid URL format
+                return false; 
             }
         }
 
         function addImageToGrid(imageData) {
-            // Ensure unique IDs across all images (both localStorage and manually added)
-            const uniqueId = `img-${Date.now()}-${Math.floor(Math.random() * 1000)}`; 
-            const displayId = ++imageCounter; // For display numbering
-
-            // Add the uniqueId to imageData if not already present (for localStorage items)
-            if (!imageData.id) {
-                imageData.id = uniqueId;
-            }
-            // Update the global images array if this is a new addition or re-adding from storage
-            if (!images.some(img => img.id === imageData.id)) {
-                images.push(imageData);
+            // Check if this image (by its unique ID) is already in the 'images' array (currently displayed)
+            if (images.some(img => img.id === imageData.id)) {
+                return; 
             }
             
-            const card = createImageCard(imageData, displayId);
+            images.push(imageData);
+            
+            // Assign a display ID for numbering on the card
+            imageDisplayCounter++; 
+            const card = createImageCard(imageData, imageDisplayCounter);
             imagesGrid.appendChild(card);
             
             updateStatistics();
@@ -224,9 +287,8 @@
         function createImageCard(imageData, displayId) {
             const card = document.createElement('div');
             card.className = 'image-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
-            card.id = `card-${imageData.id}`; // Use actual imageData.id for the card ID
+            card.id = `card-${imageData.id}`; 
             
-            // Set initial selection if status is not pending
             let correctChecked = imageData.status === 'correct' ? 'checked' : '';
             let incorrectChecked = imageData.status === 'incorrect' ? 'checked' : '';
             if (imageData.status === 'correct') card.classList.add('correct-selected');
@@ -303,41 +365,85 @@
             if (card) {
                 card.classList.add('border-red-300', 'bg-red-50');
             }
-            updateImageStatus(imageId, 'incorrect'); // Mark as incorrect if image fails to load
+            updateImageStatus(imageId, 'incorrect'); 
         }
 
-        // --- Update Image Status ---
-        function updateImageStatus(imageId, status) {
-            const imageIndex = images.findIndex(img => img.id === imageId);
-            if (imageIndex !== -1) {
-                images[imageIndex].status = status;
-                
-                const card = document.getElementById(`card-${imageId}`);
-                if (card) {
-                    card.classList.remove('correct-selected', 'incorrect-selected');
-                    
-                    if (status === 'correct') {
-                        card.classList.add('correct-selected');
-                    } else if (status === 'incorrect') {
-                        card.classList.add('incorrect-selected');
+        // --- Update Image Status on Google Sheet ---
+        async function updateImageStatus(imageId, status) {
+            showMessage(urlMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
+            try {
+                const formData = new FormData();
+                formData.append('action', 'updateStatus');
+                formData.append('id', imageId);
+                formData.append('status', status);
+
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const imageIndex = images.findIndex(img => img.id === imageId);
+                    if (imageIndex !== -1) {
+                        images[imageIndex].status = status;
+                        const card = document.getElementById(`card-${imageId}`);
+                        if (card) {
+                            card.classList.remove('correct-selected', 'incorrect-selected');
+                            if (status === 'correct') card.classList.add('correct-selected');
+                            else if (status === 'incorrect') card.classList.add('incorrect-selected');
+                        }
+                        updateStatistics();
                     }
+                    showMessage(urlMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
+                } else {
+                    showMessage(urlMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
-                updateStatistics();
-                saveImagesToLocalStorage(); // Save changes to localStorage
+            } catch (error) {
+                console.error('Error updating status on Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
+            } finally {
+                setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
-        // --- Remove Image ---
-        function removeImage(imageId) {
-            const imageIndex = images.findIndex(img => img.id === imageId);
-            if (imageIndex !== -1) {
-                images.splice(imageIndex, 1); 
-                const card = document.getElementById(`card-${imageId}`);
-                if (card) {
-                    card.remove(); 
+        // --- Remove Image from Google Sheet ---
+        async function removeImage(imageId) {
+            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบรูปภาพนี้?')) {
+                return;
+            }
+
+            showMessage(urlMessageDiv, 'กำลังลบรูปภาพ...', 'info');
+            try {
+                const formData = new FormData();
+                formData.append('action', 'delete');
+                formData.append('id', imageId);
+
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    const imageIndex = images.findIndex(img => img.id === imageId);
+                    if (imageIndex !== -1) {
+                        images.splice(imageIndex, 1); 
+                        const card = document.getElementById(`card-${imageId}`);
+                        if (card) {
+                            card.remove(); 
+                        }
+                        updateStatistics();
+                    }
+                    showMessage(urlMessageDiv, 'ลบรูปภาพสำเร็จ!', 'success');
+                } else {
+                    showMessage(urlMessageDiv, `ลบรูปภาพล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
-                updateStatistics();
-                saveImagesToLocalStorage(); // Save changes to localStorage
+            } catch (error) {
+                console.error('Error deleting image from Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการลบรูปภาพ', 'error');
+            } finally {
+                setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
@@ -352,19 +458,19 @@
             incorrectCountSpan.textContent = incorrect;
         }
 
-        // --- Clear All Images ---
-        function clearAll() {
-            if (confirm('คุณต้องการลบรูปภาพทั้งหมดหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้')) {
+        // --- Clear All Displayed Images (Does NOT clear Google Sheet) ---
+        function clearAllDisplayedImages() {
+            if (confirm('คุณต้องการล้างรูปภาพที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่? (จะไม่ลบข้อมูลใน Google Sheet)')) {
                 images = [];
                 imagesGrid.innerHTML = ''; 
                 updateStatistics();
-                localStorage.removeItem('uploadedImages'); // Clear localStorage
-                showMessage(urlMessageDiv, 'ลบรูปภาพทั้งหมดแล้ว', 'info');
+                imageDisplayCounter = 0; 
+                showMessage(urlMessageDiv, 'ล้างรูปภาพที่แสดงทั้งหมดแล้ว', 'info');
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
-        // --- Export Results ---
+        // --- Export Results (from currently displayed images) ---
         function exportResults() {
             if (images.length === 0) {
                 showMessage(urlMessageDiv, 'ไม่มีรูปภาพให้ส่งออก', 'info');
@@ -379,10 +485,10 @@
                 pending: images.filter(img => img.status === 'pending').length,
                 images: images.map(img => ({
                     id: img.id,
-                    username: img.username, // Include username in export
-                    url: img.imageUrl,      // Use imageUrl in export
+                    username: img.username,
+                    url: img.imageUrl,
                     status: img.status,
-                    timestamp: img.timestamp // Include timestamp in export
+                    timestamp: img.timestamp 
                 }))
             };
             
@@ -400,36 +506,6 @@
             setTimeout(() => hideMessage(urlMessageDiv), 3000);
         }
 
-        // --- LocalStorage functions ---
-        function loadImagesFromLocalStorage() {
-            const storedImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
-            storedImages.forEach(img => addImageToGrid(img));
-        }
-
-        function saveImagesToLocalStorage() {
-            // Only save the actual image data, not temporary display IDs
-            localStorage.setItem('uploadedImages', JSON.stringify(images));
-        }
-
-        // --- Initialize the app when the DOM is fully loaded ---
-        document.addEventListener('DOMContentLoaded', () => {
-            loadImagesFromLocalStorage(); // Load images saved from upload.html (and previous admin sessions)
-            // Optionally add sample images if no images are loaded from localStorage
-            if (images.length === 0) {
-                 sampleImages.forEach(img => {
-                    const newImageEntry = {
-                        username: img.username,
-                        imageUrl: img.url,
-                        timestamp: new Date().toISOString(),
-                        status: 'pending',
-                        id: `sample-${Date.now()}-${Math.floor(Math.random() * 1000)}` // Unique ID for samples
-                    };
-                    addImageToGrid(newImageEntry);
-                 });
-                 saveImagesToLocalStorage(); // Save samples to localStorage too
-            }
-        });
-
         // --- Event Listeners ---
         // Allow Enter key to add manual image
         cloudinaryUrlInput.addEventListener('keypress', function(e) {
@@ -437,6 +513,11 @@
                 e.preventDefault(); 
                 addManualImage();
             }
+        });
+
+        // Load images from Google Sheet when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImagesFromGoogleSheet();
         });
     </script>
 </body>
