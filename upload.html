@@ -189,7 +189,7 @@
     }
   });
 
-  // --- Form Submission Logic: Send data to choose.html via URL parameters ---
+  // --- Form Submission Logic: Display success message on the same page ---
   uploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -204,29 +204,20 @@
       return;
     }
 
-    showMessage(formMessage, 'กำลังเตรียมข้อมูล... กรุณารอสักครู่', 'info');
-    submitBtn.disabled = true; // Disable submit button
+    // This is where you would typically send data to a backend server.
+    // For this example, we'll just simulate a successful submission by displaying a message.
+    showMessage(formMessage, 'ข้อมูลและรูปภาพของคุณถูกส่งเรียบร้อยแล้ว! ขอบคุณครับ/ค่ะ', 'success');
+    submitBtn.disabled = true; // Disable the button after successful submission
 
-    // Collect all form data including Cloudinary URL
-    const formDataToSend = {
-      username: usernameInput.value.trim(),
-      imageUrl: uploadedImageUrlInput.value, // URL of the profile image from Cloudinary
-    };
-
-    // Prepare data for URL parameters
-    const params = new URLSearchParams();
-    for (const key in formDataToSend) {
-        params.append(key, formDataToSend[key]);
-    }
-
-    // Redirect to choose.html with parameters
-    // Note: In a real application, you'd send this to a backend.
-    // For this demonstration, we're sending directly to choose.html.
-    window.location.href = `choose.html?${params.toString()}`;
-
-    // Re-enable button and clear messages (though page will redirect)
-    submitBtn.disabled = false;
-    hideMessage(formMessage);
+    // Optional: Reset form after a short delay
+    setTimeout(() => {
+        uploadForm.reset();
+        uploadedImageUrlInput.value = '';
+        imagePreviewDiv.classList.add('hidden');
+        hideMessage(imageUploadMessage);
+        hideMessage(formMessage);
+        submitBtn.disabled = false; // Re-enable the button to allow new submissions
+    }, 5000); // Reset after 5 seconds
   });
 </script>
 
