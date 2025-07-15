@@ -60,10 +60,11 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบรูปภาพ</h1>
             <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: เพิ่มและตรวจสอบรูปภาพ</p>
+            <div id="username-display" class="text-xl font-semibold text-blue-700 mt-4 hidden"></div>
         </div>
 
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary</h2>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary (สำหรับทดสอบ/เพิ่มเติม)</h2>
             <div class="flex gap-3">
                 <input 
                     type="url" 
@@ -126,8 +127,9 @@
         const totalCountSpan = document.getElementById('totalCount');
         const correctCountSpan = document.getElementById('correctCount');
         const incorrectCountSpan = document.getElementById('incorrectCount');
+        const usernameDisplay = document.getElementById('username-display');
 
-        // Sample Cloudinary images for demonstration
+        // Sample Cloudinary images for demonstration (if no image comes from upload.html)
         const sampleImages = [
             'https://res.cloudinary.com/demo/image/upload/sample.jpg',
             'https://res.cloudinary.com/demo/image/upload/w_400/sample.jpg',
@@ -144,13 +146,6 @@
         function hideMessage(element) {
             element.classList.add('hidden');
             element.textContent = '';
-        }
-
-        // --- Initialization ---
-        function initializeSampleImages() {
-            sampleImages.forEach(url => {
-                addImageToGrid(url);
-            });
         }
 
         // --- Add Image Logic ---
@@ -181,7 +176,6 @@
         }
 
         function isValidCloudinaryUrl(url) {
-            // More robust check for Cloudinary URLs
             try {
                 const urlObj = new URL(url);
                 return urlObj.hostname.includes('cloudinary.com') || urlObj.hostname.includes('res.cloudinary.com');
@@ -190,12 +184,13 @@
             }
         }
 
-        function addImageToGrid(imageUrl) {
+        function addImageToGrid(imageUrl, initialStatus = 'pending', username = '') {
             const imageId = ++imageCounter;
             const imageData = {
                 id: imageId,
                 url: imageUrl,
-                status: 'pending' // pending, correct, incorrect
+                status: initialStatus, // pending, correct, incorrect
+                username: username // Store username associated with the image if available
             };
             
             images.push(imageData);
@@ -211,6 +206,12 @@
             card.className = 'image-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
             card.id = `image-${imageData.id}`;
             
+            // Set initial selection if status is not pending
+            let correctChecked = imageData.status === 'correct' ? 'checked' : '';
+            let incorrectChecked = imageData.status === 'incorrect' ? 'checked' : '';
+            if (imageData.status === 'correct') card.classList.add('correct-selected');
+            if (imageData.status === 'incorrect') card.classList.add('incorrect-selected');
+
             card.innerHTML = `
                 <div class="relative">
                     <img 
@@ -224,6 +225,7 @@
                     </div>
                 </div>
                 <div class="p-4">
+                    ${imageData.username ? `<p class="text-center text-sm text-gray-700 mb-2">อัปโหลดโดย: <span class="font-semibold">${imageData.username}</span></p>` : ''}
                     <div class="flex justify-center space-x-6">
                         <label class="flex items-center cursor-pointer group">
                             <input 
@@ -232,6 +234,7 @@
                                 value="correct"
                                 class="checkbox-correct w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
                                 onchange="updateImageStatus(${imageData.id}, 'correct')"
+                                ${correctChecked}
                             >
                             <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ ถูกต้อง</span>
                         </label>
@@ -242,6 +245,7 @@
                                 value="incorrect"
                                 class="checkbox-incorrect w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
                                 onchange="updateImageStatus(${imageData.id}, 'incorrect')"
+                                ${incorrectChecked}
                             >
                             <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ผิด</span>
                         </label>
@@ -260,7 +264,6 @@
 
         // --- Image Error Handling ---
         function handleImageError(imgElement, imageId) {
-            // SVG for broken image icon and text
             const errorSvg = `
                 <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="400" height="300" fill="#F3F4F6"/>
@@ -274,15 +277,13 @@
             `;
             imgElement.src = `data:image/svg+xml;base64,${btoa(errorSvg)}`;
             imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${imageId} ได้`;
-            imgElement.classList.add('object-contain'); // Change object-cover to object-contain for SVGs
+            imgElement.classList.add('object-contain'); 
 
-            // Visually mark the card as having an error
             const card = document.getElementById(`image-${imageId}`);
             if (card) {
                 card.classList.add('border-red-300', 'bg-red-50');
             }
-            // Optionally, set the status to incorrect for broken images
-            updateImageStatus(imageId, 'incorrect');
+            updateImageStatus(imageId, 'incorrect'); // Mark as incorrect if image fails to load
         }
 
         // --- Update Image Status ---
@@ -292,7 +293,7 @@
                 images[imageIndex].status = status;
                 
                 const card = document.getElementById(`image-${imageId}`);
-                if (card) { // Ensure card exists
+                if (card) {
                     card.classList.remove('correct-selected', 'incorrect-selected');
                     
                     if (status === 'correct') {
@@ -309,10 +310,10 @@
         function removeImage(imageId) {
             const imageIndex = images.findIndex(img => img.id === imageId);
             if (imageIndex !== -1) {
-                images.splice(imageIndex, 1); // Remove from array
+                images.splice(imageIndex, 1); 
                 const card = document.getElementById(`image-${imageId}`);
-                if (card) { // Ensure card exists
-                    card.remove(); // Remove from DOM
+                if (card) {
+                    card.remove(); 
                 }
                 updateStatistics();
             }
@@ -333,7 +334,7 @@
         function clearAll() {
             if (confirm('คุณต้องการลบรูปภาพทั้งหมดหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้')) {
                 images = [];
-                imagesGrid.innerHTML = ''; // Clear DOM
+                imagesGrid.innerHTML = ''; 
                 updateStatistics();
                 showMessage(urlMessageDiv, 'ลบรูปภาพทั้งหมดแล้ว', 'info');
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
@@ -356,7 +357,8 @@
                 images: images.map(img => ({
                     id: img.id,
                     url: img.url,
-                    status: img.status
+                    status: img.status,
+                    username: img.username || null // Include username in export
                 }))
             };
             
@@ -369,7 +371,7 @@
             link.download = `image-review-results-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
-            URL.revokeObjectURL(url); // Clean up the URL object
+            URL.revokeObjectURL(url);
             showMessage(urlMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
             setTimeout(() => hideMessage(urlMessageDiv), 3000);
         }
@@ -378,13 +380,28 @@
         // Allow Enter key to add image
         cloudinaryUrlInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent default form submission behavior
+                e.preventDefault(); 
                 addImage();
             }
         });
 
-        // Initialize the app with sample images on load
-        document.addEventListener('DOMContentLoaded', initializeSampleImages);
+        // --- Initialize the app ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const usernameFromUpload = params.get('username');
+            const imageUrlFromUpload = params.get('imageUrl');
+
+            if (usernameFromUpload && imageUrlFromUpload) {
+                // Display username received from upload.html
+                usernameDisplay.textContent = `รูปภาพจากผู้ใช้: ${usernameFromUpload}`;
+                usernameDisplay.classList.remove('hidden');
+                // Add the image from upload.html to the grid
+                addImageToGrid(imageUrlFromUpload, 'pending', usernameFromUpload);
+            } else {
+                // If no data from upload.html, initialize with sample images
+                initializeSampleImages();
+            }
+        });
     </script>
 </body>
 </html>
