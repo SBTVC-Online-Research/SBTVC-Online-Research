@@ -60,12 +60,17 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบรูปภาพ</h1>
             <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: เพิ่มและตรวจสอบรูปภาพ</p>
-            <div id="username-display" class="text-xl font-semibold text-blue-700 mt-4 hidden"></div>
         </div>
 
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary (สำหรับทดสอบ/เพิ่มเติม)</h2>
-            <div class="flex gap-3">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary (ด้วยตนเอง)</h2>
+            <div class="flex flex-col md:flex-row gap-3">
+                <input 
+                    type="text" 
+                    id="manualUsername" 
+                    placeholder="ชื่อผู้ใช้ (ถ้ามี)..." 
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
                 <input 
                     type="url" 
                     id="cloudinaryUrl" 
@@ -73,7 +78,7 @@
                     class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 >
                 <button 
-                    onclick="addImage()" 
+                    onclick="addManualImage()" 
                     class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
                 >
                     เพิ่มรูป
@@ -117,23 +122,23 @@
     </div>
 
     <script>
-        let images = [];
-        let imageCounter = 0; // Use to generate unique IDs
+        let images = []; // Stores all image data
+        let imageCounter = 0; // Use to generate unique IDs for display purposes
 
         // Get DOM elements
+        const manualUsernameInput = document.getElementById('manualUsername');
         const cloudinaryUrlInput = document.getElementById('cloudinaryUrl');
         const urlMessageDiv = document.getElementById('url-message');
         const imagesGrid = document.getElementById('imagesGrid');
         const totalCountSpan = document.getElementById('totalCount');
         const correctCountSpan = document.getElementById('correctCount');
         const incorrectCountSpan = document.getElementById('incorrectCount');
-        const usernameDisplay = document.getElementById('username-display');
 
-        // Sample Cloudinary images for demonstration (if no image comes from upload.html)
+        // Sample Cloudinary images for demonstration (will be added after localStorage images)
         const sampleImages = [
-            'https://res.cloudinary.com/demo/image/upload/sample.jpg',
-            'https://res.cloudinary.com/demo/image/upload/w_400/sample.jpg',
-            'https://res.cloudinary.com/demo/image/upload/c_fill,h_400,w_400/sample.jpg'
+            { username: 'ตัวอย่าง 1', url: 'https://res.cloudinary.com/demo/image/upload/sample.jpg' },
+            { username: 'ตัวอย่าง 2', url: 'https://res.cloudinary.com/demo/image/upload/w_400/sample.jpg' },
+            { username: 'ตัวอย่าง 3', url: 'https://res.cloudinary.com/demo/image/upload/c_fill,h_400,w_400/sample.jpg' }
         ];
 
         // --- Message Display Function ---
@@ -148,8 +153,9 @@
             element.textContent = '';
         }
 
-        // --- Add Image Logic ---
-        function addImage() {
+        // --- Add Image Logic (Manual Input from Admin) ---
+        function addManualImage() {
+            const username = manualUsernameInput.value.trim();
             const url = cloudinaryUrlInput.value.trim();
             hideMessage(urlMessageDiv); // Clear previous messages
 
@@ -157,22 +163,33 @@
                 showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปภาพ', 'error');
                 return;
             }
-
             if (!isValidCloudinaryUrl(url)) {
                 showMessage(urlMessageDiv, 'กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary (ต้องมี "cloudinary.com" หรือ "res.cloudinary.com")', 'error');
                 return;
             }
 
-            // Prevent adding duplicate images
+            // Prevent adding duplicate images (check both localStorage images and existing manually added images)
             if (images.some(img => img.url === url)) {
                 showMessage(urlMessageDiv, 'รูปภาพนี้ถูกเพิ่มไปแล้ว', 'info');
                 return;
             }
 
-            addImageToGrid(url);
+            // Create a new entry for a manually added image
+            const newImageEntry = {
+                username: username || 'ผู้ดูแลเพิ่มเอง', // Default username if not provided
+                imageUrl: url,
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            addImageToGrid(newImageEntry);
             cloudinaryUrlInput.value = ''; // Clear input after adding
+            manualUsernameInput.value = ''; // Clear username input
             showMessage(urlMessageDiv, 'เพิ่มรูปภาพสำเร็จ!', 'success');
             setTimeout(() => hideMessage(urlMessageDiv), 3000); // Hide message after 3 seconds
+
+            // Also save manually added images to localStorage so they persist
+            saveImagesToLocalStorage();
         }
 
         function isValidCloudinaryUrl(url) {
@@ -184,27 +201,30 @@
             }
         }
 
-        function addImageToGrid(imageUrl, initialStatus = 'pending', username = '') {
-            const imageId = ++imageCounter;
-            const imageData = {
-                id: imageId,
-                url: imageUrl,
-                status: initialStatus, // pending, correct, incorrect
-                username: username // Store username associated with the image if available
-            };
+        function addImageToGrid(imageData) {
+            // Ensure unique IDs across all images (both localStorage and manually added)
+            const uniqueId = `img-${Date.now()}-${Math.floor(Math.random() * 1000)}`; 
+            const displayId = ++imageCounter; // For display numbering
+
+            // Add the uniqueId to imageData if not already present (for localStorage items)
+            if (!imageData.id) {
+                imageData.id = uniqueId;
+            }
+            // Update the global images array if this is a new addition or re-adding from storage
+            if (!images.some(img => img.id === imageData.id)) {
+                images.push(imageData);
+            }
             
-            images.push(imageData);
-            
-            const imageCard = createImageCard(imageData);
-            imagesGrid.appendChild(imageCard);
+            const card = createImageCard(imageData, displayId);
+            imagesGrid.appendChild(card);
             
             updateStatistics();
         }
 
-        function createImageCard(imageData) {
+        function createImageCard(imageData, displayId) {
             const card = document.createElement('div');
             card.className = 'image-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
-            card.id = `image-${imageData.id}`;
+            card.id = `card-${imageData.id}`; // Use actual imageData.id for the card ID
             
             // Set initial selection if status is not pending
             let correctChecked = imageData.status === 'correct' ? 'checked' : '';
@@ -215,17 +235,17 @@
             card.innerHTML = `
                 <div class="relative">
                     <img 
-                        src="${imageData.url}" 
+                        src="${imageData.imageUrl}" 
                         alt="Image ${imageData.id}"
                         class="w-full h-64 object-cover"
-                        onerror="handleImageError(this, ${imageData.id})"
+                        onerror="handleImageError(this, '${imageData.id}')"
                     >
                     <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
-                        #${imageData.id}
+                        #${displayId}
                     </div>
                 </div>
                 <div class="p-4">
-                    ${imageData.username ? `<p class="text-center text-sm text-gray-700 mb-2">อัปโหลดโดย: <span class="font-semibold">${imageData.username}</span></p>` : ''}
+                    <p class="text-gray-700 font-semibold mb-2 truncate" title="${imageData.username}">ชื่อผู้ใช้: ${imageData.username}</p>
                     <div class="flex justify-center space-x-6">
                         <label class="flex items-center cursor-pointer group">
                             <input 
@@ -233,7 +253,7 @@
                                 name="status-${imageData.id}" 
                                 value="correct"
                                 class="checkbox-correct w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
-                                onchange="updateImageStatus(${imageData.id}, 'correct')"
+                                onchange="updateImageStatus('${imageData.id}', 'correct')"
                                 ${correctChecked}
                             >
                             <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ ถูกต้อง</span>
@@ -244,14 +264,14 @@
                                 name="status-${imageData.id}" 
                                 value="incorrect"
                                 class="checkbox-incorrect w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
-                                onchange="updateImageStatus(${imageData.id}, 'incorrect')"
+                                onchange="updateImageStatus('${imageData.id}', 'incorrect')"
                                 ${incorrectChecked}
                             >
                             <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ผิด</span>
                         </label>
                     </div>
                     <button 
-                        onclick="removeImage(${imageData.id})"
+                        onclick="removeImage('${imageData.id}')"
                         class="w-full mt-3 text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
                     >
                         ลบรูปภาพ
@@ -279,7 +299,7 @@
             imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${imageId} ได้`;
             imgElement.classList.add('object-contain'); 
 
-            const card = document.getElementById(`image-${imageId}`);
+            const card = document.getElementById(`card-${imageId}`);
             if (card) {
                 card.classList.add('border-red-300', 'bg-red-50');
             }
@@ -292,7 +312,7 @@
             if (imageIndex !== -1) {
                 images[imageIndex].status = status;
                 
-                const card = document.getElementById(`image-${imageId}`);
+                const card = document.getElementById(`card-${imageId}`);
                 if (card) {
                     card.classList.remove('correct-selected', 'incorrect-selected');
                     
@@ -303,6 +323,7 @@
                     }
                 }
                 updateStatistics();
+                saveImagesToLocalStorage(); // Save changes to localStorage
             }
         }
 
@@ -311,11 +332,12 @@
             const imageIndex = images.findIndex(img => img.id === imageId);
             if (imageIndex !== -1) {
                 images.splice(imageIndex, 1); 
-                const card = document.getElementById(`image-${imageId}`);
+                const card = document.getElementById(`card-${imageId}`);
                 if (card) {
                     card.remove(); 
                 }
                 updateStatistics();
+                saveImagesToLocalStorage(); // Save changes to localStorage
             }
         }
 
@@ -336,6 +358,7 @@
                 images = [];
                 imagesGrid.innerHTML = ''; 
                 updateStatistics();
+                localStorage.removeItem('uploadedImages'); // Clear localStorage
                 showMessage(urlMessageDiv, 'ลบรูปภาพทั้งหมดแล้ว', 'info');
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
@@ -356,9 +379,10 @@
                 pending: images.filter(img => img.status === 'pending').length,
                 images: images.map(img => ({
                     id: img.id,
-                    url: img.url,
+                    username: img.username, // Include username in export
+                    url: img.imageUrl,      // Use imageUrl in export
                     status: img.status,
-                    username: img.username || null // Include username in export
+                    timestamp: img.timestamp // Include timestamp in export
                 }))
             };
             
@@ -376,30 +400,42 @@
             setTimeout(() => hideMessage(urlMessageDiv), 3000);
         }
 
-        // --- Event Listeners ---
-        // Allow Enter key to add image
-        cloudinaryUrlInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                addImage();
+        // --- LocalStorage functions ---
+        function loadImagesFromLocalStorage() {
+            const storedImages = JSON.parse(localStorage.getItem('uploadedImages')) || [];
+            storedImages.forEach(img => addImageToGrid(img));
+        }
+
+        function saveImagesToLocalStorage() {
+            // Only save the actual image data, not temporary display IDs
+            localStorage.setItem('uploadedImages', JSON.stringify(images));
+        }
+
+        // --- Initialize the app when the DOM is fully loaded ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadImagesFromLocalStorage(); // Load images saved from upload.html (and previous admin sessions)
+            // Optionally add sample images if no images are loaded from localStorage
+            if (images.length === 0) {
+                 sampleImages.forEach(img => {
+                    const newImageEntry = {
+                        username: img.username,
+                        imageUrl: img.url,
+                        timestamp: new Date().toISOString(),
+                        status: 'pending',
+                        id: `sample-${Date.now()}-${Math.floor(Math.random() * 1000)}` // Unique ID for samples
+                    };
+                    addImageToGrid(newImageEntry);
+                 });
+                 saveImagesToLocalStorage(); // Save samples to localStorage too
             }
         });
 
-        // --- Initialize the app ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const usernameFromUpload = params.get('username');
-            const imageUrlFromUpload = params.get('imageUrl');
-
-            if (usernameFromUpload && imageUrlFromUpload) {
-                // Display username received from upload.html
-                usernameDisplay.textContent = `รูปภาพจากผู้ใช้: ${usernameFromUpload}`;
-                usernameDisplay.classList.remove('hidden');
-                // Add the image from upload.html to the grid
-                addImageToGrid(imageUrlFromUpload, 'pending', usernameFromUpload);
-            } else {
-                // If no data from upload.html, initialize with sample images
-                initializeSampleImages();
+        // --- Event Listeners ---
+        // Allow Enter key to add manual image
+        cloudinaryUrlInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                addManualImage();
             }
         });
     </script>
