@@ -78,9 +78,12 @@
       </div>
 
       <div id="form-message" class="message hidden"></div>
-      <div class="flex justify-end space-x-4">
-        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">ยกเลิก</button>
-        <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">ส่งข้อมูล</button>
+      <div class="flex justify-between items-center">
+        <button type="button" id="home-btn" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">หน้าหลัก</button>
+        <div class="flex space-x-4">
+            <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">ยกเลิก</button>
+            <button type="submit" id="submit-btn" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">ส่งข้อมูล</button>
+        </div>
       </div>
     </form>
   </div>
@@ -104,6 +107,7 @@
   const imageUploadMessage = document.getElementById('image-upload-message');
   const submitBtn = document.getElementById('submit-btn');
   const cancelBtn = document.getElementById('cancel-btn');
+  const homeBtn = document.getElementById('home-btn'); // New: Home button
 
   // --- Message Display Functions ---
   function showMessage(element, msg, type) {
@@ -186,6 +190,11 @@
       hideMessage(formMessage);
       usernameInput.focus(); // Focus back to username field
     }
+  });
+
+  // --- Home Button ---
+  homeBtn.addEventListener('click', () => {
+    window.location.href = 'index.html'; // Redirect to index.html
   });
 
   // --- Form Submission Logic: Save to localStorage ---
