@@ -1,11 +1,9 @@
-
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Review System</title>
+    <title>ระบบตรวจสอบรูปภาพ (สำหรับผู้ดูแล)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -20,12 +18,12 @@
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
         .correct-selected {
-            border-color: #10b981;
-            background-color: #ecfdf5;
+            border-color: #10b981; /* green-500 */
+            background-color: #ecfdf5; /* green-50 */
         }
         .incorrect-selected {
-            border-color: #ef4444;
-            background-color: #fef2f2;
+            border-color: #ef4444; /* red-500 */
+            background-color: #fef2f2; /* red-50 */
         }
         .checkbox-correct:checked {
             background-color: #10b981;
@@ -35,17 +33,35 @@
             background-color: #ef4444;
             border-color: #ef4444;
         }
+        /* Styles for message box */
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+        }
+        .message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+        .message.info {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบรูปภาพ</h1>
-            <p class="text-gray-600 text-lg">เลือกรูปภาพที่ถูกต้องหรือผิด</p>
+            <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: เพิ่มและตรวจสอบรูปภาพ</p>
         </div>
 
-        <!-- Cloudinary URL Input -->
         <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
             <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary</h2>
             <div class="flex gap-3">
@@ -62,9 +78,9 @@
                     เพิ่มรูป
                 </button>
             </div>
+            <div id="url-message" class="message hidden"></div>
         </div>
 
-        <!-- Statistics -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-4xl mx-auto">
             <div class="bg-white rounded-lg shadow-md p-4 text-center">
                 <div class="text-2xl font-bold text-gray-800" id="totalCount">0</div>
@@ -80,12 +96,9 @@
             </div>
         </div>
 
-        <!-- Images Grid -->
         <div id="imagesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            <!-- Sample images will be added here -->
-        </div>
+            </div>
 
-        <!-- Action Buttons -->
         <div class="text-center mt-8 space-x-4">
             <button 
                 onclick="clearAll()" 
@@ -104,7 +117,15 @@
 
     <script>
         let images = [];
-        let imageCounter = 0;
+        let imageCounter = 0; // Use to generate unique IDs
+
+        // Get DOM elements
+        const cloudinaryUrlInput = document.getElementById('cloudinaryUrl');
+        const urlMessageDiv = document.getElementById('url-message');
+        const imagesGrid = document.getElementById('imagesGrid');
+        const totalCountSpan = document.getElementById('totalCount');
+        const correctCountSpan = document.getElementById('correctCount');
+        const incorrectCountSpan = document.getElementById('incorrectCount');
 
         // Sample Cloudinary images for demonstration
         const sampleImages = [
@@ -113,33 +134,60 @@
             'https://res.cloudinary.com/demo/image/upload/c_fill,h_400,w_400/sample.jpg'
         ];
 
-        // Initialize with sample images
+        // --- Message Display Function ---
+        function showMessage(element, msg, type) {
+            element.textContent = msg;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+        }
+
+        function hideMessage(element) {
+            element.classList.add('hidden');
+            element.textContent = '';
+        }
+
+        // --- Initialization ---
         function initializeSampleImages() {
             sampleImages.forEach(url => {
                 addImageToGrid(url);
             });
         }
 
+        // --- Add Image Logic ---
         function addImage() {
-            const urlInput = document.getElementById('cloudinaryUrl');
-            const url = urlInput.value.trim();
-            
+            const url = cloudinaryUrlInput.value.trim();
+            hideMessage(urlMessageDiv); // Clear previous messages
+
             if (!url) {
-                alert('กรุณาใส่ URL รูปภาพ');
+                showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปภาพ', 'error');
                 return;
             }
 
             if (!isValidCloudinaryUrl(url)) {
-                alert('กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary');
+                showMessage(urlMessageDiv, 'กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary (ต้องมี "cloudinary.com" หรือ "res.cloudinary.com")', 'error');
+                return;
+            }
+
+            // Prevent adding duplicate images
+            if (images.some(img => img.url === url)) {
+                showMessage(urlMessageDiv, 'รูปภาพนี้ถูกเพิ่มไปแล้ว', 'info');
                 return;
             }
 
             addImageToGrid(url);
-            urlInput.value = '';
+            cloudinaryUrlInput.value = ''; // Clear input after adding
+            showMessage(urlMessageDiv, 'เพิ่มรูปภาพสำเร็จ!', 'success');
+            setTimeout(() => hideMessage(urlMessageDiv), 3000); // Hide message after 3 seconds
         }
 
         function isValidCloudinaryUrl(url) {
-            return url.includes('cloudinary.com') || url.includes('res.cloudinary.com');
+            // More robust check for Cloudinary URLs
+            try {
+                const urlObj = new URL(url);
+                return urlObj.hostname.includes('cloudinary.com') || urlObj.hostname.includes('res.cloudinary.com');
+            } catch (e) {
+                return false; // Invalid URL format
+            }
         }
 
         function addImageToGrid(imageUrl) {
@@ -152,9 +200,8 @@
             
             images.push(imageData);
             
-            const grid = document.getElementById('imagesGrid');
             const imageCard = createImageCard(imageData);
-            grid.appendChild(imageCard);
+            imagesGrid.appendChild(imageCard);
             
             updateStatistics();
         }
@@ -170,7 +217,7 @@
                         src="${imageData.url}" 
                         alt="Image ${imageData.id}"
                         class="w-full h-64 object-cover"
-                        onerror="handleImageError(this)"
+                        onerror="handleImageError(this, ${imageData.id})"
                     >
                     <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
                         #${imageData.id}
@@ -211,60 +258,92 @@
             return card;
         }
 
-        function handleImageError(img) {
-            img.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMDAgMTUwTDE3MCA4MEwyMzAgODBMMjAwIDE1MFoiIGZpbGw9IiM5Q0EzQUYiLz4KPHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIxODAiIHk9IjEzMCI+CjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjIwIiBmaWxsPSIjRUY0NDQ0Ii8+CjxwYXRoIGQ9Ik0yNiAxNEwxNCAyNk0xNCAyNkwyNiAxNCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KPHN2Zz4KPHRleHQgeD0iMjAwIiB5PSIyMDAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM2QjcyODAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCI+ไม่สามารถโหลดรูปภาพได้PC90ZXh0Pgo8L3N2Zz4K';
-            img.parentElement.parentElement.classList.add('border-red-300', 'bg-red-50');
+        // --- Image Error Handling ---
+        function handleImageError(imgElement, imageId) {
+            // SVG for broken image icon and text
+            const errorSvg = `
+                <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="400" height="300" fill="#F3F4F6"/>
+                    <path d="M200 150L170 80L230 80L200 150Z" fill="#9CA3AF"/>
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" x="180" y="130">
+                        <circle cx="20" cy="20" r="20" fill="#EF4444"/>
+                        <path d="M26 14L14 26M14 26L26 14" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <text x="200" y="200" text-anchor="middle" fill="#6B7280" font-family="Sarabun, Arial" font-size="14">ไม่สามารถโหลดรูปภาพได้</text>
+                </svg>
+            `;
+            imgElement.src = `data:image/svg+xml;base64,${btoa(errorSvg)}`;
+            imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${imageId} ได้`;
+            imgElement.classList.add('object-contain'); // Change object-cover to object-contain for SVGs
+
+            // Visually mark the card as having an error
+            const card = document.getElementById(`image-${imageId}`);
+            if (card) {
+                card.classList.add('border-red-300', 'bg-red-50');
+            }
+            // Optionally, set the status to incorrect for broken images
+            updateImageStatus(imageId, 'incorrect');
         }
 
+        // --- Update Image Status ---
         function updateImageStatus(imageId, status) {
             const imageIndex = images.findIndex(img => img.id === imageId);
             if (imageIndex !== -1) {
                 images[imageIndex].status = status;
                 
                 const card = document.getElementById(`image-${imageId}`);
-                card.classList.remove('correct-selected', 'incorrect-selected');
-                
-                if (status === 'correct') {
-                    card.classList.add('correct-selected');
-                } else if (status === 'incorrect') {
-                    card.classList.add('incorrect-selected');
+                if (card) { // Ensure card exists
+                    card.classList.remove('correct-selected', 'incorrect-selected');
+                    
+                    if (status === 'correct') {
+                        card.classList.add('correct-selected');
+                    } else if (status === 'incorrect') {
+                        card.classList.add('incorrect-selected');
+                    }
                 }
-                
                 updateStatistics();
             }
         }
 
+        // --- Remove Image ---
         function removeImage(imageId) {
             const imageIndex = images.findIndex(img => img.id === imageId);
             if (imageIndex !== -1) {
-                images.splice(imageIndex, 1);
+                images.splice(imageIndex, 1); // Remove from array
                 const card = document.getElementById(`image-${imageId}`);
-                card.remove();
+                if (card) { // Ensure card exists
+                    card.remove(); // Remove from DOM
+                }
                 updateStatistics();
             }
         }
 
+        // --- Update Statistics ---
         function updateStatistics() {
             const total = images.length;
             const correct = images.filter(img => img.status === 'correct').length;
             const incorrect = images.filter(img => img.status === 'incorrect').length;
             
-            document.getElementById('totalCount').textContent = total;
-            document.getElementById('correctCount').textContent = correct;
-            document.getElementById('incorrectCount').textContent = incorrect;
+            totalCountSpan.textContent = total;
+            correctCountSpan.textContent = correct;
+            incorrectCountSpan.textContent = incorrect;
         }
 
+        // --- Clear All Images ---
         function clearAll() {
-            if (confirm('คุณต้องการลบรูปภาพทั้งหมดหรือไม่?')) {
+            if (confirm('คุณต้องการลบรูปภาพทั้งหมดหรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้')) {
                 images = [];
-                document.getElementById('imagesGrid').innerHTML = '';
+                imagesGrid.innerHTML = ''; // Clear DOM
                 updateStatistics();
+                showMessage(urlMessageDiv, 'ลบรูปภาพทั้งหมดแล้ว', 'info');
+                setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
+        // --- Export Results ---
         function exportResults() {
             if (images.length === 0) {
-                alert('ไม่มีรูปภาพให้ส่งออก');
+                showMessage(urlMessageDiv, 'ไม่มีรูปภาพให้ส่งออก', 'info');
                 return;
             }
             
@@ -290,18 +369,22 @@
             link.download = `image-review-results-${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
-            URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url); // Clean up the URL object
+            showMessage(urlMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
+            setTimeout(() => hideMessage(urlMessageDiv), 3000);
         }
 
+        // --- Event Listeners ---
         // Allow Enter key to add image
-        document.getElementById('cloudinaryUrl').addEventListener('keypress', function(e) {
+        cloudinaryUrlInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent default form submission behavior
                 addImage();
             }
         });
 
-        // Initialize the app
-        initializeSampleImages();
+        // Initialize the app with sample images on load
+        document.addEventListener('DOMContentLoaded', initializeSampleImages);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95bd9ef4356299a6',t:'MTc1MTk1NzE0OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
