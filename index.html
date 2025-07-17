@@ -441,9 +441,236 @@
         </div>
     </div>
 
-    <script src="common.js"></script>
-
     <script>
+        // *** START - Common JavaScript (previously common.js) ***
+
+        // *** IMPORTANT: Replace with your deployed Google Apps Script Web App URL ***
+        const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE'; 
+        // Example: https://script.google.com/macros/s/AKfyc.../exec
+
+        // Function to show Toast Notifications
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast show ' + type;
+            toast.textContent = message;
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000); // 3 seconds
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('opacity-100'), 10); // Add transition effect
+            }
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                setTimeout(() => modal.classList.add('hidden'), 300); // Hide after transition
+            }
+        }
+
+        // Handle Login Form Submission
+        async function handleLogin(event) {
+            event.preventDefault();
+            const form = event.target;
+            const email = form.loginEmail.value;
+            const password = form.loginPassword.value;
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'login',
+                        email: email,
+                        password: password
+                    }).toString()
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    localStorage.setItem('loggedInUser', JSON.stringify(result.user));
+                    closeModal('loginModal');
+                    checkLoginStatus(); // Update UI after login
+                    // Optionally redirect or refresh page
+                    // window.location.reload(); 
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('An error occurred during login. Please try again.', 'error');
+            }
+        }
+
+        // Handle Register Form Submission
+        async function handleRegister(event) {
+            event.preventDefault();
+            const form = event.target;
+            const username = form.regUsername.value;
+            const fullname = form.regFullname.value;
+            const email = form.regEmail.value;
+            const password = form.regPassword.value;
+            const confirmPassword = form.regConfirmPassword.value;
+
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'register',
+                        username: username,
+                        fullname: fullname,
+                        email: email,
+                        password: password
+                    }).toString()
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    closeModal('registerModal');
+                    openModal('loginModal'); // Open login modal after successful registration
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showToast('An error occurred during registration. Please try again.', 'error');
+            }
+        }
+
+        // Check Login Status and Update UI
+        function checkLoginStatus() {
+            const userProfileSection = document.getElementById('user-profile');
+            const authButtonsSection = document.getElementById('auth-buttons');
+            const usernameDisplay = document.getElementById('username-display');
+            const fullnameDisplay = document.getElementById('fullname-display');
+            const emailDisplay = document.getElementById('email-display');
+            const mobileUsernameDisplay = document.getElementById('mobile-username-display');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            const uploadLinkDesktop = document.getElementById('upload-link-desktop');
+            const uploadLinkMobile = document.getElementById('upload-link-mobile');
+
+            const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+            if (user && userProfileSection && authButtonsSection) {
+                userProfileSection.classList.remove('hidden');
+                userProfileSection.classList.add('flex'); // Ensure it's a flex container
+                authButtonsSection.classList.add('hidden');
+
+                if (usernameDisplay) usernameDisplay.textContent = user.username || 'ผู้ใช้';
+                if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
+                if (emailDisplay) emailDisplay.textContent = user.email || 'ไม่ระบุอีเมล';
+                if (mobileUsernameDisplay) mobileUsernameDisplay.textContent = user.username || 'ผู้ใช้';
+                if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
+
+                // Show upload links if logged in
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
+
+                return user; // Return user object if logged in
+            } else if (userProfileSection && authButtonsSection) {
+                userProfileSection.classList.add('hidden');
+                userProfileSection.classList.remove('flex');
+                authButtonsSection.classList.remove('hidden');
+
+                // Hide upload links if not logged in
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
+
+                return null; // Return null if not logged in
+            }
+            return null; // Default return
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            showToast('Logged out successfully!', 'info');
+            checkLoginStatus(); // Update UI after logout
+            // Hide mobile menu if open
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+            window.location.reload(); // Reload to clear any user-specific data
+        }
+
+        // Attach event listeners for auth forms
+        function attachAuthFormListeners() {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+            if (registerForm) {
+                registerForm.addEventListener('submit', handleRegister);
+            }
+
+            // Mobile menu toggle
+            const menuButton = document.getElementById('menuButton');
+            const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (menuButton) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            if (menuButtonLoggedIn) {
+                menuButtonLoggedIn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            });
+
+            // Toggle dropdown active class when dropdown button is clicked
+            const dropdownButtons = document.querySelectorAll('.dropdown > button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation(); // Prevent immediate closing from document click
+                    this.closest('.dropdown').classList.toggle('active');
+                });
+            });
+
+            // Close modal when clicking outside (on the overlay)
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+        }
+
+        // *** END - Common JavaScript ***
+
+        // *** START - Page-specific JavaScript (previously in index.html) ***
+
         let allResearches = []; // Stores all research data loaded from Google Sheet
         const researchCardsContainer = document.getElementById('researchCards');
         const searchInput = document.getElementById('searchInput');
@@ -547,7 +774,7 @@
             noResearchMessage.classList.add('hidden'); // Hide "no research" message initially
 
             try {
-                // GOOGLE_APPS_SCRIPT_URL is defined in common.js
+                // GOOGLE_APPS_SCRIPT_URL is defined in the common JavaScript section above
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                     method: 'POST', // Use POST as per our combined Apps Script
                     mode: 'cors',
@@ -596,28 +823,6 @@
             }
         }
 
-        // --- UI Updates based on Login Status ---
-        // Overrides checkLoginStatus from common.js to add upload link logic
-        const originalCheckLoginStatus = checkLoginStatus; // Keep a reference to the original function
-
-        checkLoginStatus = () => {
-            const user = originalCheckLoginStatus(); // Call the original function
-            const uploadLinkDesktop = document.getElementById('upload-link-desktop');
-            const uploadLinkMobile = document.getElementById('upload-link-mobile');
-
-            if (user) {
-                // If logged in, show upload links
-                if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
-                if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
-            } else {
-                // If not logged in, hide upload links
-                if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
-                if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
-            }
-            return user; // Return the user object
-        };
-
-
         // Event listeners for search and filter
         searchButton.addEventListener('click', filterResearches);
         searchInput.addEventListener('input', filterResearches); // Filter as user types
@@ -627,10 +832,12 @@
 
         // Initial load on DOMContentLoaded
         document.addEventListener('DOMContentLoaded', () => {
-            checkLoginStatus(); // Call the modified checkLoginStatus
-            attachAuthFormListeners(); // Call from common.js for modal logic
+            checkLoginStatus(); // Call checkLoginStatus
+            attachAuthFormListeners(); // Call function to attach event listeners to auth forms and mobile menu
             loadApprovedResearch(); // Load research data
         });
+
+        // *** END - Page-specific JavaScript ***
     </script>
 </body>
 </html>
