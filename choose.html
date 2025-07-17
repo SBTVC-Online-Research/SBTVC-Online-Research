@@ -3,35 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบตรวจสอบรูปภาพ (สำหรับผู้ดูแล)</title>
+    <title>ระบบจัดการงานวิจัย (สำหรับผู้ดูแล)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Sarabun', sans-serif;
         }
-        .image-card {
+        .research-card {
             transition: all 0.3s ease;
         }
-        .image-card:hover {
+        .research-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        .correct-selected {
+        .status-approved {
             border-color: #10b981; /* green-500 */
             background-color: #ecfdf5; /* green-50 */
         }
-        .incorrect-selected {
+        .status-pending {
+            border-color: #fbbf24; /* amber-400 */
+            background-color: #fffbeb; /* amber-50 */
+        }
+        .status-rejected {
             border-color: #ef4444; /* red-500 */
             background-color: #fef2f2; /* red-50 */
         }
-        .checkbox-correct:checked {
+        .checkbox-approved:checked {
             background-color: #10b981;
             border-color: #10b981;
         }
-        .checkbox-incorrect:checked {
+        .checkbox-rejected:checked {
             background-color: #ef4444;
             border-color: #ef4444;
+        }
+        .checkbox-pending:checked {
+            background-color: #fbbf24;
+            border-color: #fbbf24;
         }
         /* Styles for message box */
         .message {
@@ -58,94 +66,101 @@
 <body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบรูปภาพ</h1>
-            <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: เพิ่มและตรวจสอบรูปภาพ</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบจัดการงานวิจัย</h1>
+            <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: ตรวจสอบและอนุมัติงานวิจัย</p>
         </div>
 
         <div class="text-center mb-4">
-            <button 
-                onclick="loadImagesFromGoogleSheet()" 
+            <button
+                onclick="loadResearchDataFromGoogleSheet()"
                 class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
             >
                 รีเฟรชข้อมูลล่าสุดจาก Google Sheet
             </button>
         </div>
 
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-2xl mx-auto">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มรูปภาพจาก Cloudinary (ด้วยตนเอง)</h2>
-            <div class="flex flex-col md:flex-row gap-3">
-                <input 
-                    type="text" 
-                    id="manualUsername" 
-                    placeholder="ชื่อผู้ใช้ (ถ้ามี)..." 
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                <input 
-                    type="url" 
-                    id="cloudinaryUrl" 
-                    placeholder="ใส่ URL รูปภาพจาก Cloudinary..." 
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                <button 
-                    onclick="addManualImage()" 
-                    class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-                >
-                    เพิ่มรูป
-                </button>
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-4xl mx-auto">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มงานวิจัยใหม่ (ด้วยตนเอง)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input type="text" id="manualUsername" placeholder="ชื่อผู้ใช้ (ไม่บังคับ)..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="url" id="manualCoverImageUrl" placeholder="URL รูปปกงานวิจัย (Cloudinary)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualTitle" placeholder="ชื่อเรื่องงานวิจัย..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualCategory" placeholder="หมวดหมู่..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualDepartment" placeholder="สาขาวิชา/ภาควิชา..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualField" placeholder="สาขา/แขนงวิชา..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="number" id="manualYear" placeholder="ปีที่ตีพิมพ์ (ค.ศ.)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualAcademicYear" placeholder="ปีการศึกษา (เช่น 2566-2567)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualAuthors" placeholder="ผู้แต่ง (คั่นด้วย , )..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <input type="text" id="manualAdvisor" placeholder="อาจารย์ที่ปรึกษา..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
+                <textarea id="manualAbstract" placeholder="บทคัดย่อ..." rows="3" class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-y"></textarea>
+                <textarea id="manualResearchFileUrls" placeholder="URL ไฟล์งานวิจัย (JSON Array เช่น [&quot;url1&quot;, &quot;url2&quot;])..." rows="2" class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-y"></textarea>
             </div>
+            <button
+                onclick="addManualResearch()"
+                class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 w-full"
+            >
+                เพิ่มงานวิจัย
+            </button>
             <div id="url-message" class="message hidden"></div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-4xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-5xl mx-auto">
             <div class="bg-white rounded-lg shadow-md p-4 text-center">
                 <div class="text-2xl font-bold text-gray-800" id="totalCount">0</div>
-                <div class="text-gray-600">รูปทั้งหมด</div>
+                <div class="text-gray-600">งานวิจัยทั้งหมด</div>
+            </div>
+            <div class="bg-amber-50 rounded-lg shadow-md p-4 text-center">
+                <div class="text-2xl font-bold text-amber-600" id="pendingCount">0</div>
+                <div class="text-amber-700">รอดำเนินการ</div>
             </div>
             <div class="bg-green-50 rounded-lg shadow-md p-4 text-center">
-                <div class="text-2xl font-bold text-green-600" id="correctCount">0</div>
-                <div class="text-green-700">ถูกต้อง</div>
+                <div class="text-2xl font-bold text-green-600" id="approvedCount">0</div>
+                <div class="text-green-700">อนุมัติแล้ว</div>
             </div>
-            <div class="bg-red-50 rounded-lg shadow-md p-4 text-center">
-                <div class="text-2xl font-bold text-red-600" id="incorrectCount">0</div>
-                <div class="text-red-700">ผิด</div>
             </div>
+
+        <div id="researchGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         </div>
 
-        <div id="imagesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            </div>
-
         <div class="text-center mt-8 space-x-4">
-            <button 
-                onclick="clearAllDisplayedImages()" 
+            <button
+                onclick="clearAllDisplayedResearch()"
                 class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
             >
                 ล้างทั้งหมดที่แสดง (ไม่ลบใน Sheet)
             </button>
-            <button 
-                onclick="exportResults()" 
-                class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
-            >
-                ส่งออกผลลัพธ์
-            </button>
-        </div>
+            </div>
     </div>
 
     <script>
-        let images = []; // Stores all image data currently displayed
-        let imageDisplayCounter = 0; // Use to generate unique IDs for display numbering
+        let researches = []; // Stores all research data currently displayed
+        let researchDisplayCounter = 0; // Use to generate unique IDs for display numbering
 
         // **Google Apps Script Web App URL** //
-        // *** สำคัญมาก: URL ของคุณถูกนำมาใช้ที่นี่แล้ว ***
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec'; 
+        // *** สำคัญมาก: โปรดแทนที่ด้วย URL ของ Web App ของคุณเองหลังจาก Deploy Apps Script เป็นเวอร์ชันใหม่ ***
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-        // DOM elements
+        // DOM elements for manual add
         const manualUsernameInput = document.getElementById('manualUsername');
-        const cloudinaryUrlInput = document.getElementById('cloudinaryUrl');
+        const manualCoverImageUrlInput = document.getElementById('manualCoverImageUrl');
+        const manualTitleInput = document.getElementById('manualTitle');
+        const manualCategoryInput = document.getElementById('manualCategory');
+        const manualDepartmentInput = document.getElementById('manualDepartment');
+        const manualFieldInput = document.getElementById('manualField');
+        const manualYearInput = document.getElementById('manualYear');
+        const manualAcademicYearInput = document.getElementById('manualAcademicYear');
+        const manualAuthorsInput = document.getElementById('manualAuthors');
+        const manualAdvisorInput = document.getElementById('manualAdvisor');
+        const manualAbstractInput = document.getElementById('manualAbstract');
+        const manualResearchFileUrlsInput = document.getElementById('manualResearchFileUrls');
+
+        // DOM elements for display and messages
         const urlMessageDiv = document.getElementById('url-message');
-        const imagesGrid = document.getElementById('imagesGrid');
+        const researchGrid = document.getElementById('researchGrid');
         const totalCountSpan = document.getElementById('totalCount');
-        const correctCountSpan = document.getElementById('correctCount');
-        const incorrectCountSpan = document.getElementById('incorrectCount');
+        const pendingCountSpan = document.getElementById('pendingCount');
+        const approvedCountSpan = document.getElementById('approvedCount');
+        // const rejectedCountSpan = document.getElementById('rejectedCount'); // Uncomment if using 'Rejected' status
 
         // --- Message Display Function ---
         function showMessage(element, msg, type) {
@@ -159,82 +174,123 @@
             element.textContent = '';
         }
 
-        // --- Load Images from Google Sheet ---
-        async function loadImagesFromGoogleSheet() {
+        // --- Load Research Data from Google Sheet (PENDING_SHEET_NAME) ---
+        async function loadResearchDataFromGoogleSheet() {
             showMessage(urlMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
             try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                // สำหรับ Admin UI เราต้องการดึงข้อมูลจากชีท PENDING_SHEET_NAME
+                // Apps Script doGet จะดึงจาก APPROVED_SHEET_NAME โดยค่าเริ่มต้น
+                // เราต้องส่งพารามิเตอร์เพื่อให้ doGet ดึงจาก PENDING_SHEET_NAME แทน
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=pending`, { // เพิ่ม ?sheet=pending
                     method: 'GET',
-                    redirect: 'follow', 
+                    redirect: 'follow',
                 });
                 const data = await response.json();
-                
-                images = []; // Clear current images array
-                imagesGrid.innerHTML = ''; // Clear current display
-                imageDisplayCounter = 0; // Reset display counter
 
-                if (Array.isArray(data)) {
-                    data.forEach(item => {
+                researches = []; // Clear current researches array
+                researchGrid.innerHTML = ''; // Clear current display
+                researchDisplayCounter = 0; // Reset display counter
+
+                if (data.status === 'success' && Array.isArray(data.data)) {
+                    data.data.forEach(item => {
                         // Ensure data has the expected properties (ImageUrl, Username, Status, Id)
-                        if (item.ImageUrl && item.Id) {
-                            addImageToGrid({
-                                id: item.Id,
-                                username: item.Username || 'ไม่ระบุ',
-                                imageUrl: item.ImageUrl,
-                                status: item.Status || 'pending', // Default to pending if not set
-                                timestamp: item.Timestamp || new Date().toISOString()
-                            });
+                        if (item.Id) { // ตรวจสอบว่ามี Id เป็นอย่างน้อย
+                            addResearchToGrid(item);
                         }
                     });
                     showMessage(urlMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
+                } else if (data.status === 'error') {
+                    showMessage(urlMessageDiv, `โหลดข้อมูลล้มเหลว: ${data.message}`, 'error');
                 } else {
                     showMessage(urlMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
                 }
             } catch (error) {
-                console.error('Error loading images from Google Sheet:', error);
+                console.error('Error loading research data from Google Sheet:', error);
                 showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
             } finally {
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
-        // --- Add Image Logic (Manual Input from Admin) ---
-        async function addManualImage() {
+        // --- Add Manual Research Logic (Admin Input) ---
+        async function addManualResearch() {
             const username = manualUsernameInput.value.trim();
-            const url = cloudinaryUrlInput.value.trim();
-            hideMessage(urlMessageDiv); 
+            const coverImageUrl = manualCoverImageUrlInput.value.trim();
+            const title = manualTitleInput.value.trim();
+            const category = manualCategoryInput.value.trim();
+            const department = manualDepartmentInput.value.trim();
+            const field = manualFieldInput.value.trim();
+            const year = manualYearInput.value.trim();
+            const academicYear = manualAcademicYearInput.value.trim();
+            const authors = manualAuthorsInput.value.trim();
+            const advisor = manualAdvisorInput.value.trim();
+            const abstract = manualAbstractInput.value.trim();
+            let researchFileUrls = manualResearchFileUrlsInput.value.trim();
 
-            if (!url) {
-                showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปภาพ', 'error');
+            hideMessage(urlMessageDiv);
+
+            if (!title) {
+                showMessage(urlMessageDiv, 'กรุณาใส่ชื่อเรื่องงานวิจัย', 'error');
                 return;
             }
-            if (!isValidCloudinaryUrl(url)) {
-                showMessage(urlMessageDiv, 'กรุณาใส่ URL ที่ถูกต้องจาก Cloudinary', 'error');
+            if (coverImageUrl && !isValidCloudinaryUrl(coverImageUrl)) {
+                showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปปกที่ถูกต้องจาก Cloudinary (ถ้ามี)', 'error');
                 return;
             }
 
-            // Check for duplicates before adding to Google Sheet
-            if (images.some(img => img.imageUrl === url)) {
-                showMessage(urlMessageDiv, 'รูปภาพนี้ถูกเพิ่มไปแล้ว', 'info');
-                return;
+            // ตรวจสอบว่า researchFileUrls เป็น JSON array ที่ถูกต้อง (ถ้ามี)
+            if (researchFileUrls) {
+                try {
+                    const parsedUrls = JSON.parse(researchFileUrls);
+                    if (!Array.isArray(parsedUrls)) {
+                        throw new Error('ไม่ใช่ JSON Array');
+                    }
+                    // Optional: Validate each URL in the array if needed
+                } catch (e) {
+                    showMessage(urlMessageDiv, 'URL ไฟล์งานวิจัยต้องเป็น JSON Array ที่ถูกต้อง (เช่น ["url1", "url2"])', 'error');
+                    return;
+                }
+            } else {
+                researchFileUrls = '[]'; // ส่งเป็น JSON array ว่างเปล่า
             }
 
-            showMessage(urlMessageDiv, 'กำลังเพิ่มรูปภาพ...', 'info');
+            showMessage(urlMessageDiv, 'กำลังเพิ่มงานวิจัย...', 'info');
 
-            const newImageEntry = {
+            const newResearchEntry = {
                 id: `manual-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-                username: username || 'ผู้ดูแลเพิ่มเอง',
-                imageUrl: url,
-                status: 'pending',
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                username: username || 'ผู้ดูแล',
+                imageUrl: coverImageUrl, // ใช้ ImageUrl แทน CoverImageUrl ใน Apps Script (ตรงกับหัวข้อในชีท)
+                status: 'Pending', // สถานะเริ่มต้น
+                title: title,
+                category: category,
+                department: department,
+                field: field,
+                year: year,
+                academicYear: academicYear,
+                authors: authors,
+                advisor: advisor,
+                abstract: abstract,
+                researchFileUrls: researchFileUrls // เป็น JSON string
             };
 
             try {
                 const formData = new FormData();
-                formData.append('action', 'upload');
-                formData.append('username', newImageEntry.username);
-                formData.append('imageUrl', newImageEntry.imageUrl);
-                formData.append('id', newImageEntry.id);
+                formData.append('action', 'submitResearch'); // ใช้ action เดียวกันกับฟอร์มหลัก
+                formData.append('id', newResearchEntry.id);
+                formData.append('timestamp', newResearchEntry.timestamp);
+                formData.append('username', newResearchEntry.username);
+                formData.append('coverImageUrl', newResearchEntry.imageUrl); // ชื่อพารามิเตอร์นี้ต้องตรงกับที่ Apps Script รับ
+                formData.append('title', newResearchEntry.title);
+                formData.append('category', newResearchEntry.category);
+                formData.append('department', newResearchEntry.department);
+                formData.append('field', newResearchEntry.field);
+                formData.append('year', newResearchEntry.year);
+                formData.append('academicYear', newResearchEntry.academicYear);
+                formData.append('authors', newResearchEntry.authors);
+                formData.append('advisor', newResearchEntry.advisor);
+                formData.append('abstract', newResearchEntry.abstract);
+                formData.append('researchFileUrls', newResearchEntry.researchFileUrls); // ต้องเป็น JSON string
 
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -243,17 +299,28 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // Re-load all images from Google Sheet to ensure display is in sync
-                    await loadImagesFromGoogleSheet(); 
-                    cloudinaryUrlInput.value = ''; 
-                    manualUsernameInput.value = ''; 
-                    showMessage(urlMessageDiv, 'เพิ่มรูปภาพสำเร็จ!', 'success');
+                    await loadResearchDataFromGoogleSheet(); // Reload all data to ensure display is in sync
+                    // Clear form fields
+                    manualUsernameInput.value = '';
+                    manualCoverImageUrlInput.value = '';
+                    manualTitleInput.value = '';
+                    manualCategoryInput.value = '';
+                    manualDepartmentInput.value = '';
+                    manualFieldInput.value = '';
+                    manualYearInput.value = '';
+                    manualAcademicYearInput.value = '';
+                    manualAuthorsInput.value = '';
+                    manualAdvisorInput.value = '';
+                    manualAbstractInput.value = '';
+                    manualResearchFileUrlsInput.value = '';
+
+                    showMessage(urlMessageDiv, 'เพิ่มงานวิจัยสำเร็จ!', 'success');
                 } else {
-                    showMessage(urlMessageDiv, `เพิ่มรูปภาพล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                    showMessage(urlMessageDiv, `เพิ่มงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
             } catch (error) {
-                console.error('Error adding manual image to Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการเพิ่มรูปภาพ', 'error');
+                console.error('Error adding manual research to Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการเพิ่มงานวิจัย', 'error');
             } finally {
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
@@ -264,88 +331,132 @@
                 const urlObj = new URL(url);
                 return urlObj.hostname.includes('cloudinary.com') || urlObj.hostname.includes('res.cloudinary.com');
             } catch (e) {
-                return false; 
+                return false;
             }
         }
 
-        function addImageToGrid(imageData) {
-            // Check if this image (by its unique ID) is already in the 'images' array (currently displayed)
-            if (images.some(img => img.id === imageData.id)) {
-                return; 
+        function addResearchToGrid(researchData) {
+            // Check if this research (by its unique ID) is already in the 'researches' array (currently displayed)
+            if (researches.some(r => r.Id === researchData.Id)) { // ใช้ Id จากข้อมูลจริง
+                return;
             }
-            
-            images.push(imageData);
-            
+
+            researches.push(researchData);
+
             // Assign a display ID for numbering on the card
-            imageDisplayCounter++; 
-            const card = createImageCard(imageData, imageDisplayCounter);
-            imagesGrid.appendChild(card);
-            
+            researchDisplayCounter++;
+            const card = createResearchCard(researchData, researchDisplayCounter);
+            researchGrid.appendChild(card);
+
             updateStatistics();
         }
 
-        function createImageCard(imageData, displayId) {
+        function createResearchCard(researchData, displayId) {
             const card = document.createElement('div');
-            card.className = 'image-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
-            card.id = `card-${imageData.id}`; 
+            card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
+            card.id = `card-${researchData.Id}`; // ใช้ Id จากข้อมูลจริง
+
+            let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
+            let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
+            let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : ''; // หากมีสถานะ Rejected
             
-            let correctChecked = imageData.status === 'correct' ? 'checked' : '';
-            let incorrectChecked = imageData.status === 'incorrect' ? 'checked' : '';
-            if (imageData.status === 'correct') card.classList.add('correct-selected');
-            if (imageData.status === 'incorrect') card.classList.add('incorrect-selected');
+            // Add status class
+            if (researchData.Status === 'Approved') card.classList.add('status-approved');
+            else if (researchData.Status === 'Pending') card.classList.add('status-pending');
+            else if (researchData.Status === 'Rejected') card.classList.add('status-rejected'); // หากมีสถานะ Rejected
+
+            // Parse Research File URLs for display
+            let researchFileLinksHtml = '';
+            if (researchData['Research File URLs']) {
+                try {
+                    const fileUrls = JSON.parse(researchData['Research File URLs']);
+                    if (Array.isArray(fileUrls) && fileUrls.length > 0) {
+                        researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
+                        fileUrls.forEach((url, index) => {
+                            researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
+                        });
+                        researchFileLinksHtml += '</div>';
+                    }
+                } catch (e) {
+                    console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
+                    researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
+                }
+            }
+
 
             card.innerHTML = `
                 <div class="relative">
-                    <img 
-                        src="${imageData.imageUrl}" 
-                        alt="Image ${imageData.id}"
+                    <img
+                        src="${researchData.ImageUrl || 'https://via.placeholder.com/400x300?text=No+Image+Available'}"
+                        alt="Research Cover ${researchData.Title || researchData.Id}"
                         class="w-full h-64 object-cover"
-                        onerror="handleImageError(this, '${imageData.id}')"
+                        onerror="handleImageError(this, '${researchData.Id}')"
                     >
                     <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
                         #${displayId}
                     </div>
+                    <div class="absolute bottom-3 left-3 bg-white rounded-lg px-3 py-1 text-xs font-semibold text-gray-700 shadow-md">
+                        ID: ${researchData.Id}
+                    </div>
                 </div>
                 <div class="p-4">
-                    <p class="text-gray-700 font-semibold mb-2 truncate" title="${imageData.username}">ชื่อผู้ใช้: ${imageData.username}</p>
-                    <div class="flex justify-center space-x-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-2 truncate" title="${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}">${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}</h3>
+                    <p class="text-gray-600 text-sm mb-1"><strong>ผู้ใช้:</strong> ${researchData.Username || 'ไม่ระบุ'}</p>
+                    <p class="text-gray-600 text-sm mb-1"><strong>หมวดหมู่:</strong> ${researchData.Category || 'ไม่ระบุ'}</p>
+                    <p class="text-gray-600 text-sm mb-1"><strong>ผู้แต่ง:</strong> ${researchData.Authors || 'ไม่ระบุ'}</p>
+                    <p class="text-gray-600 text-sm mb-1"><strong>ปี:</strong> ${researchData.Year || 'ไม่ระบุ'}</p>
+                    <p class="text-gray-600 text-sm mb-1"><strong>สถานะปัจจุบัน:</strong> <span class="font-semibold">${researchData.Status || 'Pending'}</span></p>
+                    ${researchFileLinksHtml}
+                    
+                    <div class="mt-4 flex justify-around space-x-2">
                         <label class="flex items-center cursor-pointer group">
-                            <input 
-                                type="radio" 
-                                name="status-${imageData.id}" 
-                                value="correct"
-                                class="checkbox-correct w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
-                                onchange="updateImageStatus('${imageData.id}', 'correct')"
-                                ${correctChecked}
+                            <input
+                                type="radio"
+                                name="status-${researchData.Id}"
+                                value="Approved"
+                                class="checkbox-approved w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
+                                onchange="updateResearchStatus('${researchData.Id}', 'Approved')"
+                                ${approvedChecked}
                             >
-                            <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ ถูกต้อง</span>
+                            <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ อนุมัติ</span>
                         </label>
                         <label class="flex items-center cursor-pointer group">
-                            <input 
-                                type="radio" 
-                                name="status-${imageData.id}" 
-                                value="incorrect"
-                                class="checkbox-incorrect w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
-                                onchange="updateImageStatus('${imageData.id}', 'incorrect')"
-                                ${incorrectChecked}
+                            <input
+                                type="radio"
+                                name="status-${researchData.Id}"
+                                value="Rejected"
+                                class="checkbox-rejected w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
+                                onchange="updateResearchStatus('${researchData.Id}', 'Rejected')"
+                                ${rejectedChecked}
                             >
-                            <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ผิด</span>
+                            <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ไม่อนุมัติ</span>
+                        </label>
+                        <label class="flex items-center cursor-pointer group">
+                            <input
+                                type="radio"
+                                name="status-${researchData.Id}"
+                                value="Pending"
+                                class="checkbox-pending w-5 h-5 text-amber-600 border-2 border-gray-300 rounded focus:ring-amber-500"
+                                onchange="updateResearchStatus('${researchData.Id}', 'Pending')"
+                                ${pendingChecked}
+                            >
+                            <span class="ml-2 text-amber-700 font-medium group-hover:text-amber-800">รอดำเนินการ</span>
                         </label>
                     </div>
-                    <button 
-                        onclick="removeImage('${imageData.id}')"
+                    <button
+                        onclick="deleteResearch('${researchData.Id}')"
                         class="w-full mt-3 text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
                     >
-                        ลบรูปภาพ
+                        ลบงานวิจัยนี้
                     </button>
                 </div>
             `;
-            
+
             return card;
         }
 
         // --- Image Error Handling ---
-        function handleImageError(imgElement, imageId) {
+        function handleImageError(imgElement, researchId) {
             const errorSvg = `
                 <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <rect width="400" height="300" fill="#F3F4F6"/>
@@ -358,23 +469,23 @@
                 </svg>
             `;
             imgElement.src = `data:image/svg+xml;base64,${btoa(errorSvg)}`;
-            imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${imageId} ได้`;
-            imgElement.classList.add('object-contain'); 
+            imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${researchId} ได้`;
+            imgElement.classList.add('object-contain');
 
-            const card = document.getElementById(`card-${imageId}`);
+            const card = document.getElementById(`card-${researchId}`);
             if (card) {
-                card.classList.add('border-red-300', 'bg-red-50');
+                // ไม่ได้เปลี่ยนสถานะอัตโนมัติเป็น Rejected เพราะรูปโหลดไม่ได้
+                // ปล่อยให้ Admin ตัดสินใจเอง
             }
-            updateImageStatus(imageId, 'incorrect'); 
         }
 
-        // --- Update Image Status on Google Sheet ---
-        async function updateImageStatus(imageId, status) {
+        // --- Update Research Status on Google Sheet ---
+        async function updateResearchStatus(researchId, status) {
             showMessage(urlMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
             try {
                 const formData = new FormData();
                 formData.append('action', 'updateStatus');
-                formData.append('id', imageId);
+                formData.append('id', researchId);
                 formData.append('status', status);
 
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
@@ -384,17 +495,9 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    const imageIndex = images.findIndex(img => img.id === imageId);
-                    if (imageIndex !== -1) {
-                        images[imageIndex].status = status;
-                        const card = document.getElementById(`card-${imageId}`);
-                        if (card) {
-                            card.classList.remove('correct-selected', 'incorrect-selected');
-                            if (status === 'correct') card.classList.add('correct-selected');
-                            else if (status === 'incorrect') card.classList.add('incorrect-selected');
-                        }
-                        updateStatistics();
-                    }
+                    // Re-fetch data to ensure UI is consistent with backend after status change
+                    // This is important because 'Approved' items are moved to a different sheet
+                    await loadResearchDataFromGoogleSheet();
                     showMessage(urlMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
                 } else {
                     showMessage(urlMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
@@ -407,17 +510,17 @@
             }
         }
 
-        // --- Remove Image from Google Sheet ---
-        async function removeImage(imageId) {
-            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบรูปภาพนี้?')) {
+        // --- Delete Research from Google Sheet ---
+        async function deleteResearch(researchId) {
+            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบงานวิจัยนี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้!')) {
                 return;
             }
 
-            showMessage(urlMessageDiv, 'กำลังลบรูปภาพ...', 'info');
+            showMessage(urlMessageDiv, 'กำลังลบงานวิจัย...', 'info');
             try {
                 const formData = new FormData();
                 formData.append('action', 'delete');
-                formData.append('id', imageId);
+                formData.append('id', researchId);
 
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                     method: 'POST',
@@ -426,22 +529,23 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    const imageIndex = images.findIndex(img => img.id === imageId);
-                    if (imageIndex !== -1) {
-                        images.splice(imageIndex, 1); 
-                        const card = document.getElementById(`card-${imageId}`);
+                    // Remove from local array and DOM
+                    const researchIndex = researches.findIndex(r => r.Id === researchId);
+                    if (researchIndex !== -1) {
+                        researches.splice(researchIndex, 1);
+                        const card = document.getElementById(`card-${researchId}`);
                         if (card) {
-                            card.remove(); 
+                            card.remove();
                         }
                         updateStatistics();
                     }
-                    showMessage(urlMessageDiv, 'ลบรูปภาพสำเร็จ!', 'success');
+                    showMessage(urlMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
                 } else {
-                    showMessage(urlMessageDiv, `ลบรูปภาพล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                    showMessage(urlMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
             } catch (error) {
-                console.error('Error deleting image from Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการลบรูปภาพ', 'error');
+                console.error('Error deleting research from Google Sheet:', error);
+                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
             } finally {
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
@@ -449,75 +553,41 @@
 
         // --- Update Statistics ---
         function updateStatistics() {
-            const total = images.length;
-            const correct = images.filter(img => img.status === 'correct').length;
-            const incorrect = images.filter(img => img.status === 'incorrect').length;
+            const total = researches.length;
+            const pending = researches.filter(r => r.Status === 'Pending').length;
+            const approved = researches.filter(r => r.Status === 'Approved').length;
+            const rejected = researches.filter(r => r.Status === 'Rejected').length; // หากมีสถานะ Rejected
             
             totalCountSpan.textContent = total;
-            correctCountSpan.textContent = correct;
-            incorrectCountSpan.textContent = incorrect;
+            pendingCountSpan.textContent = pending;
+            approvedCountSpan.textContent = approved;
+            // if (rejectedCountSpan) rejectedCountSpan.textContent = rejected; // Uncomment if using 'Rejected' status
         }
 
-        // --- Clear All Displayed Images (Does NOT clear Google Sheet) ---
-        function clearAllDisplayedImages() {
-            if (confirm('คุณต้องการล้างรูปภาพที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่? (จะไม่ลบข้อมูลใน Google Sheet)')) {
-                images = [];
-                imagesGrid.innerHTML = ''; 
+        // --- Clear All Displayed Research (Does NOT clear Google Sheet) ---
+        function clearAllDisplayedResearch() {
+            if (confirm('คุณต้องการล้างงานวิจัยที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่? (จะไม่ลบข้อมูลใน Google Sheet)')) {
+                researches = [];
+                researchGrid.innerHTML = '';
                 updateStatistics();
-                imageDisplayCounter = 0; 
-                showMessage(urlMessageDiv, 'ล้างรูปภาพที่แสดงทั้งหมดแล้ว', 'info');
+                researchDisplayCounter = 0;
+                showMessage(urlMessageDiv, 'ล้างงานวิจัยที่แสดงทั้งหมดแล้ว', 'info');
                 setTimeout(() => hideMessage(urlMessageDiv), 3000);
             }
         }
 
-        // --- Export Results (from currently displayed images) ---
-        function exportResults() {
-            if (images.length === 0) {
-                showMessage(urlMessageDiv, 'ไม่มีรูปภาพให้ส่งออก', 'info');
-                return;
-            }
-            
-            const results = {
-                timestamp: new Date().toISOString(),
-                total: images.length,
-                correct: images.filter(img => img.status === 'correct').length,
-                incorrect: images.filter(img => img.status === 'incorrect').length,
-                pending: images.filter(img => img.status === 'pending').length,
-                images: images.map(img => ({
-                    id: img.id,
-                    username: img.username,
-                    url: img.imageUrl,
-                    status: img.status,
-                    timestamp: img.timestamp 
-                }))
-            };
-            
-            const dataStr = JSON.stringify(results, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `image-review-results-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            showMessage(urlMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
-            setTimeout(() => hideMessage(urlMessageDiv), 3000);
-        }
-
         // --- Event Listeners ---
-        // Allow Enter key to add manual image
-        cloudinaryUrlInput.addEventListener('keypress', function(e) {
+        // Allow Enter key to add manual research when focus on last input
+        manualResearchFileUrlsInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                e.preventDefault(); 
-                addManualImage();
+                e.preventDefault();
+                addManualResearch();
             }
         });
 
-        // Load images from Google Sheet when the page loads
+        // Load research data from Google Sheet when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            loadImagesFromGoogleSheet();
+            loadResearchDataFromGoogleSheet();
         });
     </script>
 </body>
