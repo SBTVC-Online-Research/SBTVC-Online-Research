@@ -71,7 +71,7 @@
             color: #dc3545; /* Bootstrap-like red for required fields */
         }
 
-        /* Message Box styles - คงไว้ตามที่คุณให้มา (แต่เปลี่ยนจาก Tailwind colors เป็น CSS ตรงๆ) */
+        /* Message Box styles */
         .message-box {
             padding: 1rem;
             margin-bottom: 1rem;
@@ -237,23 +237,30 @@
             padding: 10px;
             background-color: #fdfdfd;
         }
-        #research-file-list > div {
+        .file-item-display { /* New class for file list items */
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 8px 0;
             border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+            color: #333;
         }
-        #research-file-list > div:last-child {
+        .file-item-display:last-child {
             border-bottom: none;
         }
-        #research-file-list span {
-            font-size: 0.85em;
-            color: #555;
+        .file-item-display .file-name {
+            flex-grow: 1;
+            margin-right: 10px;
+            word-break: break-all;
         }
-        #research-file-list .text-gray-500 { color: #888; }
-        #research-file-list .text-green-600 { color: #28a745; }
-        #research-file-list .text-red-600 { color: #dc3545; }
+        .file-item-display .file-status {
+            font-weight: 500;
+        }
+
+        /* Specific text colors for file status */
+        .text-green-700 { color: #155724; } /* Darker green for success */
+        .text-red-700 { color: #721c24; }   /* Darker red for error */
 
         /* Buttons */
         .button-group {
@@ -457,7 +464,7 @@
 
     const submitButton = document.getElementById('submit-btn');
 
-    // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม
+    // ฟังก์ชันตรวจสอบความถูกต้องของฟอร์ม และอัปเดตสถานะปุ่ม Submit
     function checkFormValidity() {
         const form = document.getElementById('research-form');
         const requiredInputs = form.querySelectorAll('[required]');
@@ -473,8 +480,13 @@
                     allRequiredFilled = false;
                 }
             } else if (input.type === 'hidden' && input.id === 'uploaded-research-files-url') {
-                if (uploadedFileInfos.length === 0) { // At least one research file must be uploaded
-                    allRequiredFilled = false;
+                // Check if the parsed array of file URLs is empty
+                try {
+                    if (JSON.parse(input.value || '[]').length === 0) {
+                        allRequiredFilled = false;
+                    }
+                } catch (e) {
+                    allRequiredFilled = false; // Invalid JSON means no files
                 }
             } else if (input.tagName === 'TEXTAREA' || input.tagName === 'INPUT') {
                  if (input.value.trim() === '') {
@@ -492,13 +504,8 @@
             authorsFilled = false; // ต้องมีอย่างน้อย 1 ผู้จัดทำ
         }
         
-        // ถ้ามีไฟล์ที่กำลังอัปโหลดอยู่ ให้ปุ่มเป็น disabled
-        if (pendingFileUploads > 0) {
-            submitButton.disabled = true;
-            return;
-        }
-
-        submitButton.disabled = !(allRequiredFilled && authorsFilled);
+        // อัปเดตสถานะปุ่ม Submit
+        submitButton.disabled = !(allRequiredFilled && authorsFilled && pendingFileUploads === 0);
     }
 
     // Listener สำหรับฟิลด์ทั่วไป
@@ -597,7 +604,7 @@
 
         showImageUploadMessage('กำลังอัปโหลดรูปภาพปก...', 'info');
         pendingFileUploads++;
-        submitButton.disabled = true; // Disable submit button during upload
+        checkFormValidity(); // Disable submit button during upload
 
         const formData = new FormData();
         formData.append('file', file);
@@ -656,18 +663,23 @@
         researchFileListDiv.innerHTML = ''; // Clear previous display
         showFileUploadMessage(`กำลังอัปโหลด ${files.length} ไฟล์...`, 'info');
         pendingFileUploads += files.length;
-        submitButton.disabled = true; // Disable submit button during upload
+        checkFormValidity(); // Disable submit button during upload
 
         for (const file of files) {
             const fileItemDiv = document.createElement('div');
-            fileItemDiv.classList.add('file-item'); /* ใช้ class 'file-item' แทน Tailwind classes */
-            fileItemDiv.innerHTML = `
-                <span class="file-name">${file.name}</span>
-                <span class="file-status" id="status-${file.name.replace(/\./g, '-')}-${file.size}">กำลังอัปโหลด...</span>
-            `;
-            researchFileListDiv.appendChild(fileItemDiv);
+            fileItemDiv.classList.add('file-item-display'); /* ใช้ class 'file-item-display' ที่เพิ่มใน CSS */
+            
+            const fileNameSpan = document.createElement('span');
+            fileNameSpan.classList.add('file-name');
+            fileNameSpan.textContent = file.name;
 
-            const statusSpan = document.getElementById(`status-${file.name.replace(/\./g, '-')}-${file.size}`);
+            const statusSpan = document.createElement('span');
+            statusSpan.classList.add('file-status');
+            statusSpan.textContent = 'กำลังอัปโหลด...';
+
+            fileItemDiv.appendChild(fileNameSpan);
+            fileItemDiv.appendChild(statusSpan);
+            researchFileListDiv.appendChild(fileItemDiv);
 
             const formData = new FormData();
             formData.append('file', file);
@@ -686,19 +698,16 @@
                         name: file.name,
                         type: file.type
                     });
-                    statusSpan.textContent = 'อัปโหลดสำเร็จ!';
-                    statusSpan.classList.add('text-green-600'); /* ใช้ class name */
-                    statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
+                    statusSpan.textContent = '✅ อัปโหลดสำเร็จ!';
+                    statusSpan.classList.add('text-green-700'); 
                 } else {
-                    statusSpan.textContent = `อัปโหลดไม่สำเร็จ: ${data.error ? data.error.message : 'ข้อผิดพลาดไม่ทราบสาเหตุ'}`;
-                    statusSpan.classList.add('text-red-600'); /* ใช้ class name */
-                    statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
+                    statusSpan.textContent = `❌ อัปโหลดไม่สำเร็จ: ${data.error ? data.error.message : 'ไม่ทราบข้อผิดพลาด'}`;
+                    statusSpan.classList.add('text-red-700');
                     console.error('Cloudinary file upload error:', data);
                 }
             } catch (error) {
-                statusSpan.textContent = `อัปโหลดเกิดข้อผิดพลาด: ${error.message}`;
-                statusSpan.classList.add('text-red-600'); /* ใช้ class name */
-                statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
+                statusSpan.textContent = `❌ เกิดข้อผิดพลาดในการอัปโหลดไฟล์: ${error.message}`;
+                statusSpan.classList.add('text-red-700');
                 console.error('Error uploading file to Cloudinary:', error);
             } finally {
                 pendingFileUploads--;
@@ -722,70 +731,73 @@
     document.getElementById('research-form').addEventListener('submit', async (event) => {
         event.preventDefault();
         hideFormMessage();
-        submitButton.disabled = true; // Disable submit button to prevent double submission
-        submitButton.textContent = 'กำลังส่งข้อมูล...';
-
-        if (pendingFileUploads > 0) {
-            showFormMessage('กรุณารอการอัปโหลดไฟล์และรูปภาพให้เสร็จสิ้นก่อน!', 'warning');
-            submitButton.disabled = false;
-            submitButton.textContent = 'ส่งข้อมูล';
+        
+        // Final check before submission
+        checkFormValidity(); 
+        if (submitButton.disabled) {
+            showFormMessage('กรุณากรอกข้อมูลให้ครบถ้วนและรอการอัปโหลดไฟล์ให้เสร็จสิ้น', 'warning');
             return;
         }
 
-        const formData = new FormData(event.target);
-        const data = {};
+        submitButton.textContent = 'กำลังส่งข้อมูล...';
 
-        // Collect authors as a comma-separated string
+        const formData = new FormData();
+        formData.append('action', 'submitResearch');
+        formData.append('id', `RES_${Date.now()}`); // Unique ID for research
+        formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })); // Current timestamp
+
+        // Collect all form fields
+        formData.append('title', document.getElementById('title').value);
+        formData.append('category', selectedCategoryInput.value);
+        formData.append('department', document.getElementById('department').value);
+        formData.append('field', document.getElementById('field').value);
+        formData.append('year', document.getElementById('year').value);
+        formData.append('academicYear', document.getElementById('academic-year').value);
+        
         const authors = Array.from(document.querySelectorAll('input[name="authors[]"]'))
                              .map(input => input.value.trim())
                              .filter(value => value !== '');
-        data.authors = authors.join(', '); // Join with comma and space
+        formData.append('authors', authors.join(', '));
 
-        // Collect other form fields
-        formData.forEach((value, key) => {
-            if (key !== 'authors[]') { // Exclude authors[] from direct formData processing
-                data[key] = value;
-            }
-        });
-
-        // Add dynamically generated fields
-        data.id = `RES_${Date.now()}`; // Unique ID for research
-        data.timestamp = new Date().toLocaleString('th-TH'); // Current timestamp
-        
-        // Ensure image URL is from our uploaded state, not directly from input (which might be empty if no re-upload)
-        data.coverImageUrl = uploadedImageUrlInput.value;
-        // Ensure research file URLs are from our uploaded state
-        data.researchFileUrls = uploadedResearchFilesUrlInput.value; 
+        formData.append('advisor', document.getElementById('advisor').value);
+        formData.append('abstract', document.getElementById('abstract').value);
+        formData.append('coverImageUrl', uploadedImageUrlInput.value);
+        formData.append('researchFileUrls', uploadedResearchFilesUrlInput.value);
 
         // Get current logged-in username from sessionStorage
         const loggedInUser = JSON.parse(sessionStorage.getItem('loggedInUser'));
-        data.username = loggedInUser ? loggedInUser.username : 'anonymous'; // Set username
+        formData.append('username', loggedInUser ? loggedInUser.username : 'anonymous'); // Set username
 
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams(data).toString(),
+                body: formData,
             });
             const result = await response.json();
 
             if (result.success) {
                 showFormMessage('ส่งข้อมูลงานวิจัยสำเร็จ! ข้อมูลของคุณจะถูกตรวจสอบโดยผู้ดูแลระบบ.', 'success');
-                document.getElementById('research-form').reset(); // Clear form
-                // Clear all dynamic fields/previews
+                
+                // Clear form and reset states
+                document.getElementById('research-form').reset(); 
                 selectedCategoryInput.value = '';
                 categoryItems.forEach(i => i.classList.remove('selected'));
+                
                 authorsContainer.innerHTML = ''; // Clear authors
                 addAuthorField(); // Add back one author field
+                
                 uploadedImageUrlInput.value = '';
-                coverImagePreview.classList.remove('visible'); // Remove 'visible' to hide
+                coverImagePreview.classList.remove('visible'); // Hide preview
                 uploadedImageInfo = null;
+                
                 researchFileInput.value = ''; // Clear file input
                 uploadedResearchFilesUrlInput.value = JSON.stringify([]);
                 researchFileListDiv.innerHTML = '';
                 uploadedFileInfos = [];
+
+                hideImageUploadMessage();
+                hideFileUploadMessage();
+
             } else {
                 showFormMessage(`ส่งข้อมูลไม่สำเร็จ: ${result.message}`, 'error');
             }
@@ -793,32 +805,39 @@
             showFormMessage(`เกิดข้อผิดพลาดในการเชื่อมต่อ: ${error.message}`, 'error');
             console.error('Error submitting form:', error);
         } finally {
-            submitButton.disabled = false;
             submitButton.textContent = 'ส่งข้อมูล';
             checkFormValidity(); // Re-check validity after submission attempt
+            // Add a slight delay before hiding the form message if it's not an error,
+            // to allow users to read success/info messages.
+            if (formMessageDiv.classList.contains('success') || formMessageDiv.classList.contains('info')) {
+                setTimeout(() => hideFormMessage(), 5000);
+            }
         }
     });
 
     document.getElementById('cancel-btn').addEventListener('click', () => {
-        // Optionally redirect or clear form
         if (confirm('คุณต้องการยกเลิกการอัปโหลดและล้างข้อมูลในฟอร์มใช่หรือไม่?')) {
             document.getElementById('research-form').reset();
             selectedCategoryInput.value = '';
             categoryItems.forEach(i => i.classList.remove('selected'));
-            authorsContainer.innerHTML = '';
+            
+            authorsContainer.innerHTML = ''; // Clear authors
             addAuthorField(); // Add back one author field
+            
             uploadedImageUrlInput.value = '';
-            coverImagePreview.classList.remove('visible'); // Remove 'visible' to hide
+            coverImagePreview.classList.remove('visible'); // Hide preview
             uploadedImageInfo = null;
+            
             researchFileInput.value = '';
             uploadedResearchFilesUrlInput.value = JSON.stringify([]);
             researchFileListDiv.innerHTML = '';
             uploadedFileInfos = [];
+
             hideFormMessage();
             hideImageUploadMessage();
             hideFileUploadMessage();
             pendingFileUploads = 0; // Reset pending uploads
-            checkFormValidity();
+            checkFormValidity(); // Ensure submit button state is correct
         }
     });
 
