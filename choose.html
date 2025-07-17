@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบจัดการงานวิจัย (สำหรับผู้ดูแล)</title>
+    <title>ระบบตรวจสอบงานวิจัย (สำหรับผู้ดูแล)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -61,13 +61,28 @@
             background-color: #e0f2fe; /* blue-100 */
             color: #1e40af; /* blue-800 */
         }
+        .card-detail-group {
+            margin-bottom: 0.25rem;
+        }
+        .card-detail-label {
+            font-weight: 600; /* Semi-bold for labels */
+            color: #4b5563; /* gray-700 */
+        }
+        .card-detail-value {
+            color: #6b7280; /* gray-600 */
+        }
+        .card-detail-value.truncate {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบจัดการงานวิจัย</h1>
-            <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: ตรวจสอบและอนุมัติงานวิจัย</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">ระบบตรวจสอบงานวิจัย</h1>
+            <p class="text-gray-600 text-lg">สำหรับผู้ดูแล: ตรวจสอบและอนุมัติรูปปกและข้อมูลงานวิจัย</p>
         </div>
 
         <div class="text-center mb-4">
@@ -77,31 +92,7 @@
             >
                 รีเฟรชข้อมูลล่าสุดจาก Google Sheet
             </button>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 max-w-4xl mx-auto">
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">เพิ่มงานวิจัยใหม่ (ด้วยตนเอง)</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input type="text" id="manualUsername" placeholder="ชื่อผู้ใช้ (ไม่บังคับ)..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="url" id="manualCoverImageUrl" placeholder="URL รูปปกงานวิจัย (Cloudinary)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualTitle" placeholder="ชื่อเรื่องงานวิจัย..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualCategory" placeholder="หมวดหมู่..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualDepartment" placeholder="สาขาวิชา/ภาควิชา..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualField" placeholder="สาขา/แขนงวิชา..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="number" id="manualYear" placeholder="ปีที่ตีพิมพ์ (ค.ศ.)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualAcademicYear" placeholder="ปีการศึกษา (เช่น 2566-2567)..." class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualAuthors" placeholder="ผู้แต่ง (คั่นด้วย , )..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <input type="text" id="manualAdvisor" placeholder="อาจารย์ที่ปรึกษา..." class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none">
-                <textarea id="manualAbstract" placeholder="บทคัดย่อ..." rows="3" class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-y"></textarea>
-                <textarea id="manualResearchFileUrls" placeholder="URL ไฟล์งานวิจัย (JSON Array เช่น [&quot;url1&quot;, &quot;url2&quot;])..." rows="2" class="col-span-2 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-y"></textarea>
-            </div>
-            <button
-                onclick="addManualResearch()"
-                class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 w-full"
-            >
-                เพิ่มงานวิจัย
-            </button>
-            <div id="url-message" class="message hidden"></div>
+            <div id="status-message" class="message hidden mt-4"></div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 max-w-5xl mx-auto">
@@ -117,9 +108,14 @@
                 <div class="text-2xl font-bold text-green-600" id="approvedCount">0</div>
                 <div class="text-green-700">อนุมัติแล้ว</div>
             </div>
+            <div class="bg-red-50 rounded-lg shadow-md p-4 text-center">
+                <div class="text-2xl font-bold text-red-600" id="rejectedCount">0</div>
+                <div class="text-red-700">ไม่อนุมัติ</div>
             </div>
+        </div>
 
         <div id="researchGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            <p id="noDataMessage" class="col-span-full text-center text-gray-500 text-lg hidden">ไม่มีข้อมูลงานวิจัยที่รอดำเนินการ</p>
         </div>
 
         <div class="text-center mt-8 space-x-4">
@@ -129,7 +125,13 @@
             >
                 ล้างทั้งหมดที่แสดง (ไม่ลบใน Sheet)
             </button>
-            </div>
+            <button
+                onclick="exportResults()"
+                class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200"
+            >
+                ส่งออกผลลัพธ์
+            </button>
+        </div>
     </div>
 
     <script>
@@ -140,27 +142,14 @@
         // *** สำคัญมาก: โปรดแทนที่ด้วย URL ของ Web App ของคุณเองหลังจาก Deploy Apps Script เป็นเวอร์ชันใหม่ ***
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-        // DOM elements for manual add
-        const manualUsernameInput = document.getElementById('manualUsername');
-        const manualCoverImageUrlInput = document.getElementById('manualCoverImageUrl');
-        const manualTitleInput = document.getElementById('manualTitle');
-        const manualCategoryInput = document.getElementById('manualCategory');
-        const manualDepartmentInput = document.getElementById('manualDepartment');
-        const manualFieldInput = document.getElementById('manualField');
-        const manualYearInput = document.getElementById('manualYear');
-        const manualAcademicYearInput = document.getElementById('manualAcademicYear');
-        const manualAuthorsInput = document.getElementById('manualAuthors');
-        const manualAdvisorInput = document.getElementById('manualAdvisor');
-        const manualAbstractInput = document.getElementById('manualAbstract');
-        const manualResearchFileUrlsInput = document.getElementById('manualResearchFileUrls');
-
         // DOM elements for display and messages
-        const urlMessageDiv = document.getElementById('url-message');
+        const statusMessageDiv = document.getElementById('status-message');
         const researchGrid = document.getElementById('researchGrid');
+        const noDataMessage = document.getElementById('noDataMessage'); // Added for no data message
         const totalCountSpan = document.getElementById('totalCount');
         const pendingCountSpan = document.getElementById('pendingCount');
         const approvedCountSpan = document.getElementById('approvedCount');
-        // const rejectedCountSpan = document.getElementById('rejectedCount'); // Uncomment if using 'Rejected' status
+        const rejectedCountSpan = document.getElementById('rejectedCount');
 
         // --- Message Display Function ---
         function showMessage(element, msg, type) {
@@ -176,11 +165,9 @@
 
         // --- Load Research Data from Google Sheet (PENDING_SHEET_NAME) ---
         async function loadResearchDataFromGoogleSheet() {
-            showMessage(urlMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
+            showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
             try {
                 // สำหรับ Admin UI เราต้องการดึงข้อมูลจากชีท PENDING_SHEET_NAME
-                // Apps Script doGet จะดึงจาก APPROVED_SHEET_NAME โดยค่าเริ่มต้น
-                // เราต้องส่งพารามิเตอร์เพื่อให้ doGet ดึงจาก PENDING_SHEET_NAME แทน
                 const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=pending`, { // เพิ่ม ?sheet=pending
                     method: 'GET',
                     redirect: 'follow',
@@ -190,160 +177,40 @@
                 researches = []; // Clear current researches array
                 researchGrid.innerHTML = ''; // Clear current display
                 researchDisplayCounter = 0; // Reset display counter
+                noDataMessage.classList.add('hidden'); // Hide no data message initially
 
                 if (data.status === 'success' && Array.isArray(data.data)) {
-                    data.data.forEach(item => {
-                        // Ensure data has the expected properties (ImageUrl, Username, Status, Id)
-                        if (item.Id) { // ตรวจสอบว่ามี Id เป็นอย่างน้อย
-                            addResearchToGrid(item);
-                        }
-                    });
-                    showMessage(urlMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
+                    if (data.data.length === 0) {
+                        showMessage(statusMessageDiv, 'ไม่พบข้อมูลงานวิจัยที่รอดำเนินการ', 'info');
+                        noDataMessage.classList.remove('hidden'); // Show no data message
+                    } else {
+                        data.data.forEach(item => {
+                            if (item.Id) {
+                                addResearchToGrid(item);
+                            }
+                        });
+                        showMessage(statusMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
+                    }
                 } else if (data.status === 'error') {
-                    showMessage(urlMessageDiv, `โหลดข้อมูลล้มเหลว: ${data.message}`, 'error');
+                    showMessage(statusMessageDiv, `โหลดข้อมูลล้มเหลว: ${data.message}`, 'error');
                 } else {
-                    showMessage(urlMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
+                    showMessage(statusMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
                 }
             } catch (error) {
                 console.error('Error loading research data from Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
+                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
             } finally {
-                setTimeout(() => hideMessage(urlMessageDiv), 3000);
-            }
-        }
-
-        // --- Add Manual Research Logic (Admin Input) ---
-        async function addManualResearch() {
-            const username = manualUsernameInput.value.trim();
-            const coverImageUrl = manualCoverImageUrlInput.value.trim();
-            const title = manualTitleInput.value.trim();
-            const category = manualCategoryInput.value.trim();
-            const department = manualDepartmentInput.value.trim();
-            const field = manualFieldInput.value.trim();
-            const year = manualYearInput.value.trim();
-            const academicYear = manualAcademicYearInput.value.trim();
-            const authors = manualAuthorsInput.value.trim();
-            const advisor = manualAdvisorInput.value.trim();
-            const abstract = manualAbstractInput.value.trim();
-            let researchFileUrls = manualResearchFileUrlsInput.value.trim();
-
-            hideMessage(urlMessageDiv);
-
-            if (!title) {
-                showMessage(urlMessageDiv, 'กรุณาใส่ชื่อเรื่องงานวิจัย', 'error');
-                return;
-            }
-            if (coverImageUrl && !isValidCloudinaryUrl(coverImageUrl)) {
-                showMessage(urlMessageDiv, 'กรุณาใส่ URL รูปปกที่ถูกต้องจาก Cloudinary (ถ้ามี)', 'error');
-                return;
-            }
-
-            // ตรวจสอบว่า researchFileUrls เป็น JSON array ที่ถูกต้อง (ถ้ามี)
-            if (researchFileUrls) {
-                try {
-                    const parsedUrls = JSON.parse(researchFileUrls);
-                    if (!Array.isArray(parsedUrls)) {
-                        throw new Error('ไม่ใช่ JSON Array');
-                    }
-                    // Optional: Validate each URL in the array if needed
-                } catch (e) {
-                    showMessage(urlMessageDiv, 'URL ไฟล์งานวิจัยต้องเป็น JSON Array ที่ถูกต้อง (เช่น ["url1", "url2"])', 'error');
-                    return;
-                }
-            } else {
-                researchFileUrls = '[]'; // ส่งเป็น JSON array ว่างเปล่า
-            }
-
-            showMessage(urlMessageDiv, 'กำลังเพิ่มงานวิจัย...', 'info');
-
-            const newResearchEntry = {
-                id: `manual-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-                timestamp: new Date().toISOString(),
-                username: username || 'ผู้ดูแล',
-                imageUrl: coverImageUrl, // ใช้ ImageUrl แทน CoverImageUrl ใน Apps Script (ตรงกับหัวข้อในชีท)
-                status: 'Pending', // สถานะเริ่มต้น
-                title: title,
-                category: category,
-                department: department,
-                field: field,
-                year: year,
-                academicYear: academicYear,
-                authors: authors,
-                advisor: advisor,
-                abstract: abstract,
-                researchFileUrls: researchFileUrls // เป็น JSON string
-            };
-
-            try {
-                const formData = new FormData();
-                formData.append('action', 'submitResearch'); // ใช้ action เดียวกันกับฟอร์มหลัก
-                formData.append('id', newResearchEntry.id);
-                formData.append('timestamp', newResearchEntry.timestamp);
-                formData.append('username', newResearchEntry.username);
-                formData.append('coverImageUrl', newResearchEntry.imageUrl); // ชื่อพารามิเตอร์นี้ต้องตรงกับที่ Apps Script รับ
-                formData.append('title', newResearchEntry.title);
-                formData.append('category', newResearchEntry.category);
-                formData.append('department', newResearchEntry.department);
-                formData.append('field', newResearchEntry.field);
-                formData.append('year', newResearchEntry.year);
-                formData.append('academicYear', newResearchEntry.academicYear);
-                formData.append('authors', newResearchEntry.authors);
-                formData.append('advisor', newResearchEntry.advisor);
-                formData.append('abstract', newResearchEntry.abstract);
-                formData.append('researchFileUrls', newResearchEntry.researchFileUrls); // ต้องเป็น JSON string
-
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    await loadResearchDataFromGoogleSheet(); // Reload all data to ensure display is in sync
-                    // Clear form fields
-                    manualUsernameInput.value = '';
-                    manualCoverImageUrlInput.value = '';
-                    manualTitleInput.value = '';
-                    manualCategoryInput.value = '';
-                    manualDepartmentInput.value = '';
-                    manualFieldInput.value = '';
-                    manualYearInput.value = '';
-                    manualAcademicYearInput.value = '';
-                    manualAuthorsInput.value = '';
-                    manualAdvisorInput.value = '';
-                    manualAbstractInput.value = '';
-                    manualResearchFileUrlsInput.value = '';
-
-                    showMessage(urlMessageDiv, 'เพิ่มงานวิจัยสำเร็จ!', 'success');
-                } else {
-                    showMessage(urlMessageDiv, `เพิ่มงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error adding manual research to Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการเพิ่มงานวิจัย', 'error');
-            } finally {
-                setTimeout(() => hideMessage(urlMessageDiv), 3000);
-            }
-        }
-
-        function isValidCloudinaryUrl(url) {
-            try {
-                const urlObj = new URL(url);
-                return urlObj.hostname.includes('cloudinary.com') || urlObj.hostname.includes('res.cloudinary.com');
-            } catch (e) {
-                return false;
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
             }
         }
 
         function addResearchToGrid(researchData) {
-            // Check if this research (by its unique ID) is already in the 'researches' array (currently displayed)
-            if (researches.some(r => r.Id === researchData.Id)) { // ใช้ Id จากข้อมูลจริง
+            if (researches.some(r => r.Id === researchData.Id)) {
                 return;
             }
 
             researches.push(researchData);
 
-            // Assign a display ID for numbering on the card
             researchDisplayCounter++;
             const card = createResearchCard(researchData, researchDisplayCounter);
             researchGrid.appendChild(card);
@@ -354,18 +221,16 @@
         function createResearchCard(researchData, displayId) {
             const card = document.createElement('div');
             card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
-            card.id = `card-${researchData.Id}`; // ใช้ Id จากข้อมูลจริง
+            card.id = `card-${researchData.Id}`;
 
             let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
             let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
-            let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : ''; // หากมีสถานะ Rejected
+            let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
             
-            // Add status class
             if (researchData.Status === 'Approved') card.classList.add('status-approved');
             else if (researchData.Status === 'Pending') card.classList.add('status-pending');
-            else if (researchData.Status === 'Rejected') card.classList.add('status-rejected'); // หากมีสถานะ Rejected
+            else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
 
-            // Parse Research File URLs for display
             let researchFileLinksHtml = '';
             if (researchData['Research File URLs']) {
                 try {
@@ -383,7 +248,6 @@
                 }
             }
 
-
             card.innerHTML = `
                 <div class="relative">
                     <img
@@ -400,12 +264,19 @@
                     </div>
                 </div>
                 <div class="p-4">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2 truncate" title="${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}">${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}</h3>
-                    <p class="text-gray-600 text-sm mb-1"><strong>ผู้ใช้:</strong> ${researchData.Username || 'ไม่ระบุ'}</p>
-                    <p class="text-gray-600 text-sm mb-1"><strong>หมวดหมู่:</strong> ${researchData.Category || 'ไม่ระบุ'}</p>
-                    <p class="text-gray-600 text-sm mb-1"><strong>ผู้แต่ง:</strong> ${researchData.Authors || 'ไม่ระบุ'}</p>
-                    <p class="text-gray-600 text-sm mb-1"><strong>ปี:</strong> ${researchData.Year || 'ไม่ระบุ'}</p>
-                    <p class="text-gray-600 text-sm mb-1"><strong>สถานะปัจจุบัน:</strong> <span class="font-semibold">${researchData.Status || 'Pending'}</span></p>
+                    <h3 class="text-lg font-bold text-gray-800 mb-2" title="${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}">${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}</h3>
+                    <div class="text-sm">
+                        <p class="card-detail-group"><span class="card-detail-label">ผู้ใช้:</span> <span class="card-detail-value">${researchData.Username || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">หมวดหมู่:</span> <span class="card-detail-value">${researchData.Category || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">สาขา/ภาควิชา:</span> <span class="card-detail-value">${researchData.Department || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">สาขา/แขนงวิชา:</span> <span class="card-detail-value">${researchData.Field || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">ปีที่ตีพิมพ์:</span> <span class="card-detail-value">${researchData.Year || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">ปีการศึกษา:</span> <span class="card-detail-value">${researchData['Academic Year'] || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">ผู้แต่ง:</span> <span class="card-detail-value">${researchData.Authors || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">อาจารย์ที่ปรึกษา:</span> <span class="card-detail-value">${researchData.Advisor || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">บทคัดย่อ:</span> <span class="card-detail-value truncate" title="${researchData.Abstract || 'ไม่ระบุ'}">${researchData.Abstract || 'ไม่ระบุ'}</span></p>
+                        <p class="card-detail-group"><span class="card-detail-label">สถานะปัจจุบัน:</span> <span class="font-semibold">${researchData.Status || 'Pending'}</span></p>
+                    </div>
                     ${researchFileLinksHtml}
                     
                     <div class="mt-4 flex justify-around space-x-2">
@@ -451,7 +322,6 @@
                     </button>
                 </div>
             `;
-
             return card;
         }
 
@@ -471,17 +341,11 @@
             imgElement.src = `data:image/svg+xml;base64,${btoa(errorSvg)}`;
             imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${researchId} ได้`;
             imgElement.classList.add('object-contain');
-
-            const card = document.getElementById(`card-${researchId}`);
-            if (card) {
-                // ไม่ได้เปลี่ยนสถานะอัตโนมัติเป็น Rejected เพราะรูปโหลดไม่ได้
-                // ปล่อยให้ Admin ตัดสินใจเอง
-            }
         }
 
         // --- Update Research Status on Google Sheet ---
         async function updateResearchStatus(researchId, status) {
-            showMessage(urlMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
+            showMessage(statusMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
             try {
                 const formData = new FormData();
                 formData.append('action', 'updateStatus');
@@ -495,18 +359,16 @@
                 const result = await response.json();
 
                 if (result.status === 'success') {
-                    // Re-fetch data to ensure UI is consistent with backend after status change
-                    // This is important because 'Approved' items are moved to a different sheet
-                    await loadResearchDataFromGoogleSheet();
-                    showMessage(urlMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
+                    await loadResearchDataFromGoogleSheet(); // Re-fetch data to ensure UI is consistent
+                    showMessage(statusMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
                 } else {
-                    showMessage(urlMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                    showMessage(statusMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error updating status on Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
+                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
             } finally {
-                setTimeout(() => hideMessage(urlMessageDiv), 3000);
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
             }
         }
 
@@ -516,7 +378,7 @@
                 return;
             }
 
-            showMessage(urlMessageDiv, 'กำลังลบงานวิจัย...', 'info');
+            showMessage(statusMessageDiv, 'กำลังลบงานวิจัย...', 'info');
             try {
                 const formData = new FormData();
                 formData.append('action', 'delete');
@@ -539,15 +401,15 @@
                         }
                         updateStatistics();
                     }
-                    showMessage(urlMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
+                    showMessage(statusMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
                 } else {
-                    showMessage(urlMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                    showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error deleting research from Google Sheet:', error);
-                showMessage(urlMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
+                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
             } finally {
-                setTimeout(() => hideMessage(urlMessageDiv), 3000);
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
             }
         }
 
@@ -556,12 +418,19 @@
             const total = researches.length;
             const pending = researches.filter(r => r.Status === 'Pending').length;
             const approved = researches.filter(r => r.Status === 'Approved').length;
-            const rejected = researches.filter(r => r.Status === 'Rejected').length; // หากมีสถานะ Rejected
+            const rejected = researches.filter(r => r.Status === 'Rejected').length;
             
             totalCountSpan.textContent = total;
             pendingCountSpan.textContent = pending;
             approvedCountSpan.textContent = approved;
-            // if (rejectedCountSpan) rejectedCountSpan.textContent = rejected; // Uncomment if using 'Rejected' status
+            rejectedCountSpan.textContent = rejected;
+
+            // Show/hide "No data" message based on total researches
+            if (total === 0) {
+                noDataMessage.classList.remove('hidden');
+            } else {
+                noDataMessage.classList.add('hidden');
+            }
         }
 
         // --- Clear All Displayed Research (Does NOT clear Google Sheet) ---
@@ -571,19 +440,56 @@
                 researchGrid.innerHTML = '';
                 updateStatistics();
                 researchDisplayCounter = 0;
-                showMessage(urlMessageDiv, 'ล้างงานวิจัยที่แสดงทั้งหมดแล้ว', 'info');
-                setTimeout(() => hideMessage(urlMessageDiv), 3000);
+                showMessage(statusMessageDiv, 'ล้างงานวิจัยที่แสดงทั้งหมดแล้ว', 'info');
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
             }
         }
 
-        // --- Event Listeners ---
-        // Allow Enter key to add manual research when focus on last input
-        manualResearchFileUrlsInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                addManualResearch();
+        // --- Export Results (from currently displayed researches) ---
+        function exportResults() {
+            if (researches.length === 0) {
+                showMessage(statusMessageDiv, 'ไม่มีงานวิจัยให้ส่งออก', 'info');
+                return;
             }
-        });
+            
+            const results = {
+                timestamp: new Date().toISOString(),
+                total: researches.length,
+                pending: researches.filter(r => r.Status === 'Pending').length,
+                approved: researches.filter(r => r.Status === 'Approved').length,
+                rejected: researches.filter(r => r.Status === 'Rejected').length,
+                researches: researches.map(res => ({
+                    id: res.Id,
+                    username: res.Username,
+                    imageUrl: res.ImageUrl,
+                    status: res.Status,
+                    title: res.Title,
+                    category: res.Category,
+                    department: res.Department,
+                    field: res.Field,
+                    year: res.Year,
+                    academicYear: res['Academic Year'],
+                    authors: res.Authors,
+                    advisor: res.Advisor,
+                    abstract: res.Abstract,
+                    researchFileUrls: res['Research File URLs'],
+                    timestamp: res.Timestamp
+                }))
+            };
+            
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `research-review-results-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            showMessage(statusMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
+            setTimeout(() => hideMessage(statusMessageDiv), 3000);
+        }
 
         // Load research data from Google Sheet when the page loads
         document.addEventListener('DOMContentLoaded', () => {
