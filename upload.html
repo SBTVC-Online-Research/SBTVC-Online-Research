@@ -71,8 +71,7 @@
         </div>
         <div id="image-preview" class="mt-4 text-center hidden">
             <img id="uploaded-image-display" src="" alt="รูปโปรไฟล์" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
-            <p id="image-url-display" class="text-sm text-blue-600 truncate"></p>
-        </div>
+            </div>
         <input type="hidden" id="uploaded-image-url" name="imageUrl">
         <div id="image-upload-message" class="message hidden"></div>
       </div>
@@ -95,7 +94,6 @@
   const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- ชื่อ Unsigned preset สำหรับรูปภาพ
 
   // **Google Apps Script Web App URL** //
-  // *** สำคัญมาก: URL ของคุณถูกนำมาใช้ที่นี่แล้ว ***
   const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec'; 
 
   // DOM Elements
@@ -105,7 +103,7 @@
   const profileImageInput = document.getElementById('profile-image-upload');
   const imagePreviewDiv = document.getElementById('image-preview');
   const uploadedImageDisplay = document.getElementById('uploaded-image-display');
-  const imageUrlDisplay = document.getElementById('image-url-display');
+  // const imageUrlDisplay = document.getElementById('image-url-display'); // บรรทัดนี้ถูกคอมเมนต์ออก/ลบออก
   const uploadedImageUrlInput = document.getElementById('uploaded-image-url'); // Hidden input to store URL
   const formMessage = document.getElementById('form-message');
   const imageUploadMessage = document.getElementById('image-upload-message');
@@ -164,7 +162,7 @@
 
       if (data.secure_url) {
         uploadedImageDisplay.src = data.secure_url;
-        imageUrlDisplay.textContent = data.secure_url;
+        // imageUrlDisplay.textContent = data.secure_url; // บรรทัดนี้ถูกคอมเมนต์ออก/ลบออก
         uploadedImageUrlInput.value = data.secure_url; // Store URL in hidden input
         imagePreviewDiv.classList.remove('hidden');
         showMessage(imageUploadMessage, 'อัปโหลดรูปภาพสำเร็จ!', 'success');
