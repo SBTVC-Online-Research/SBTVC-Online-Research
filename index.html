@@ -4,138 +4,195 @@
     <meta name="google-site-verification" content="B4grT7s_R1qrFTOC99J3Eog2AsfSQ216CbTPTs1jOUs" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SBTVC Online Research </title>
-  <meta name="SBTVC Online Research" content="เว็บไซต์สำหรับจัดเก็บและนำเสนอผลงานวิจัยของวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรั)SBTVC ">
+    <title>SBTVC Online Research</title>
+    <meta name="description" content="เว็บไซต์สำหรับจัดเก็บและนำเสนอผลงานวิจัยของวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรั)SBTVC ">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        * {
+        body {
             font-family: 'Prompt', sans-serif;
+            background-color: #f7f7f7;
         }
-
+        .orange-primary {
+            color: #FF5722; /* สีส้มหลัก */
+        }
         .bg-orange-primary {
-            background-color: #FF7A00;
+            background-color: #FF5722;
         }
-
-        .bg-orange-secondary {
-            background-color: #FFA149;
+        .hover\:bg-orange-secondary:hover {
+            background-color: #E64A19; /* สีส้มเข้มขึ้นเมื่อ hover */
         }
-
-        .bg-orange-light {
-            background-color: #FFE0C2;
-        }
-
-        .text-orange-primary {
-            color: #FF7A00;
-        }
-
         .border-orange-primary {
-            border-color: #FF7A00;
+            border-color: #FF5722;
         }
-
-        .hover-bg-orange-dark:hover {
-            background-color: #E56E00;
+        .hover\:bg-orange-light:hover {
+            background-color: #FFCCBC; /* สีส้มอ่อนเมื่อ hover */
         }
-
-        .active-tab {
-            border-bottom: 3px solid #FF7A00;
-            color: #FF7A00;
-            font-weight: 600;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .modal {
-            transition: opacity 0.3s ease;
-        }
-
-        .research-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        .category-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            border-radius: 4px;
-            color: white;
-            font-weight: 500;
-            z-index: 9999;
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .toast.success {
-            background-color: #10B981;
-        }
-
-        .toast.error {
-            background-color: #EF4444;
-        }
-
         .dropdown {
             position: relative;
             display: inline-block;
         }
-
         .dropdown-content {
             display: none;
             position: absolute;
-            right: 0;
-            background-color: white;
+            background-color: #f9f9f9;
             min-width: 200px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            z-index: 1;
-            border-radius: 4px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 10;
+            right: 0; /* จัดให้ dropdown ชิดขวา */
+            border-radius: 0.375rem; /* rounded-md */
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+            pointer-events: none; /* ไม่ให้คลิกได้ถ้ายังไม่แสดง */
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown.active .dropdown-content { /* เพิ่ม .active สำหรับการควบคุมด้วย JS */
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .dropdown-content a, .dropdown-content button {
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-content a:hover, .dropdown-content button:hover {
+            background-color: #f1f1f1;
+        }
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 17px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .toast.show {
+            visibility: visible;
+            -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+        .toast.success { background-color: #4CAF50; }
+        .toast.error { background-color: #F44336; }
+        .toast.info { background-color: #2196F3; }
+
+        @-webkit-keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @keyframes fadein {
+            from {bottom: 0; opacity: 0;}
+            to {bottom: 30px; opacity: 1;}
+        }
+        @-webkit-keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
+        }
+        @keyframes fadeout {
+            from {bottom: 30px; opacity: 1;}
+            to {bottom: 0; opacity: 0;}
         }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
+        /* Modal Styles */
+        .modal {
+            transition: opacity 0.3s ease-out;
+        }
+        .modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .modal-content {
+            transform: translateY(-20px);
+            transition: transform 0.3s ease-out;
+        }
+        .modal.opacity-100 .modal-content {
+            transform: translateY(0);
+        }
+        
+        /* Research Card styles for consistent height */
+        .research-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%; /* Ensure all cards in a row have same height */
+            transition: transform 0.2s ease-in-out;
+        }
+        .research-card:hover {
+            transform: translateY(-5px);
+        }
+        .research-card .image-container {
+            width: 100%;
+            height: 200px; /* Fixed height for images */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0; /* Placeholder background */
+        }
+        .research-card .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the area, may crop */
+        }
+        .research-card-content {
+            flex-grow: 1; /* Allow content area to expand */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Push button to bottom */
+            padding: 1rem;
+        }
+        .research-card-content h3 {
+            min-height: 3rem; /* Ensure title has enough space */
+        }
+        .research-card-content .flex-grow-1 {
+            flex-grow: 1; /* Ensures buttons align at bottom if needed */
+        }
+        
+        /* Adjust for smaller screens */
+        @media (max-width: 768px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            .hero-content p {
+                font-size: 0.9rem;
+            }
+            .research-card .image-container {
+                height: 150px; /* Smaller image height on mobile */
+            }
         }
     </style>
 </head>
 
 <body class="bg-gray-50">
-     <!-- Toast Notification -->
     <div id="toast" class="toast"></div>
- 
 
-    <!-- Header -->
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
-               <img src="https://res.cloudinary.com/djbbchijx/image/upload/v1750912014/sbtvc-logo_om98ni.png" alt="โลโก้ SBTVC" class="h-12 w-12 object-contain mr-3" />
-
-            <h1 class="text-2xl font-bold text-gray-800">
-                SBTVC <span class="text-orange-primary">Online Research</span>
-            </h1>
-        </div>
+                <img src="https://res.cloudinary.com/djbbchijx/image/upload/v1750912014/sbtvc-logo_om98ni.png" alt="โลโก้ SBTVC" class="h-12 w-12 object-contain mr-3" />
+                <h1 class="text-2xl font-bold text-gray-800">
+                    SBTVC <span class="orange-primary">Online Research</span>
+                </h1>
+            </div>
             <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
                 <a href="Category/Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
-               
-              
+                <a href="upload.html" id="upload-link-desktop" class="hidden text-gray-700 hover:text-orange-primary font-medium">
+                    <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
+                </a>
             </div>
             <div id="auth-buttons" class="flex items-center space-x-3">
                 <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
@@ -160,7 +217,7 @@
                             <p id="fullname-display" class="font-medium text-gray-800">ชื่อ-นามสกุล</p>
                             <p id="email-display" class="text-sm text-gray-500">อีเมล</p>
                         </div>
-                        <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                             <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
                         </a>
                         <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
@@ -181,27 +238,23 @@
                 </button>
             </div>
         </div>
-<!-- Banner ด้านบน -->
-<div class="w-full bg-white text-center">
-    <img 
-        src="https://res.cloudinary.com/djbbchijx/image/upload/v1750912013/it_1_nlmagq.jpg" 
-        alt="แบนเนอร์เว็บไซต์"  
-        class="inline-block w-full max-w-6xl transition-transform duration-500 hover:scale-110"
-    />
-</div>
+        <div class="w-full bg-white text-center">
+            <img 
+                src="https://res.cloudinary.com/djbbchijx/image/upload/v1750912013/it_1_nlmagq.jpg" 
+                alt="แบนเนอร์เว็บไซต์" 
+                class="inline-block w-full max-w-6xl transition-transform duration-500 hover:scale-110"
+            />
+        </div>
 
-
-
-
-        <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white px-4 py-2 shadow-md">
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">ติดต่อ</a>
+            <a href="index.html" class="block py-2 text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
+            <a href="Category/Category.html" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
+            <a href="upload.html" id="upload-link-mobile" class="hidden block py-2 text-gray-700 hover:text-orange-primary">
+                <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
+            </a>
             <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
                 <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-username-display">ชื่อผู้ใช้</span></p>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
+                <a href="profile.html" class="block py-2 text-gray-700 hover:text-orange-primary">
                     <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
                 </a>
                 <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
@@ -217,698 +270,367 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-gradient-to-r from-orange-primary to-orange-secondary text-black py-16">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="md:w-1/2 mb-8 md:mb-0">
-               <h2 class="text-6xl font-bold mb-4">ผลงานวิจัย</h2>
-                    <h2 class="text-3xl font-bold mb-4">วิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
-                    <p class="text-lg mb-6">ค้นพบงานวิจัยที่ SBTVC เพื่อต่อยอดความรู้และพัฒนางานวิจัย</p>
-                    <div class="flex space-x-4">
-<a href="upload.html" class="inline-block px-10 py-3 border-2 border-black text-black font-semibold rounded-md hover:bg-white hover:text-orange-primary transition">อัพโหลดงานวิจัย</a>
-                    </div>
-                </div>
-        
-                </div>
+    <main class="container mx-auto px-4 py-8">
+        <section class="mb-12 text-center py-12 rounded-lg" style="background: linear-gradient(to right, #FF7043, #FF9800);">
+            <div class="hero-content text-white">
+                <h2 class="text-4xl font-bold mb-4">ค้นพบงานวิจัยอันล้ำค่า</h2>
+                <p class="text-lg mb-6">แหล่งรวมผลงานวิจัยนวัตกรรมจากวิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์</p>
+                <a href="upload.html" class="bg-white text-orange-primary font-semibold px-8 py-3 rounded-full hover:bg-gray-100 transition shadow-lg">
+                    <i class="fas fa-plus-circle mr-2"></i> ส่งผลงานวิจัยของคุณ
+                </a>
             </div>
-        </div>
-    </section>
+        </section>
 
- <!-- Search Section -->
-<section class="py-8 bg-white shadow-md">
-  <div class="container mx-auto px-4">
-    <div class="bg-white rounded-lg p-6">
-      <h3 class="text-xl font-semibold mb-4 text-gray-800">ค้นหางานวิจัย</h3>
-      <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-        <div class="flex-grow">
-          <input id="searchInput" type="text" placeholder="คำค้นหา..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-        </div>
-        <div class="md:w-1/5">
-          <select id="categorySelect" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-            <option value="">หมวดหมู่ทั้งหมด</option>
-            <option value="สำรวจ">สำรวจ</option>
-            <option value="ทฤษฎี">ทฤษฎี</option>
-            <option value="ทดลอง">ทดลอง</option>
-            <option value="ประดิษฐ์">ประดิษฐ์</option>
-          </select>
-        </div>
-        <div class="md:w-1/5">
-          <select id="yearSelect" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-            <option value="">ปีงานวิจัย</option>
-            <option value="2568">2568</option>
-            <option value="2566">2566</option>
-            <option value="2565">2565</option>
-          </select>
-        </div>
-        <div class="md:w-1/5">
-          <select id="levelSelect" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-            <option value="">ระดับผลงาน</option>
-            <option value="ระดับชาติ">ระดับชาติ</option>
-            <option value="ระดับนานาชาติ">ระดับนานาชาติ</option>
-            <option value="ระดับภูมิภาค">ระดับภูมิภาค</option>
-            <option value="ระดับวิลัย">ระดับวิลัย</option>
-          </select>
-        </div>
-        <button id="searchButton" class="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition">ค้นหา</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Research Cards Section -->
-<section class="container mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="researchCards">
-
-  <!-- Card 1 -->
-  <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-       data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
-       data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
-       data-category="สำรวจ"
-       data-year="2568"
-       data-level="ระดับวิลัย">
-    <a href="OnlineMMM.html">
-      <div class="h-40 overflow-hidden">
-        <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752544289/e28f254b-24e5-431b-8ab5-f3d3e092cef3.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-      </div>
-    </a>
-    <div class="p-6">
-      <div class="flex justify-between mb-2">
-        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">สำรวจ</span>
-        <span class="text-gray-500 text-sm">2568</span>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h3>
-      <p class="text-gray-600 mb-4">การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์</p>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ส</div>
-          <span class="ml-2 text-gray-700">นายธนวิชญ์ จันทร์โชติ</span>
-        </div>
-        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับวิลัย</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 2 -->
-  <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-       data-title="แอปพลิเคชันช่วยสอน"
-       data-description="แอปมือถือเพื่อการเรียนสายอาชีพ"
-       data-category="ทฤษฎี"
-       data-year="2566"
-       data-level="ระดับชาติ">
-    <a href="OnlineBBB.html">
-    <div class="h-40 overflow-hidden">
-      <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752546585/6dcfbc63-1b08-40a0-90b1-31d027646e9f.png" class="w-full h-full object-cover" />
-    </div>
-    </a>
-    <div class="p-6">
-      <div class="flex justify-between mb-2">
-        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">ทฤษฎี</span>
-        <span class="text-gray-500 text-sm">2566</span>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">แอปพลิเคชันช่วยสอน</h3>
-      <p class="text-gray-600 mb-4">แอปมือถือเพื่อการเรียนสายอาชีพ</p>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ท</div>
-          <span class="ml-2 text-gray-700">นางสาวกัญญารัตน์ พรหมสาขา</span>
-        </div>
-        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับชาติ</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Card 3 -->
-  <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-       data-title="หุ่นยนต์ช่วยเกษตร"
-       data-description="ต้นแบบหุ่นยนต์ฟาร์มผัก"
-       data-category="ประดิษฐ์"
-       data-year="2565"
-       data-level="ระดับภูมิภาค">
-        <a href="OnlineDDD.html">
-    <div class="h-40 overflow-hidden">
-      <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752546692/29f8cd75-be07-4318-a4f2-1acd0ea36afd.png" class="w-full h-full object-cover" />
-    </div>
-    </a>
-    <div class="p-6">
-      <div class="flex justify-between mb-2">
-        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">ประดิษฐ์</span>
-        <span class="text-gray-500 text-sm">2565</span>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">หุ่นยนต์ช่วยเกษตร</h3>
-      <p class="text-gray-600 mb-4">ต้นแบบหุ่นยนต์ฟาร์มผัก</p>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ป</div>
-          <span class="ml-2 text-gray-700">นายพีรวิชญ์ ทองสุข</span>
-        </div>
-        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับภูมิภาค</span>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<!-- JavaScript Filtering -->
-<script>
-document.getElementById("searchButton").addEventListener("click", function () {
-  const keyword = document.getElementById("searchInput").value.toLowerCase().trim();
-  const selectedCategory = document.getElementById("categorySelect").value;
-  const selectedYear = document.getElementById("yearSelect").value;
-  const selectedLevel = document.getElementById("levelSelect").value;
-
-  const cards = document.querySelectorAll(".research-card");
-
-  cards.forEach(card => {
-    const title = card.getAttribute("data-title").toLowerCase();
-    const description = card.getAttribute("data-description").toLowerCase();
-    const category = card.getAttribute("data-category");
-    const year = card.getAttribute("data-year");
-    const level = card.getAttribute("data-level");
-
-    const matchKeyword = keyword === "" || title.includes(keyword) || description.includes(keyword);
-    const matchCategory = selectedCategory === "" || category === selectedCategory;
-    const matchYear = selectedYear === "" || year === selectedYear;
-    const matchLevel = selectedLevel === "" || level === selectedLevel;
-
-    card.style.display = (matchKeyword && matchCategory && matchYear && matchLevel) ? "block" : "none";
-  });
-});
-
-document.getElementById("searchInput").addEventListener("keypress", function (e) {
-  if (e.key === "Enter") {
-    document.getElementById("searchButton").click();
-  }
-});
-</script>
-
-    <!-- Featured Research -->
-    <section class="py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">งานวิจัยแนะนำ</h2>
-                <a href="choose.html" class="text-orange-primary hover:underline">ดูทั้งหมด</a>
+        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">ค้นหางานวิจัย</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <input type="text" id="searchInput" placeholder="ค้นหาด้วยชื่อเรื่อง, ผู้แต่ง, คำสำคัญ..." class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                <select id="categorySelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <option value="">-- เลือกหมวดหมู่ --</option>
+                    <option value="วิทยาศาสตร์">วิทยาศาสตร์</option>
+                    <option value="เทคโนโลยี">เทคโนโลยี</option>
+                    <option value="วิศวกรรมศาสตร์">วิศวกรรมศาสตร์</option>
+                    <option value="คณิตศาสตร์">คณิตศาสตร์</option>
+                    <option value="เกษตรกรรม">เกษตรกรรม</option>
+                    <option value="อุตสาหกรรม">อุตสาหกรรม</option>
+                    <option value="บริหารธุรกิจ">บริหารธุรกิจ</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+                <select id="yearSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <option value="">-- เลือกปี --</option>
+                    </select>
+                <select id="levelSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                    <option value="">-- เลือกระดับ --</option>
+                    <option value="ปวช.">ปวช.</option>
+                    <option value="ปวส.">ปวส.</option>
+                    <option value="ปริญญาตรี">ปริญญาตรี</option>
+                    <option value="บัณฑิตศึกษา">บัณฑิตศึกษา</option>
+                </select>
             </div>
-
-
-<!-- Research Card -->
-<div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-    <a href="OnlineMMM.html">
-        <div class="h-40 overflow-hidden">
-            <img 
-                src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752544289/e28f254b-24e5-431b-8ab5-f3d3e092cef3.png" 
-                alt="ภาพประกอบ"
-                class="w-full h-full object-cover transition hover:opacity-90"
-            />
-        </div>
-    </a>
-    <div class="p-10">
-        <div class="flex justify-between mb-2">
-            <span class="px-3 py-1 bg-orange-light text-orange-primary text-sm rounded-full">สำรวจ</span>
-            <span class="text-gray-500 text-sm">2568</span>
-        </div>
-        <h3 class="text-lg font-semibold mb-2 leading-snug">
-            ระบบเว็บไซต์จัดเก็บผลงานวิจัย<br>
-            การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ （ชลบุรี）
-        </h3>
-        <p class="text-gray-600 mb-4 line-clamp-2">งานวิจัยเชิงสำรวจ รวบรวม และ การ ค้นหา</p>
-        <div class="flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold">ส</div>
-                <span class="ml-2 text-gray-700">นายธนวิชญ์ จันทร์โชติ</span>
+            <div class="text-center mt-6">
+                <button id="searchButton" class="bg-orange-primary text-white px-6 py-3 rounded-md hover:bg-orange-secondary transition">
+                    <i class="fas fa-search mr-2"></i> ค้นหา
+                </button>
             </div>
-            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับวิลัย</span>
-        </div>
-    </div>
-</div>
+        </section>
 
-
- <!-- Categories Section -->
-    <section class="py-12 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <h2 class="text-2xl font-bold text-gray-800 mb-8">หมวดหมู่งานวิจัย</h2>
-
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                <!-- Category 1 -->
-            <div onclick="window.location.href='Category/samruat.html'" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
-                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                        </svg>
-                    </div>
-                  <h3 class="font-semibold text-gray-800">การสำรวจ</h3> 
-                   <p class="text-gray-500 text-sm mt-2">2 งานวิจัย</p>
-          
-                </div>
-           </div>
-                <!-- Category 2 -->
-                <div onclick="window.location.href='Category/tidsadee.html'" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
-                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">ทฤษฎี</h3>
-                    <p class="text-gray-500 text-sm mt-2">2 งานวิจัย</p>
-                </div>
-                </div>
-                    
-                <!-- Category 3 -->
-       <div onclick="window.location.href='Category/todlong.html'" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">      
-                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
-                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">ทดลอง</h3>
-                    <p class="text-gray-500 text-sm mt-2">2 งานวิจัย</p>
-                </div>
-       </div>
-           
-                <!-- Category 4 -->
-               <div onclick="window.location.href='Category/pradit.html'" class="category-card bg-gradient-to-br from-primary-50 to-primary-100 rounded-2xl shadow-lg overflow-hidden border border-primary-200 transition-all duration-300 cursor-pointer">
-                <div class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer hover:bg-orange-light">
-                    <div class="bg-orange-light w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                    </div>
-                    <h3 class="font-semibold text-gray-800">ประดิษฐ์</h3>
-                    <p class="text-gray-500 text-sm mt-2">2 งานวิจัย</p>
-                </div>
-               </div>
-             </div>
-        </div>
-    </section>
-
-   
-    <!-- Recent Research -->
-    <section class="py-12">
-        <div class="container mx-auto px-4">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">งานวิจัยล่าสุด</h2>
-                <a href="#" class="text-orange-primary hover:underline">ดูทั้งหมด</a>
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
+            <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
             </div>
+        </section>
 
-            <div class="overflow-x-auto">
-                <table class="min-w-full bg-white rounded-lg overflow-hidden">
-                    <thead class="bg-orange-light">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ชื่องานวิจัย</th>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ผู้วิจัย</th>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">หมวดหมู่</th>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ปี</th>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">ระดับ</th>
-                            <th class="px-6 py-3 text-left text-gray-700 font-semibold">การดำเนินการ</th>
-                        </tr>
-                    </thead>
-                    <tbody onclick="window.location.href='OnlineMMM.html'" class="divide-y divide-gray-200">
-                    <tbody class="divide-y divide-gray-200">
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</td>
-                            <td class="px-6 py-4">นายธนวิชญ์ จันทร์โชติ</td>
-                            <td class="px-6 py-4">สำรวจ</td>
-                            <td class="px-6 py-4">2568</td>
-                            <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับชาติ</span></td>
-                            <td class="px-6 py-4">
-                             <a href="OnlineMMM.html"><button class="text-blue-600 hover:text-blue-800 mr-2">ดู</button></a>
-
-                                
-                                <button class="text-orange-primary hover:text-orange-700">ดาวน์โหลด</button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"><span class="bg-white-100 text-blue-800 px-2 py-1 rounded text-xs"></span></td>
-                            <td class="px-6 py-4">
-                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
-                                <button class="text-orange-primary hover:text-orange-700"></button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"><span class="bg-white-100 text-green-800 px-2 py-1 rounded text-xs"></span></td>
-                            <td class="px-6 py-4">
-                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
-                                <button class="text-orange-primary hover:text-orange-700"></button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"><span class="bg-white-100 text-yellow-800 px-2 py-1 rounded text-xs"></span></td>
-                            <td class="px-6 py-4">
-                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
-                                <button class="text-orange-primary hover:text-orange-700"></button>
-                            </td>
-                        </tr>
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"></td>
-                            <td class="px-6 py-4"><span class="bg-white-100 text-green-800 px-2 py-1 rounded text-xs"></span></td>
-                            <td class="px-6 py-4">
-                                <button class="text-blue-600 hover:text-blue-800 mr-2"></button>
-                                <button class="text-orange-primary hover:text-orange-700"></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยทั้งหมด</h2>
+            <div id="researchCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <p id="noResearchMessage" class="hidden text-center col-span-full text-gray-500">ไม่พบงานวิจัยที่ตรงกับเงื่อนไขการค้นหา</p>
             </div>
-        </div>
-    </section>
-
-
-
-
-
-
-   <!-- Contact Section -->
-<section class="py-12 bg-gray-50">
-  <div class="container mx-auto px-4">
-    <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">ติดต่อเรา</h2>
-
-    <div class="flex flex-col md:flex-row gap-8">
-      <!-- ฟอร์มส่งข้อความ -->
-      <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold mb-4">ส่งข้อความถึงเรา</h3>
-        <form id="contactForm">
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
-            <input type="text" id="name" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">อีเมล</label>
-            <input type="email" id="email" required class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">หัวข้อ</label>
-            <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 mb-2">ข้อความ</label>
-            <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary"></textarea>
-          </div>
-          <button type="submit" class="w-full px-6 py-3 bg-orange-primary text-white rounded-md hover:bg-orange-dark transition">ส่งข้อความ</button>
-        </form>
-      </div>
-
-      <!-- ข้อมูลการติดต่อ -->
-      <div class="md:w-1/2 bg-white rounded-lg shadow-md p-6">
-        <h3 class="text-xl font-semibold mb-4">ข้อมูลการติดต่อ</h3>
-        <div class="space-y-4">
-          <div class="flex items-start">
-            <div class="bg-orange-light p-3 rounded-full mr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+            <div id="loadingMessage" class="text-center py-8 text-gray-600 text-lg">
+                <i class="fas fa-spinner fa-spin mr-2"></i> กำลังโหลดงานวิจัย...
             </div>
-            <div>
-              <h4 class="font-semibold text-gray-800">ที่อยู่</h4>
-              <p class="text-gray-600">37 หมู่ 3 ต.บ้านเก่า อ.พานทอง จ.ชลบุรี 20160</p>
-            </div>
-          </div>
+        </section>
 
-          <div class="flex items-start">
-            <div class="bg-orange-light p-3 rounded-full mr-4">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
+        <section class="mb-12 bg-white p-6 rounded-lg shadow-md">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">สำรวจตามหมวดหมู่</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <a href="Category/Category.html?category=วิทยาศาสตร์" class="block p-4 text-center bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
+                    <i class="fas fa-flask text-2xl mb-2"></i>
+                    <p class="font-medium">วิทยาศาสตร์</p>
+                </a>
+                <a href="Category/Category.html?category=เทคโนโลยี" class="block p-4 text-center bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
+                    <i class="fas fa-microchip text-2xl mb-2"></i>
+                    <p class="font-medium">เทคโนโลยี</p>
+                </a>
+                <a href="Category/Category.html?category=วิศวกรรมศาสตร์" class="block p-4 text-center bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">
+                    <i class="fas fa-hard-hat text-2xl mb-2"></i>
+                    <p class="font-medium">วิศวกรรมศาสตร์</p>
+                </a>
+                <a href="Category/Category.html?category=คณิตศาสตร์" class="block p-4 text-center bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
+                    <i class="fas fa-calculator text-2xl mb-2"></i>
+                    <p class="font-medium">คณิตศาสตร์</p>
+                </a>
+                <a href="Category/Category.html?category=เกษตรกรรม" class="block p-4 text-center bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition">
+                    <i class="fas fa-seedling text-2xl mb-2"></i>
+                    <p class="font-medium">เกษตรกรรม</p>
+                </a>
+                <a href="Category/Category.html?category=อุตสาหกรรม" class="block p-4 text-center bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition">
+                    <i class="fas fa-industry text-2xl mb-2"></i>
+                    <p class="font-medium">อุตสาหกรรม</p>
+                </a>
+                <a href="Category/Category.html?category=บริหารธุรกิจ" class="block p-4 text-center bg-pink-100 text-pink-800 rounded-lg hover:bg-pink-200 transition">
+                    <i class="fas fa-chart-line text-2xl mb-2"></i>
+                    <p class="font-medium">บริหารธุรกิจ</p>
+                </a>
+                <a href="Category/Category.html?category=อื่นๆ" class="block p-4 text-center bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition">
+                    <i class="fas fa-ellipsis-h text-2xl mb-2"></i>
+                    <p class="font-medium">อื่นๆ</p>
+                </a>
             </div>
-            <div>
-              <h4 class="font-semibold text-gray-800">โทรศัพท์</h4>
-              <p class="text-gray-600">038 447 241</p>
-            </div>
-          </div>
+        </section>
+    </main>
 
-          <div class="mt-6">
-            <h4 class="font-semibold text-gray-800 mb-3">ติดตามเรา</h4>
-            <div class="flex space-x-4">
-              <a href="https://web.facebook.com/sbtvc/?_rdc=1&_rdr" class="bg-orange-light p-3 rounded-full text-orange-primary hover:bg-orange-primary hover:text-white transition">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between">
-                <div class="mb-6 md:mb-0">
-                    <div class="flex items-center mb-4">
-                        <div class="bg-orange-primary rounded-full p-2 mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                            </svg>
-                        </div>
-                        <h2 class="text-xl font-bold">SBTVC <span class="text-orange-primary">Online Research</span></h2>
-                    </div>
-                    <p class="text-gray-400 mb-4">แหล่งรวมงานวิจัยคุณภาพเพื่อการพัฒนาประเทศไทย</p>
-                    <p class="text-gray-400">© 2025 SBTVC Online Research สงวนลิขสิทธิ์</p>
-                </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">เมนูหลัก</h3>
-                        <ul class="space-y-2">
-                            <li><a href="#" class="text-gray-400 hover:text-orange-primary">หน้าหลัก</a></li>
-                            <li><a href="Category/Category.html" class="text-gray-400 hover:text-orange-primary">หมวดหมู่</a></li>
-                         
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h3 class="text-lg font-semibold mb-4">หมวดหมู่</h3>
-                        <ul class="space-y-2">
-                            <li><a href="Category/samruat" class="text-gray-400 hover:text-orange-primary">สำรวจ</a></li>
-                            <li><a href="Category/tidsadee.html" class="text-gray-400 hover:text-orange-primary">ทฤษฤี</a></li>
-                            <li><a href="Category/todlong.html" class="text-gray-400 hover:text-orange-primary">ทดลอง</a></li>
-                            <li><a href="Category/pradit.html" class="text-gray-400 hover:text-orange-primary">ประดิษฐ์</a></li>
-                        </ul>
-                    </div>
-
-                   
-                </div>
+        <div class="container mx-auto px-4 text-center">
+            <p>&copy; 2024 SBTVC Online Research. All rights reserved.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin-in"></i></a>
             </div>
         </div>
     </footer>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-            <button onclick="closeModal('loginModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <h2 class="text-2xl font-bold text-center mb-6">เข้าสู่ระบบ</h2>
+    <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
+        <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
             <form id="loginForm">
                 <div class="mb-4">
-                    <label for="login-email" class="block text-gray-700 mb-2">อีเมล</label>
-                    <input type="email" id="login-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
+                    <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
+                    <input type="email" id="loginEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-6">
-                    <label for="login-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
-                    <input type="password" id="login-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
+                    <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">รหัสผ่าน:</label>
+                    <input type="password" id="loginPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
-                <div class="flex items-center justify-between mb-6">
-                    <div class="flex items-center">
-                        <input type="checkbox" id="remember" class="mr-2">
-                        <label for="remember" class="text-gray-700">จดจำฉัน</label>
-                    </div>
-                    <a href="#" class="text-orange-primary hover:underline">ลืมรหัสผ่าน?</a>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">เข้าสู่ระบบ</button>
                 </div>
-                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">เข้าสู่ระบบ</button>
+                <p class="text-center text-gray-600 text-sm mt-4">
+                    ยังไม่มีบัญชี? 
+                    <button type="button" onclick="closeModal('loginModal'); openModal('registerModal');" class="text-orange-primary hover:underline font-bold">สมัครสมาชิก</button>
+                </p>
             </form>
-            <div class="mt-4 text-center">
-                <p class="text-gray-700">ยังไม่มีบัญชี? <a href="#" onclick="switchModal('loginModal', 'registerModal')" class="text-orange-primary hover:underline">สมัครสมาชิก</a></p>
-            </div>
+            <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
         </div>
     </div>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-            <button onclick="closeModal('registerModal')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-            <h2 class="text-2xl font-bold text-center mb-6">สมัครสมาชิก</h2>
+    <div id="registerModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
+        <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">สมัครสมาชิก</h2>
             <form id="registerForm">
                 <div class="mb-4">
-                    <label for="fullname" class="block text-gray-700 mb-2">ชื่อ-นามสกุล</label>
-                    <input type="text" id="fullname" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ชื่อ-นามสกุลของคุณ" required>
+                    <label for="regUsername" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้ใช้:</label>
+                    <input type="text" id="regUsername" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-4">
-                    <label for="register-email" class="block text-gray-700 mb-2">อีเมล</label>
-                    <input type="email" id="register-email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="อีเมลของคุณ" required>
+                    <label for="regFullname" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ-นามสกุล:</label>
+                    <input type="text" id="regFullname" name="fullname" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-4">
-                    <label for="register-password" class="block text-gray-700 mb-2">รหัสผ่าน</label>
-                    <input type="password" id="register-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="รหัสผ่านของคุณ" required>
+                    <label for="regEmail" class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
+                    <input type="email" id="regEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="mb-4">
+                    <label for="regPassword" class="block text-gray-700 text-sm font-bold mb-2">รหัสผ่าน:</label>
+                    <input type="password" id="regPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
                 <div class="mb-6">
-                    <label for="confirm-password" class="block text-gray-700 mb-2">ยืนยันรหัสผ่าน</label>
-                    <input type="password" id="confirm-password" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary" placeholder="ยืนยันรหัสผ่านของคุณ" required>
+                    <label for="regConfirmPassword" class="block text-gray-700 text-sm font-bold mb-2">ยืนยันรหัสผ่าน:</label>
+                    <input type="password" id="regConfirmPassword" name="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
                 </div>
-                <div class="flex items-center mb-6">
-                    <input type="checkbox" id="terms" class="mr-2" required>
-                    <label for="terms" class="text-gray-700">ฉันยอมรับ <a href="#" class="text-orange-primary hover:underline">ข้อกำหนดและเงื่อนไข</a></label>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">สมัครสมาชิก</button>
                 </div>
-                <button type="submit" class="w-full py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
+                <p class="text-center text-gray-600 text-sm mt-4">
+                    มีบัญชีอยู่แล้ว? 
+                    <button type="button" onclick="closeModal('registerModal'); openModal('loginModal');" class="text-orange-primary hover:underline font-bold">เข้าสู่ระบบ</button>
+                </p>
             </form>
-            <div class="mt-4 text-center">
-                <p class="text-gray-700">มีบัญชีอยู่แล้ว? <a href="#" onclick="switchModal('registerModal', 'loginModal')" class="text-orange-primary hover:underline">เข้าสู่ระบบ</a></p>
-            </div>
+            <button onclick="closeModal('registerModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
         </div>
     </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        checkLoginStatus();
+    <script src="common.js"></script>
 
-        document.getElementById('menuButton')?.addEventListener('click', function () {
-            document.getElementById('mobileMenu')?.classList.toggle('hidden');
-        });
+    <script>
+        let allResearches = []; // Stores all research data loaded from Google Sheet
+        const researchCardsContainer = document.getElementById('researchCards');
+        const searchInput = document.getElementById('searchInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const yearSelect = document.getElementById('yearSelect');
+        const levelSelect = document.getElementById('levelSelect');
+        const searchButton = document.getElementById('searchButton');
+        const noResearchMessage = document.getElementById('noResearchMessage');
+        const loadingMessage = document.getElementById('loadingMessage');
+        const featuredResearchContainer = document.getElementById('featuredResearchContainer');
+        const noFeaturedResearchMessage = document.getElementById('noFeaturedResearchMessage');
 
-        document.getElementById('menuButtonLoggedIn')?.addEventListener('click', function () {
-            document.getElementById('mobileMenu')?.classList.toggle('hidden');
-        });
+        // Function to create HTML for a single research card
+        function createResearchCardHtml(research) {
+            const defaultImageUrl = 'https://via.placeholder.com/400x300?text=No+Image+Available';
+            const imageUrl = research.ImageUrl && research.ImageUrl !== '' ? research.ImageUrl : defaultImageUrl;
 
-        document.getElementById('registerForm')?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const fullname = document.getElementById('fullname').value;
-            const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const confirmPassword = document.getElementById('confirm-password').value;
+            return `
+                <div class="research-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
+                    <a href="research-detail.html?id=${research.Id || research.ID}" class="block">
+                        <div class="image-container">
+                            <img src="${imageUrl}" alt="${research.Title}" class="w-full h-full object-cover">
+                        </div>
+                    </a>
+                    <div class="research-card-content flex flex-col justify-between flex-grow">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">${research.Title}</h3>
+                            <p class="text-sm text-gray-600 mb-1"><span class="font-medium">หมวดหมู่:</span> ${research.Category}</p>
+                            <p class="text-sm text-gray-600 mb-1"><span class="font-medium">ปี:</span> ${research.Year}</p>
+                            <p class="text-sm text-gray-600 mb-4"><span class="font-medium">ผู้แต่ง:</span> ${research.Authors}</p>
+                        </div>
+                        <div class="flex-grow-1">
+                            <a href="research-detail.html?id=${research.Id || research.ID}" class="block w-full text-center bg-orange-primary text-white py-2 rounded-md hover:bg-orange-secondary transition">
+                                ดูรายละเอียด
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
 
-            if (password !== confirmPassword) {
-                showToast('รหัสผ่านไม่ตรงกัน กรุณาตรวจสอบอีกครั้ง', 'error');
-                return;
+        // Function to create HTML for the featured research card (can be similar or slightly different style)
+        function createFeaturedResearchCardHtml(research) {
+            // Using the same card style for consistency, but you can customize if needed
+            return createResearchCardHtml(research);
+        }
+
+        // Function to populate the year dropdown dynamically
+        function populateYears() {
+            const years = new Set();
+            allResearches.forEach(research => {
+                if (research.Year) {
+                    years.add(String(research.Year));
+                }
+            });
+            const sortedYears = Array.from(years).sort((a, b) => parseInt(b) - parseInt(a)); // Sort descending
+
+            yearSelect.innerHTML = '<option value="">-- เลือกปี --</option>';
+            sortedYears.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            });
+        }
+
+        // Function to filter and display research cards
+        function filterResearches() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedCategory = categorySelect.value;
+            const selectedYear = yearSelect.value;
+            const selectedLevel = levelSelect.value;
+
+            const filtered = allResearches.filter(research => {
+                const matchesSearch = searchTerm === '' ||
+                                      (research.Title && research.Title.toLowerCase().includes(searchTerm)) ||
+                                      (research.Authors && research.Authors.toLowerCase().includes(searchTerm)) ||
+                                      (research.Abstract && research.Abstract.toLowerCase().includes(searchTerm));
+                const matchesCategory = selectedCategory === '' || (research.Category && research.Category === selectedCategory);
+                const matchesYear = selectedYear === '' || (research.Year && String(research.Year) === selectedYear);
+                const matchesLevel = selectedLevel === '' || (research.Level && research.Level === selectedLevel);
+                
+                return matchesSearch && matchesCategory && matchesYear && matchesLevel;
+            });
+
+            researchCardsContainer.innerHTML = '';
+            if (filtered.length > 0) {
+                filtered.forEach(research => {
+                    researchCardsContainer.innerHTML += createResearchCardHtml(research);
+                });
+                noResearchMessage.classList.add('hidden');
+            } else {
+                noResearchMessage.classList.remove('hidden');
             }
+        }
 
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            if (users.some(user => user.email === email)) {
-                showToast('อีเมลนี้มีผู้ใช้งานแล้ว กรุณาใช้อีเมลอื่น', 'error');
-                return;
+        // Fetch research data from Google Apps Script
+        async function loadApprovedResearch() {
+            loadingMessage.classList.remove('hidden');
+            researchCardsContainer.innerHTML = ''; // Clear existing cards
+            noResearchMessage.classList.add('hidden'); // Hide "no research" message initially
+
+            try {
+                // GOOGLE_APPS_SCRIPT_URL is defined in common.js
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST', // Use POST as per our combined Apps Script
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'getApprovedResearch' // Specific action for getting approved data
+                    }).toString()
+                });
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    allResearches = result.data;
+                    populateYears(); // Populate years after loading all data
+
+                    // Display all researches
+                    filterResearches(); // Call filter to display initially (with empty filters)
+
+                    // Display featured researches (e.g., first 3, or randomly selected)
+                    featuredResearchContainer.innerHTML = '';
+                    const featured = allResearches.slice(0, 3); // Example: show first 3
+                    if (featured.length > 0) {
+                        featured.forEach(research => {
+                            featuredResearchContainer.innerHTML += createFeaturedResearchCardHtml(research);
+                        });
+                        noFeaturedResearchMessage.classList.add('hidden');
+                    } else {
+                        noFeaturedResearchMessage.classList.remove('hidden');
+                    }
+
+                    if (allResearches.length === 0) {
+                        noResearchMessage.classList.remove('hidden');
+                    }
+
+                } else {
+                    showToast(result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้', 'error');
+                    noResearchMessage.classList.remove('hidden');
+                    noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
+                }
+            } catch (error) {
+                console.error('Error fetching research data:', error);
+                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
+                noResearchMessage.classList.remove('hidden');
+                noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
+            } finally {
+                loadingMessage.classList.add('hidden');
             }
+        }
 
-            const newUser = { fullname, email, password, registeredAt: new Date().toISOString() };
-            users.push(newUser);
-            localStorage.setItem('users', JSON.stringify(users));
+        // --- UI Updates based on Login Status ---
+        // Overrides checkLoginStatus from common.js to add upload link logic
+        const originalCheckLoginStatus = checkLoginStatus; // Keep a reference to the original function
 
-            showToast('สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ');
-            closeModal('registerModal');
-            openModal('loginModal');
-        });
-
-        document.getElementById('loginForm')?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const user = users.find(u => u.email === email && u.password === password);
+        checkLoginStatus = () => {
+            const user = originalCheckLoginStatus(); // Call the original function
+            const uploadLinkDesktop = document.getElementById('upload-link-desktop');
+            const uploadLinkMobile = document.getElementById('upload-link-mobile');
 
             if (user) {
-                sessionStorage.setItem('currentUser', JSON.stringify({
-                    fullname: user.fullname,
-                    email: user.email,
-                    loggedInAt: new Date().toISOString()
-                }));
-
-                updateUIForLoggedInUser(user);
-                closeModal('loginModal');
-                showToast('เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' + user.fullname);
+                // If logged in, show upload links
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
             } else {
-                showToast('อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error');
+                // If not logged in, hide upload links
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
             }
+            return user; // Return the user object
+        };
+
+
+        // Event listeners for search and filter
+        searchButton.addEventListener('click', filterResearches);
+        searchInput.addEventListener('input', filterResearches); // Filter as user types
+        categorySelect.addEventListener('change', filterResearches);
+        yearSelect.addEventListener('change', filterResearches);
+        levelSelect.addEventListener('change', filterResearches);
+
+        // Initial load on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus(); // Call the modified checkLoginStatus
+            attachAuthFormListeners(); // Call from common.js for modal logic
+            loadApprovedResearch(); // Load research data
         });
-    });
-
-    function showToast(message, type = 'success') {
-        const toast = document.getElementById('toast');
-        if (!toast) return;
-        toast.textContent = message;
-        toast.className = `toast ${type}`;
-        toast.classList.add('show');
-        setTimeout(() => toast.classList.remove('show'), 3000);
-    }
-
-    function logout() {
-        sessionStorage.removeItem('currentUser');
-        updateUIForLoggedOutUser();
-        showToast('ออกจากระบบสำเร็จ');
-    }
-
-    function checkLoginStatus() {
-        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-        if (currentUser) {
-            updateUIForLoggedInUser(currentUser);
-        }
-    }
-
-    function updateUIForLoggedInUser(user) {
-        document.getElementById('auth-buttons')?.classList.add('hidden');
-        document.getElementById('user-profile')?.classList.remove('hidden');
-        document.getElementById('username-display').textContent = user.fullname.split(' ')[0];
-        document.getElementById('fullname-display').textContent = user.fullname;
-        document.getElementById('email-display').textContent = user.email;
-        document.getElementById('mobile-user-menu')?.classList.remove('hidden');
-        document.getElementById('mobile-username-display').textContent = user.fullname.split(' ')[0];
-    }
-
-    function updateUIForLoggedOutUser() {
-        document.getElementById('auth-buttons')?.classList.remove('hidden');
-        document.getElementById('user-profile')?.classList.add('hidden');
-        document.getElementById('mobile-user-menu')?.classList.add('hidden');
-    }
-
-    function openModal(modalId) {
-        document.getElementById(modalId)?.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId)?.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-    }
-
-    function switchModal(closeModalId, openModalId) {
-        closeModal(closeModalId);
-        openModal(openModalId);
-    }
-
-    window.addEventListener('click', function (event) {
-        const modals = document.querySelectorAll('.modal');
-        modals.forEach(function (modal) {
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
-        });
-    });
-</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'94d6f0c7c744a192',t:'MTc0OTUzODI5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-        
+    </script>
+</body>
+</html>
