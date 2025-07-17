@@ -4,139 +4,394 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>อัปโหลดผลงานวิจัย</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* CSS ส่วนที่ใช้แสดงผลข้อความสถานะ */
+        /* Base Styles for Body and Container to mimic original design */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5; /* Light grey background, similar to original screenshots */
+            margin: 0;
+            padding: 20px; /* Add some padding around the form */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Align to top */
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 960px; /* A common width for forms, adjust as needed */
+            width: 100%;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px; /* Slightly rounded corners */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-top: 20px; /* Add some top margin to differentiate from header */
+            box-sizing: border-box; /* Ensure padding doesn't increase total width */
+        }
+
+        h1 {
+            font-size: 1.8em; /* Larger title */
+            font-weight: bold;
+            color: #333; /* Darker text */
+            margin-bottom: 25px; /* More space below title */
+            text-align: center;
+        }
+
+        /* Form Group Styles (Labels and Inputs) */
+        .form-group {
+            margin-bottom: 20px; /* Spacing between form groups */
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.9em; /* Slightly smaller label text */
+            font-weight: 600; /* Bolder label */
+            color: #555; /* Medium gray text */
+            margin-bottom: 8px; /* Space between label and input */
+        }
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px; /* Comfortable padding */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded input corners */
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.07); /* Inner shadow for depth */
+            font-size: 1em;
+            color: #333;
+            box-sizing: border-box; /* Essential for consistent width */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #007bff; /* Blue focus border */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Blue focus ring */
+        }
+        .text-red-500 {
+            color: #dc3545; /* Bootstrap-like red for required fields */
+        }
+
+        /* Message Box styles - คงไว้ตามที่คุณให้มา (แต่เปลี่ยนจาก Tailwind colors เป็น CSS ตรงๆ) */
         .message-box {
             padding: 1rem;
             margin-bottom: 1rem;
-            border-radius: 0.375rem; /* Tailwind's rounded-md */
+            border-radius: 0.375rem;
             font-weight: 500;
         }
         .message-box.info {
-            background-color: #bfdbfe; /* Tailwind's bg-blue-200 */
-            color: #1e40af; /* Tailwind's text-blue-800 */
+            background-color: #e0f2fe; /* blue-100 */
+            color: #2196f3; /* blue-500 */
         }
         .message-box.success {
-            background-color: #d1fae5; /* Tailwind's bg-green-200 */
-            color: #065f46; /* Tailwind's text-green-800 */
+            background-color: #e8f5e9; /* green-100 */
+            color: #4caf50; /* green-500 */
         }
         .message-box.error {
-            background-color: #fee2e2; /* Tailwind's bg-red-200 */
-            color: #991b1b; /* Tailwind's text-red-800 */
+            background-color: #ffebee; /* red-100 */
+            color: #f44336; /* red-500 */
         }
         .message-box.warning {
-            background-color: #fef3c7; /* Tailwind's bg-yellow-200 */
-            color: #92400e; /* Tailwind's text-yellow-800 */
+            background-color: #fffde7; /* yellow-100 */
+            color: #ffc107; /* yellow-500 */
+        }
+        .message-box.hidden {
+            display: none;
+        }
+
+        /* Category Grid */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Adjusted for better layout */
+            gap: 10px; /* Smaller gap */
+            margin-top: 5px;
+        }
+        .category-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background-color: #f8f8f8; /* Slightly off-white */
+            color: #444;
+        }
+        .category-item:hover {
+            background-color: #e9ecef; /* Lighter hover */
+            border-color: #a8a8a8;
         }
         .category-item.selected {
-            @apply bg-blue-500 text-white; /* Tailwind classes */
+            background-color: #007bff; /* Primary blue for selected */
+            color: #ffffff;
+            border-color: #007bff;
+        }
+
+        /* Author Entry */
+        .author-entry {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Space between author fields */
+        }
+        .author-entry:last-child {
+            margin-bottom: 0;
+        }
+        .author-entry input {
+            flex-grow: 1;
+            margin-right: 10px; /* Space between input and buttons */
+        }
+        .author-actions {
+            display: flex;
+            gap: 5px; /* Gap between buttons */
         }
         .author-actions button {
-            @apply ml-2 px-3 py-1 rounded-md text-sm;
+            padding: 8px 15px; /* Adjusted padding for buttons */
+            border-radius: 5px;
+            font-size: 0.85em; /* Smaller button text */
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s ease;
+            white-space: nowrap;
         }
         .author-actions .add-author {
-            @apply bg-green-500 text-white hover:bg-green-600;
+            background-color: #28a745; /* Green for add */
+            color: #ffffff;
+        }
+        .author-actions .add-author:hover {
+            background-color: #218838;
         }
         .author-actions .remove-author {
-            @apply bg-red-500 text-white hover:bg-red-600;
+            background-color: #dc3545; /* Red for remove */
+            color: #ffffff;
+        }
+        .author-actions .remove-author:hover {
+            background-color: #c82333;
+        }
+
+        /* File Upload Styles */
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+            font-size: 0.9em;
+            color: #555;
+            padding: 5px 0; /* Adjust padding for file input */
+        }
+        input[type="file"]::-webkit-file-upload-button {
+            background-color: #e9ecef; /* Light gray button */
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        input[type="file"]::file-selector-button { /* Standard property */
+            background-color: #e9ecef;
+            color: #333;
+            border: 1px solid #ccc;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        input[type="file"]::-webkit-file-upload-button:hover,
+        input[type="file"]::file-selector-button:hover {
+            background-color: #dee2e6;
+        }
+
+        /* Image Preview */
+        #cover-image-preview {
+            margin-top: 15px;
+            display: none; /* hidden by default */
+            background-color: #f9f9f9;
+            border: 1px dashed #e0e0e0;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        #cover-image-preview.visible {
+            display: block;
+        }
+        #uploaded-image-display {
+            max-width: 180px; /* Smaller preview image */
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        #cover-image-preview p {
+            font-size: 0.8em;
+            color: #666;
+            word-break: break-all; /* Allow long URLs to break */
+        }
+        #image-url-display {
+            color: #007bff; /* Blue for URL */
+            font-weight: bold;
+        }
+
+        /* Research File List */
+        #research-file-list {
+            margin-top: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            background-color: #fdfdfd;
+        }
+        #research-file-list > div {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        #research-file-list > div:last-child {
+            border-bottom: none;
+        }
+        #research-file-list span {
+            font-size: 0.85em;
+            color: #555;
+        }
+        #research-file-list .text-gray-500 { color: #888; }
+        #research-file-list .text-green-600 { color: #28a745; }
+        #research-file-list .text-red-600 { color: #dc3545; }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px; /* Spacing between buttons */
+            margin-top: 30px;
+            padding-top: 20px; /* Add padding above buttons */
+            border-top: 1px solid #eee; /* Separator line */
+        }
+        .button-group button {
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        #cancel-btn {
+            background-color: #f8f9fa; /* Light background */
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        #cancel-btn:hover {
+            background-color: #e2e6ea;
+            border-color: #b8b8b8;
+        }
+        #cancel-btn:focus, #submit-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Consistent focus ring */
+        }
+        #submit-btn {
+            background-color: #007bff; /* Primary blue for submit */
+            color: #ffffff;
+            border: 1px solid #007bff;
+        }
+        #submit-btn:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        #submit-btn:disabled {
+            background-color: #a0cffc; /* Lighter blue for disabled */
+            border-color: #a0cffc;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
         }
     </style>
 </head>
-<body class="bg-gray-100 p-4">
+<body>
 
-    <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h1 class="text-2xl font-bold mb-6 text-gray-800">อัปโหลดผลงานวิจัยใหม่</h1>
+    <div class="container">
+        <h1>อัปโหลดผลงานวิจัยใหม่</h1>
         
         <div id="form-message" class="message-box hidden" role="alert"></div>
         <div id="image-upload-message" class="message-box hidden" role="alert"></div>
         <div id="file-upload-message" class="message-box hidden" role="alert"></div>
 
-        <form id="research-form" class="space-y-6">
-            <div>
-                <label for="title" class="block text-sm font-medium text-gray-700 mb-1">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
-                <input type="text" id="title" name="title" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        <form id="research-form">
+            <div class="form-group">
+                <label for="title">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
+                <input type="text" id="title" name="title" required>
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">หมวดหมู่ <span class="text-red-500">*</span></label>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="บทความวิจัย">บทความวิจัย</div>
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="วิทยานิพนธ์">วิทยานิพนธ์</div>
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="สารนิพนธ์">สารนิพนธ์</div>
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="การศึกษาอิสระ">การศึกษาอิสระ</div>
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="งานวิจัยรับจ้าง">งานวิจัยรับจ้าง</div>
-                    <div class="category-item border border-gray-300 rounded-md p-3 text-center cursor-pointer hover:bg-gray-50 transition-colors" data-value="อื่นๆ">อื่นๆ</div>
+            <div class="form-group">
+                <label>หมวดหมู่ <span class="text-red-500">*</span></label>
+                <div class="category-grid">
+                    <div class="category-item" data-value="บทความวิจัย">บทความวิจัย</div>
+                    <div class="category-item" data-value="วิทยานิพนธ์">วิทยานิพนธ์</div>
+                    <div class="category-item" data-value="สารนิพนธ์">สารนิพนธ์</div>
+                    <div class="category-item" data-value="การศึกษาอิสระ">การศึกษาอิสระ</div>
+                    <div class="category-item" data-value="งานวิจัยรับจ้าง">งานวิจัยรับจ้าง</div>
+                    <div class="category-item" data-value="อื่นๆ">อื่นๆ</div>
                 </div>
                 <input type="hidden" id="selected-category" name="category" required>
             </div>
 
-            <div>
-                <label for="department" class="block text-sm font-medium text-gray-700 mb-1">สาขา <span class="text-red-500">*</span></label>
-                <input type="text" id="department" name="department" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <div class="form-group">
+                <label for="department">สาขา <span class="text-red-500">*</span></label>
+                <input type="text" id="department" name="department" required>
             </div>
 
-            <div>
-                <label for="field" class="block text-sm font-medium text-gray-700 mb-1">กลุ่มวิชา/แขนงวิชา <span class="text-red-500">*</span></label>
-                <input type="text" id="field" name="field" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <div class="form-group">
+                <label for="field">กลุ่มวิชา/แขนงวิชา <span class="text-red-500">*</span></label>
+                <input type="text" id="field" name="field" required>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
                 <div>
-                    <label for="year" class="block text-sm font-medium text-gray-700 mb-1">ปีที่ทำ <span class="text-red-500">*</span></label>
-                    <input type="number" id="year" name="year" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <label for="year">ปีที่ทำ <span class="text-red-500">*</span></label>
+                    <input type="number" id="year" name="year" required>
                 </div>
                 <div>
-                    <label for="academic-year" class="block text-sm font-medium text-gray-700 mb-1">ปีการศึกษา <span class="text-red-500">*</span></label>
-                    <input type="text" id="academic-year" name="academicYear" placeholder="เช่น 2566/2567" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <label for="academic-year">ปีการศึกษา <span class="text-red-500">*</span></label>
+                    <input type="text" id="academic-year" name="academicYear" placeholder="เช่น 2566/2567" required>
                 </div>
             </div>
 
-            <div>
-                <label for="authors-container" class="block text-sm font-medium text-gray-700 mb-1">ผู้จัดทำ <span class="text-red-500">*</span></label>
-                <div id="authors-container" class="space-y-2">
-                    <div class="author-entry flex items-center">
-                        <input type="text" name="authors[]" placeholder="ชื่อ-นามสกุล ผู้จัดทำ" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        <div class="author-actions">
-                            <button type="button" class="add-author bg-green-500 text-white px-3 py-1 rounded-md ml-2 text-sm hover:bg-green-600">เพิ่ม</button>
-                        </div>
+            <div class="form-group">
+                <label for="authors-container">ผู้จัดทำ <span class="text-red-500">*</span></label>
+                <div id="authors-container">
                     </div>
-                </div>
             </div>
 
-            <div>
-                <label for="advisor" class="block text-sm font-medium text-gray-700 mb-1">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
-                <input type="text" id="advisor" name="advisor" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <div class="form-group">
+                <label for="advisor">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
+                <input type="text" id="advisor" name="advisor" required>
             </div>
 
-            <div>
-                <label for="abstract" class="block text-sm font-medium text-gray-700 mb-1">บทคัดย่อ <span class="text-red-500">*</span></label>
-                <textarea id="abstract" name="abstract" rows="5" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+            <div class="form-group">
+                <label for="abstract">บทคัดย่อ <span class="text-red-500">*</span></label>
+                <textarea id="abstract" name="abstract" rows="5" required></textarea>
             </div>
 
-            <div>
-                <label for="cover-image-input" class="block text-sm font-medium text-gray-700 mb-1">รูปภาพปกผลงานวิจัย <span class="text-red-500">*</span></label>
-                <input type="file" id="cover-image-input" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <div class="form-group">
+                <label for="cover-image-input">รูปภาพปกผลงานวิจัย <span class="text-red-500">*</span></label>
+                <input type="file" id="cover-image-input" accept="image/*">
                 <input type="hidden" id="uploaded-image-url" name="coverImageUrl">
-                <div id="cover-image-preview" class="mt-4 hidden">
-                    <img id="uploaded-image-display" src="" alt="Cover Image Preview" class="max-w-xs h-auto rounded-md shadow-md">
-                    <p class="text-sm text-gray-600 mt-2">URL: <span id="image-url-display" class="break-all text-blue-700"></span></p>
+                <div id="cover-image-preview">
+                    <img id="uploaded-image-display" src="" alt="Cover Image Preview">
+                    <p>URL: <span id="image-url-display"></span></p>
                 </div>
             </div>
 
-            <div>
-                <label for="research-file-input" class="block text-sm font-medium text-gray-700 mb-1">ไฟล์ผลงานวิจัย (.pdf, .doc, .docx, .ppt, .pptx) <span class="text-red-500">*</span></label>
-                <input type="file" id="research-file-input" multiple accept=".pdf,.doc,.docx,.ppt,.pptx" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            <div class="form-group">
+                <label for="research-file-input">ไฟล์ผลงานวิจัย (.pdf, .doc, .docx, .ppt, .pptx) <span class="text-red-500">*</span></label>
+                <input type="file" id="research-file-input" multiple accept=".pdf,.doc,.docx,.ppt,.pptx">
                 <input type="hidden" id="uploaded-research-files-url" name="researchFileUrls">
-                <div id="research-file-list" class="mt-2 space-y-1">
+                <div id="research-file-list">
                     </div>
             </div>
 
-            <div class="flex justify-end space-x-4 mt-6">
-                <button type="button" id="cancel-btn" class="px-6 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            <div class="button-group">
+                <button type="button" id="cancel-btn">
                     ยกเลิก
                 </button>
-                <button type="submit" id="submit-btn" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" disabled>
+                <button type="submit" id="submit-btn" disabled>
                     ส่งข้อมูล
                 </button>
             </div>
@@ -263,7 +518,7 @@
     function createAddButton() {
         const button = document.createElement('button');
         button.type = 'button';
-        button.classList.add('add-author', 'bg-green-500', 'text-white', 'px-3', 'py-1', 'rounded-md', 'ml-2', 'text-sm', 'hover:bg-green-600');
+        button.classList.add('add-author'); /* ใช้แค่ class name */
         button.textContent = 'เพิ่ม';
         button.addEventListener('click', addAuthorField);
         return button;
@@ -272,7 +527,7 @@
     function createRemoveButton() {
         const button = document.createElement('button');
         button.type = 'button';
-        button.classList.add('remove-author', 'bg-red-500', 'text-white', 'px-3', 'py-1', 'rounded-md', 'ml-2', 'text-sm', 'hover:bg-red-600');
+        button.classList.add('remove-author'); /* ใช้แค่ class name */
         button.textContent = 'ลบ';
         button.addEventListener('click', function() {
             this.closest('.author-entry').remove();
@@ -284,9 +539,9 @@
 
     function addAuthorField() {
         const div = document.createElement('div');
-        div.classList.add('author-entry', 'flex', 'items-center');
+        div.classList.add('author-entry'); /* ใช้แค่ class name */
         div.innerHTML = `
-            <input type="text" name="authors[]" placeholder="ชื่อ-นามสกุล ผู้จัดทำ" required class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+            <input type="text" name="authors[]" placeholder="ชื่อ-นามสกุล ผู้จัดทำ" required>
             <div class="author-actions"></div>
         `;
         const actionsDiv = div.querySelector('.author-actions');
@@ -329,7 +584,7 @@
         const file = event.target.files[0];
         if (!file) {
             uploadedImageUrlInput.value = '';
-            coverImagePreview.classList.add('hidden');
+            coverImagePreview.classList.remove('visible'); /* ใช้ class 'visible' แทน 'hidden' */
             uploadedImageInfo = null;
             checkFormValidity();
             return;
@@ -359,19 +614,19 @@
                 uploadedImageUrlInput.value = data.secure_url;
                 uploadedImageDisplay.src = data.secure_url;
                 imageUrlDisplay.textContent = data.secure_url;
-                coverImagePreview.classList.remove('hidden');
+                coverImagePreview.classList.add('visible'); /* ใช้ class 'visible' แทน 'hidden' */
                 uploadedImageInfo = { url: data.secure_url, name: file.name, type: file.type };
                 showImageUploadMessage('อัปโหลดรูปภาพปกสำเร็จ!', 'success');
             } else {
                 uploadedImageUrlInput.value = '';
-                coverImagePreview.classList.add('hidden');
+                coverImagePreview.classList.remove('visible'); /* ใช้ class 'visible' แทน 'hidden' */
                 uploadedImageInfo = null;
                 showImageUploadMessage(`อัปโหลดรูปภาพปกไม่สำเร็จ: ${data.error ? data.error.message : 'เกิดข้อผิดพลาดไม่ทราบสาเหตุ'}`, 'error');
                 console.error('Cloudinary upload error:', data);
             }
         } catch (error) {
             uploadedImageUrlInput.value = '';
-            coverImagePreview.classList.add('hidden');
+            coverImagePreview.classList.remove('visible'); /* ใช้ class 'visible' แทน 'hidden' */
             uploadedImageInfo = null;
             showImageUploadMessage(`อัปโหลดรูปภาพปกเกิดข้อผิดพลาด: ${error.message}`, 'error');
             console.error('Error uploading image to Cloudinary:', error);
@@ -405,10 +660,10 @@
 
         for (const file of files) {
             const fileItemDiv = document.createElement('div');
-            fileItemDiv.classList.add('flex', 'items-center', 'justify-between', 'border', 'border-gray-200', 'p-2', 'rounded-md');
+            fileItemDiv.classList.add('file-item'); /* ใช้ class 'file-item' แทน Tailwind classes */
             fileItemDiv.innerHTML = `
-                <span class="text-sm text-gray-700">${file.name}</span>
-                <span class="text-sm text-gray-500" id="status-${file.name.replace(/\./g, '-')}-${file.size}">กำลังอัปโหลด...</span>
+                <span class="file-name">${file.name}</span>
+                <span class="file-status" id="status-${file.name.replace(/\./g, '-')}-${file.size}">กำลังอัปโหลด...</span>
             `;
             researchFileListDiv.appendChild(fileItemDiv);
 
@@ -432,18 +687,18 @@
                         type: file.type
                     });
                     statusSpan.textContent = 'อัปโหลดสำเร็จ!';
-                    statusSpan.classList.remove('text-gray-500');
-                    statusSpan.classList.add('text-green-600');
+                    statusSpan.classList.add('text-green-600'); /* ใช้ class name */
+                    statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
                 } else {
                     statusSpan.textContent = `อัปโหลดไม่สำเร็จ: ${data.error ? data.error.message : 'ข้อผิดพลาดไม่ทราบสาเหตุ'}`;
-                    statusSpan.classList.remove('text-gray-500');
-                    statusSpan.classList.add('text-red-600');
+                    statusSpan.classList.add('text-red-600'); /* ใช้ class name */
+                    statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
                     console.error('Cloudinary file upload error:', data);
                 }
             } catch (error) {
                 statusSpan.textContent = `อัปโหลดเกิดข้อผิดพลาด: ${error.message}`;
-                statusSpan.classList.remove('text-gray-500');
-                statusSpan.classList.add('text-red-600');
+                statusSpan.classList.add('text-red-600'); /* ใช้ class name */
+                statusSpan.classList.remove('text-gray-500'); /* ลบคลาสเดิม */
                 console.error('Error uploading file to Cloudinary:', error);
             } finally {
                 pendingFileUploads--;
@@ -525,7 +780,7 @@
                 authorsContainer.innerHTML = ''; // Clear authors
                 addAuthorField(); // Add back one author field
                 uploadedImageUrlInput.value = '';
-                coverImagePreview.classList.add('hidden');
+                coverImagePreview.classList.remove('visible'); // Remove 'visible' to hide
                 uploadedImageInfo = null;
                 researchFileInput.value = ''; // Clear file input
                 uploadedResearchFilesUrlInput.value = JSON.stringify([]);
@@ -553,7 +808,7 @@
             authorsContainer.innerHTML = '';
             addAuthorField(); // Add back one author field
             uploadedImageUrlInput.value = '';
-            coverImagePreview.classList.add('hidden');
+            coverImagePreview.classList.remove('visible'); // Remove 'visible' to hide
             uploadedImageInfo = null;
             researchFileInput.value = '';
             uploadedResearchFilesUrlInput.value = JSON.stringify([]);
