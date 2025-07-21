@@ -1,43 +1,47 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ระบบอัปโหลดผลงานวิจัย</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Sarabun Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: #f0f4f8;
-            min-height: 100vh; /* ทำให้ body สูงเต็มหน้าจอ */
+            background-color: #f0f4f8; /* Light blue-gray background */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
         main {
-            flex: 1; /* ทำให้ main ขยายเต็มพื้นที่ที่เหลือ */
+            flex: 1; /* Allows main content to expand and fill available space */
         }
         .upload-box-file {
-            border: 2px dashed hsl(27, 93%, 49%);
+            border: 2px dashed hsl(27, 93%, 49%); /* Orange dashed border */
             transition: all 0.3s ease;
         }
         .upload-box-file:hover {
-            border-color: #db7c0ed5;
-            background-color: rgba(231, 134, 23, 0.89);
+            border-color: #db7c0ed5; /* Darker orange on hover */
+            background-color: rgba(231, 134, 23, 0.89); /* Orange background on hover */
         }
         .category-item {
             transition: all 0.2s ease;
-            border-color: #e0e0e0; /* สีขอบเริ่มต้น */
+            border-color: #e0e0e0; /* Initial border color */
         }
         .category-item:hover {
             transform: translateY(-2px);
-            border-color: #d47a13;
+            border-color: #d47a13; /* Orange border on hover */
         }
         .category-item.selected {
-            border-color: #d47a13;
-            background-color: rgb(233, 55, 11);
+            border-color: #d47a13; /* Selected orange border */
+            background-color: rgb(233, 55, 11); /* Selected orange background */
             color: white;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for selected item */
         }
         .message {
             margin-top: 1rem;
@@ -57,6 +61,9 @@
         .message.info {
             background-color: #e0f2fe; /* blue-100 */
             color: #1e40af; /* blue-800 */
+        }
+        .message.hidden {
+            display: none;
         }
         .author-entry {
             align-items: center;
@@ -142,7 +149,7 @@
 
             <div class="mb-6">
                 <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
-                <div id="authors-container">
+                <div id="authors-container" class="space-y-2">
                     <div class="author-entry flex items-center gap-4 mb-2">
                         <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500 outline-none" placeholder="ชื่อ-นามสกุล" required value="">
                         <button type="button" class="add-author bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600 transition">
@@ -154,37 +161,38 @@
 
             <div class="mb-6">
                 <label for="advisor" class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
-                <input type="text" id="advisor" name="advisor" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500 outline-none" required>
+                <input type="text" id="advisor" name="advisor" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none" required>
             </div>
 
             <div class="mb-6">
                 <label for="abstract" class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
-                <textarea id="abstract" name="abstract" rows="4" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500 outline-none" required></textarea>
+                <textarea id="abstract" name="abstract" rows="4" class="w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 outline-none" required></textarea>
             </div>
 
             <div class="mb-8">
                 <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพปกผลงาน (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
-                <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-                    <input type="file" id="cover-image-upload" class="hidden" accept="image/*">
+                <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer" id="coverImageUploadArea">
+                    <input type="file" id="coverImageInputFile" class="hidden" accept="image/*">
                     <div>
                         <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
                     </div>
                     <p class="font-medium text-gray-700">ลากรูปภาพหรือคลิกเพื่อเลือก</p>
                     <p class="text-sm text-gray-500">รองรับ: JPG, PNG, GIF, WEBP (สูงสุด 5MB/ไฟล์)</p>
                 </div>
+                <div id="image-upload-message" class="message hidden"></div>
                 <div id="cover-image-preview-container" class="mt-4 hidden border p-4 rounded-lg flex flex-col items-center">
                     <img id="uploaded-image-display" src="" alt="Cover Image Preview" class="max-w-full h-auto rounded-lg mb-2">
-                    <p id="image-url-display" class="text-sm text-gray-600 break-all mb-2"></p>
+                    <p id="imageUrlDisplay" class="text-sm text-gray-600 break-all mb-2"></p>
                     <button type="button" id="remove-cover-image" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">ลบรูปภาพปก</button>
                 </div>
                 <input type="hidden" id="uploaded-image-url" name="coverImageUrl">
-                <div id="image-upload-message" class="message hidden"></div>
             </div>
 
             <div class="mb-8">
                 <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOCX) <span class="text-red-500">*</span></label>
-                <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-                    <input type="file" id="research-file-upload" class="hidden" multiple accept=".pdf,.docx"> <div>
+                <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer" id="researchFilesUploadArea">
+                    <input type="file" id="researchFileInput" class="hidden" multiple accept=".pdf,.docx"> 
+                    <div>
                         <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
                     </div>
                     <p class="font-medium text-gray-700">ลากไฟล์หรือคลิกเพื่อเลือก</p>
@@ -198,7 +206,7 @@
             <div id="form-message" class="message hidden"></div>
             <div class="flex justify-end">
                 <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4 transition">ยกเลิก</button>
-                <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">อัปโหลด</button>
+                <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition" disabled>อัปโหลด</button>
             </div>
         </form>
     </div>
@@ -206,17 +214,72 @@
 
 <script>
     // **Cloudinary Configuration**
-    const CLOUDINARY_CLOUD_NAME = 'davuwvefc';
-    const CLOUDINARY_UPLOAD_PRESET = 'STVC_preset';
+    // คุณต้องเปลี่ยนค่าเหล่านี้ให้เป็น Cloud Name และ Upload Preset ของคุณใน Cloudinary
+    // Upload Preset ต้องตั้งค่าเป็น "Unsigned" เพื่อให้อัปโหลดจาก Frontend ได้
+    const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <<< เปลี่ยนเป็น Cloud Name ของคุณ!
+    const CLOUDINARY_UPLOAD_PRESET = 'STVC_preset'; // <<< เปลี่ยนเป็น Upload Preset ของคุณ!
 
     // **Google Apps Script Web App URL**
-    // **สำคัญ: ต้องอัปเดต URL นี้หลังจาก Deploy Apps Script ใหม่ทุกครั้ง**
+    // URL นี้คือ URL ของ Web App ที่คุณ Deploy จาก Google Apps Script
+    // ตรวจสอบให้แน่ใจว่า URL นี้ถูกต้องและเป็นเวอร์ชันล่าสุดหลังการ Deploy
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-    // เลือกหมวดหมู่
+    // Selectors for form elements
     const categoryItems = document.querySelectorAll('.category-item');
     const selectedCategoryInput = document.getElementById('selected-category');
+    const authorsContainer = document.getElementById('authors-container');
+    const formMessage = document.getElementById('form-message');
+    const imageUploadMessage = document.getElementById('image-upload-message');
+    const fileUploadMessage = document.getElementById('file-upload-message');
 
+    // Cover Image Upload Elements
+    const coverImageUploadArea = document.getElementById('coverImageUploadArea'); // The draggable div
+    const coverImageInputFile = document.getElementById('coverImageInputFile'); // The actual file input
+    const coverImagePreviewContainer = document.getElementById('cover-image-preview-container');
+    const uploadedImageDisplay = document.getElementById('uploaded-image-display');
+    const imageUrlDisplay = document.getElementById('imageUrlDisplay');
+    const uploadedImageUrlInput = document.getElementById('uploaded-image-url');
+    const removeCoverImageButton = document.getElementById('remove-cover-image');
+
+    // Research File Upload Elements
+    const researchFilesUploadArea = document.getElementById('researchFilesUploadArea'); // The draggable div
+    const researchFileInput = document.getElementById('researchFileInput'); // The actual file input
+    const researchFileListDiv = document.getElementById('research-file-list');
+    const uploadedResearchFilesUrlInput = document.getElementById('uploaded-research-files-url');
+    let pendingFileUploads = 0; // Counter for ongoing file uploads
+
+    // --- Helper Functions for UI Messages ---
+    function showFormMessage(msg, type) {
+        formMessage.textContent = msg;
+        formMessage.className = `message ${type}`;
+        formMessage.classList.remove('hidden');
+    }
+    function hideFormMessage() {
+        formMessage.classList.add('hidden');
+        formMessage.textContent = '';
+    }
+
+    function showImageUploadMessage(msg, type) {
+        imageUploadMessage.textContent = msg;
+        imageUploadMessage.className = `message ${type}`;
+        imageUploadMessage.classList.remove('hidden');
+    }
+    function hideImageUploadMessage() {
+        imageUploadMessage.classList.add('hidden');
+        imageUploadMessage.textContent = '';
+    }
+
+    function showFileUploadMessage(msg, type) {
+        fileUploadMessage.textContent = msg;
+        fileUploadMessage.className = `message ${type}`;
+        fileUploadMessage.classList.remove('hidden');
+    }
+    function hideFileUploadMessage() {
+        fileUploadMessage.classList.add('hidden');
+        fileUploadMessage.textContent = '';
+    }
+
+    // --- Category Selection Logic ---
     categoryItems.forEach(item => {
         item.addEventListener('click', () => {
             categoryItems.forEach(i => i.classList.remove('selected'));
@@ -227,9 +290,7 @@
         });
     });
 
-    // เพิ่ม/ลบรายชื่อผู้จัดทำ
-    const authorsContainer = document.getElementById('authors-container');
-
+    // --- Authors Management Logic ---
     function createAuthorInput(value = '') {
         const newAuthorDiv = document.createElement('div');
         newAuthorDiv.className = 'author-entry flex items-center gap-4 mb-2';
@@ -240,7 +301,6 @@
         return newAuthorDiv;
     }
 
-    // สร้างปุ่มเพิ่มผู้แต่ง
     function createAddButton() {
         const addButton = document.createElement('button');
         addButton.type = 'button';
@@ -249,7 +309,6 @@
         return addButton;
     }
 
-    // สร้างปุ่มลบผู้แต่ง
     function createRemoveButton() {
         const removeButton = document.createElement('button');
         removeButton.type = 'button';
@@ -258,23 +317,14 @@
         return removeButton;
     }
 
-    // เมื่อโหลดหน้าเว็บ ให้แน่ใจว่ามีช่องใส่ผู้แต่งอย่างน้อยหนึ่งช่องพร้อมปุ่มที่ถูกต้อง
-    document.addEventListener('DOMContentLoaded', () => {
-        if (authorsContainer.children.length === 0) {
-            const initialAuthorInput = createAuthorInput();
-            authorsContainer.appendChild(initialAuthorInput);
-            const removeBtn = initialAuthorInput.querySelector('.remove-author');
-            if (removeBtn) removeBtn.replaceWith(createAddButton());
-        }
-        updateSubmitButtonState();
-    });
-
+    // Handle adding/removing authors
     authorsContainer.addEventListener('click', e => {
         if(e.target.classList.contains('add-author')) {
             const currentAuthorEntries = authorsContainer.querySelectorAll('.author-entry').length;
             const newAuthorEntry = createAuthorInput();
             authorsContainer.appendChild(newAuthorEntry);
 
+            // If this is the second author being added, change the first author's button to '-'
             if (currentAuthorEntries === 1) {
                 const firstAuthorEntry = authorsContainer.children[0];
                 const addButton = firstAuthorEntry.querySelector('.add-author');
@@ -286,6 +336,7 @@
         }
         if(e.target.classList.contains('remove-author')) {
             e.target.closest('.author-entry').remove();
+            // If only one author remains, change its button to '+'
             if (authorsContainer.children.length === 1) {
                 const soleAuthorEntry = authorsContainer.querySelector('.author-entry');
                 const removeButton = soleAuthorEntry.querySelector('.remove-author');
@@ -293,6 +344,7 @@
                     removeButton.replaceWith(createAddButton());
                 }
             } else if (authorsContainer.children.length === 0) {
+                // If all authors are removed, add an initial one with a '+' button
                 const initialAuthorInput = createAuthorInput();
                 authorsContainer.appendChild(initialAuthorInput);
                 const removeBtn = initialAuthorInput.querySelector('.remove-author');
@@ -302,55 +354,11 @@
         }
     });
 
-    // ฟังก์ชันแสดงข้อความสำหรับ Form
-    const formMessage = document.getElementById('form-message');
-    function showFormMessage(msg, type) {
-        formMessage.textContent = msg;
-        formMessage.className = `message ${type}`;
-        formMessage.classList.remove('hidden');
-    }
-    function hideFormMessage() {
-        formMessage.classList.add('hidden');
-        formMessage.textContent = '';
-    }
+    // --- Cover Image Upload Logic (Cloudinary) ---
+    coverImageUploadArea.addEventListener('click', () => coverImageInputFile.click());
 
-    // ฟังก์ชันแสดงข้อความสำหรับ Image Upload
-    const imageUploadMessage = document.getElementById('image-upload-message');
-    function showImageUploadMessage(msg, type) {
-        imageUploadMessage.textContent = msg;
-        imageUploadMessage.className = `message ${type}`;
-        imageUploadMessage.classList.remove('hidden');
-    }
-    function hideImageUploadMessage() {
-        imageUploadMessage.classList.add('hidden');
-        imageUploadMessage.textContent = '';
-    }
-
-    // ฟังก์ชันแสดงข้อความสำหรับ File Upload
-    const fileUploadMessage = document.getElementById('file-upload-message');
-    function showFileUploadMessage(msg, type) {
-        fileUploadMessage.textContent = msg;
-        fileUploadMessage.className = `message ${type}`;
-        fileUploadMessage.classList.remove('hidden');
-    }
-    function hideFileUploadMessage() {
-        fileUploadMessage.classList.add('hidden');
-        fileUploadMessage.textContent = '';
-    }
-
-    // --- การจัดการอัปโหลดรูปภาพปก (Cover Image) ไปยัง Cloudinary ---
-    const coverImageUploadBox = document.querySelector('#cover-image-upload').parentElement;
-    const coverImageInput = document.getElementById('cover-image-upload');
-    const coverImagePreviewContainer = document.getElementById('cover-image-preview-container');
-    const uploadedImageDisplay = document.getElementById('uploaded-image-display');
-    const imageUrlDisplay = document.getElementById('image-url-display');
-    const uploadedImageUrlInput = document.getElementById('uploaded-image-url');
-    const removeCoverImageButton = document.getElementById('remove-cover-image');
-
-    coverImageUploadBox.addEventListener('click', () => coverImageInput.click());
-
-    coverImageInput.addEventListener('change', async () => {
-        const file = coverImageInput.files[0];
+    coverImageInputFile.addEventListener('change', async () => {
+        const file = coverImageInputFile.files[0];
         if (!file) {
             uploadedImageUrlInput.value = '';
             coverImagePreviewContainer.classList.add('hidden');
@@ -364,7 +372,7 @@
         const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedImageTypes.includes(file.type)) {
             showImageUploadMessage('กรุณาเลือกไฟล์รูปภาพ (JPG, PNG, GIF, WEBP) เท่านั้น', 'error');
-            coverImageInput.value = '';
+            coverImageInputFile.value = '';
             uploadedImageUrlInput.value = '';
             coverImagePreviewContainer.classList.add('hidden');
             uploadedImageDisplay.src = '';
@@ -375,7 +383,7 @@
 
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
             showImageUploadMessage('ขนาดรูปภาพต้องไม่เกิน 5MB', 'error');
-            coverImageInput.value = '';
+            coverImageInputFile.value = '';
             coverImagePreviewContainer.classList.add('hidden');
             uploadedImageUrlInput.value = '';
             uploadedImageDisplay.src = '';
@@ -386,7 +394,7 @@
 
         showImageUploadMessage('กำลังอัปโหลดรูปภาพปก...', 'info');
         document.getElementById('submit-btn').disabled = true;
-        coverImageInput.disabled = true;
+        coverImageInputFile.disabled = true;
         uploadedImageUrlInput.value = '';
         coverImagePreviewContainer.classList.add('hidden');
 
@@ -416,14 +424,34 @@
             showImageUploadMessage('เกิดข้อผิดพลาดในการอัปโหลดรูปภาพปก', 'error');
             coverImagePreviewContainer.classList.add('hidden');
         } finally {
-            coverImageInput.disabled = false;
+            coverImageInputFile.disabled = false;
             updateSubmitButtonState();
+        }
+    });
+
+    // Drag and Drop for Cover Image
+    coverImageUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        coverImageUploadArea.style.borderColor = '#3b82f6'; /* Blue-500 */
+    });
+    coverImageUploadArea.addEventListener('dragleave', () => {
+        coverImageUploadArea.style.borderColor = '#a1a1aa'; /* Zinc-400 */
+    });
+    coverImageUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        coverImageUploadArea.style.borderColor = '#a1a1aa'; /* Zinc-400 */
+        const file = e.dataTransfer.files[0];
+        if (file) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            coverImageInputFile.files = dataTransfer.files;
+            coverImageInputFile.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
 
     removeCoverImageButton.addEventListener('click', () => {
         uploadedImageUrlInput.value = '';
-        coverImageInput.value = '';
+        coverImageInputFile.value = ''; // Clear selected file
         uploadedImageDisplay.src = '';
         imageUrlDisplay.textContent = '';
         coverImagePreviewContainer.classList.add('hidden');
@@ -431,18 +459,12 @@
         updateSubmitButtonState();
     });
 
-    // --- การจัดการอัปโหลดไฟล์ผลงานวิจัย (PDF/DOCX) ไปยัง Cloudinary ---
-    const researchFileUploadBox = document.querySelector('#research-file-upload').parentElement;
-    const researchFileInput = document.getElementById('research-file-upload');
-    const researchFileListDiv = document.getElementById('research-file-list');
-    const uploadedResearchFilesUrlInput = document.getElementById('uploaded-research-files-url');
-    let pendingFileUploads = 0;
-
-    researchFileUploadBox.addEventListener('click', () => researchFileInput.click());
+    // --- Research File Upload Logic (Cloudinary) ---
+    researchFilesUploadArea.addEventListener('click', () => researchFileInput.click());
 
     researchFileInput.addEventListener('change', async () => {
-        researchFileListDiv.innerHTML = '';
-        uploadedResearchFilesUrlInput.value = '';
+        researchFileListDiv.innerHTML = ''; // Clear previous list
+        uploadedResearchFilesUrlInput.value = ''; // Clear previous URLs
         const uploadedFileUrls = [];
 
         if (researchFileInput.files.length === 0) {
@@ -484,6 +506,7 @@
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            formData.append('resource_type', 'raw'); // Treat as raw file for non-image types
 
             try {
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -527,7 +550,31 @@
         }
     });
 
-    // ฟังก์ชันสำหรับควบคุมสถานะของปุ่ม Submit
+    // Drag and Drop for Research Files
+    researchFilesUploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        researchFilesUploadArea.style.borderColor = '#3b82f6'; /* Blue-500 */
+    });
+    researchFilesUploadArea.addEventListener('dragleave', () => {
+        researchFilesUploadArea.style.borderColor = '#a1a1aa'; /* Zinc-400 */
+    });
+    researchFilesUploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        researchFilesUploadArea.style.borderColor = '#a1a1aa'; /* Zinc-400 */
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const dataTransfer = new DataTransfer();
+            for (let i = 0; i < files.length; i++) {
+                dataTransfer.items.add(files[i]);
+            }
+            researchFileInput.files = dataTransfer.files;
+            researchFileInput.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+
+    // --- Form Validation and Submission Logic ---
+    // Function to control the state of the submit button
     function updateSubmitButtonState() {
         const isImageUploaded = uploadedImageUrlInput.value !== '';
         const areFilesUploaded = JSON.parse(uploadedResearchFilesUrlInput.value || '[]').length > 0;
@@ -536,16 +583,47 @@
         const hasImageUploadError = !imageUploadMessage.classList.contains('hidden') && imageUploadMessage.classList.contains('error');
         const hasFileUploadError = !fileUploadMessage.classList.contains('hidden') && fileUploadMessage.classList.contains('error');
 
-        document.getElementById('submit-btn').disabled = !(isImageUploaded && areFilesUploaded && pendingFileUploads === 0 && !hasFormError && !hasImageUploadError && !hasFileUploadError);
+        // Check if all required fields are filled
+        const titleFilled = document.getElementById('title').value.trim() !== '';
+        const categorySelected = selectedCategoryInput.value.trim() !== '';
+        const departmentSelected = document.getElementById('department').value.trim() !== '';
+        const fieldFilled = document.getElementById('field').value.trim() !== '';
+        const yearFilled = document.getElementById('year').value.trim() !== '';
+        const academicYearFilled = document.getElementById('academic-year').value.trim() !== '';
+        const advisorFilled = document.getElementById('advisor').value.trim() !== '';
+        const abstractFilled = document.getElementById('abstract').value.trim() !== '';
+        
+        const authorsInputs = document.querySelectorAll('input[name="authors[]"]');
+        let allAuthorsFilled = true;
+        if (authorsInputs.length === 0) { // Should not happen with initial setup, but as a safeguard
+            allAuthorsFilled = false;
+        } else {
+            authorsInputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    allAuthorsFilled = false;
+                }
+            });
+        }
+
+        const allFormFieldsValid = titleFilled && categorySelected && departmentSelected && fieldFilled && yearFilled && academicYearFilled && allAuthorsFilled && advisorFilled && abstractFilled;
+
+        document.getElementById('submit-btn').disabled = !(
+            allFormFieldsValid && // All form fields filled
+            isImageUploaded && // Cover image uploaded
+            areFilesUploaded && // Research files uploaded
+            pendingFileUploads === 0 && // No pending uploads
+            !hasFormError && !hasImageUploadError && !hasFileUploadError // No current errors
+        );
     }
 
-    document.querySelectorAll('#research-form input[required], #research-form select[required], #research-form textarea[required]').forEach(input => {
+    // Add event listeners to all relevant form inputs to update button state
+    document.querySelectorAll('#research-form input:not([type="file"]), #research-form select, #research-form textarea').forEach(input => {
         input.addEventListener('input', updateSubmitButtonState);
         input.addEventListener('change', updateSubmitButtonState);
     });
-    authorsContainer.addEventListener('input', updateSubmitButtonState);
+    authorsContainer.addEventListener('input', updateSubmitButtonState); // Listen for changes in author inputs
 
-    // ปุ่มยกเลิก
+    // Cancel button functionality
     document.getElementById('cancel-btn').addEventListener('click', () => {
         if(confirm('ต้องการยกเลิกและล้างข้อมูลทั้งหมดหรือไม่?')) {
             document.getElementById('research-form').reset();
@@ -562,11 +640,11 @@
             coverImagePreviewContainer.classList.add('hidden');
             uploadedImageDisplay.src = '';
             imageUrlDisplay.textContent = '';
-            coverImageInput.value = '';
+            coverImageInputFile.value = ''; // Clear selected file
 
             uploadedResearchFilesUrlInput.value = '';
             researchFileListDiv.innerHTML = '';
-            researchFileInput.value = '';
+            researchFileInput.value = ''; // Clear selected file
 
             hideFormMessage();
             hideImageUploadMessage();
@@ -576,19 +654,21 @@
         }
     });
 
-    // ส่งข้อมูลทั้งหมดไปยัง Google Apps Script Web App
+    // Main form submission handler
     document.getElementById('research-form').addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // ตรวจสอบความถูกต้องของข้อมูล (Required fields) อีกครั้งก่อนส่ง
-        if (!document.getElementById('title').value.trim() ||
-            !selectedCategoryInput.value.trim() ||
-            !document.getElementById('department').value.trim() ||
-            !document.getElementById('field').value.trim() ||
-            !document.getElementById('year').value.trim() ||
-            !document.getElementById('academic-year').value.trim() ||
-            !document.getElementById('advisor').value.trim() ||
-            !document.getElementById('abstract').value.trim()) {
+        // Re-validate all required fields before final submission
+        const title = document.getElementById('title').value.trim();
+        const category = selectedCategoryInput.value.trim();
+        const department = document.getElementById('department').value.trim();
+        const field = document.getElementById('field').value.trim();
+        const year = document.getElementById('year').value.trim();
+        const academicYear = document.getElementById('academic-year').value.trim();
+        const advisor = document.getElementById('advisor').value.trim();
+        const abstract = document.getElementById('abstract').value.trim();
+
+        if (!title || !category || !department || !field || !year || !academicYear || !advisor || !abstract) {
             showFormMessage('กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องที่มีเครื่องหมาย *', 'error');
             updateSubmitButtonState();
             return;
@@ -596,13 +676,17 @@
 
         const authorsInputs = document.querySelectorAll('input[name="authors[]"]');
         let allAuthorsFilled = true;
+        const authorsList = [];
         authorsInputs.forEach(input => {
-            if (input.value.trim() === '') {
+            const authorName = input.value.trim();
+            if (authorName === '') {
                 allAuthorsFilled = false;
+            } else {
+                authorsList.push(authorName);
             }
         });
-        if (!allAuthorsFilled) {
-            showFormMessage('กรุณากรอกชื่อผู้จัดทำให้ครบถ้วน', 'error');
+        if (!allAuthorsFilled || authorsList.length === 0) {
+            showFormMessage('กรุณากรอกชื่อผู้จัดทำให้ครบถ้วนอย่างน้อยหนึ่งคน', 'error');
             updateSubmitButtonState();
             return;
         }
@@ -617,7 +701,7 @@
         try {
             researchFileUrls = JSON.parse(uploadedResearchFilesUrlInput.value || '[]');
         } catch (e) {
-            showFormMessage('ข้อมูล URL ไฟล์ผลงานวิจัยไม่ถูกต้อง', 'error');
+            showFormMessage('ข้อมูล URL ไฟล์ผลงานวิจัยไม่ถูกต้อง (โปรดลองอัปโหลดไฟล์งานวิจัยอีกครั้ง)', 'error');
             updateSubmitButtonState();
             return;
         }
@@ -627,7 +711,7 @@
             return;
         }
         if (pendingFileUploads > 0) {
-            showFormMessage('กำลังอัปโหลดไฟล์บางส่วน กรุณารอสักครู่', 'info');
+            showFormMessage('กำลังอัปโหลดไฟล์บางส่วน กรุณารอสักครู่ให้การอัปโหลดไฟล์เสร็จสิ้น', 'info');
             updateSubmitButtonState();
             return;
         }
@@ -635,6 +719,7 @@
         showFormMessage('กำลังส่งข้อมูล... กรุณารอสักครู่', 'info');
         document.getElementById('submit-btn').disabled = true;
 
+        // Retrieve logged-in username from localStorage (if your app has a login system)
         let loggedInUser = null;
         try {
             loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -643,21 +728,22 @@
         }
         const submittedByUsername = loggedInUser && loggedInUser.username ? loggedInUser.username : 'Anonymous';
 
+        // Prepare data to send to Google Apps Script
         const formData = new FormData();
         formData.append('action', 'submitResearch');
-        formData.append('id', `res-${Date.now()}-${Math.floor(Math.random() * 1000000)}`);
-        formData.append('title', document.getElementById('title').value.trim());
-        formData.append('category', selectedCategoryInput.value.trim());
-        formData.append('department', document.getElementById('department').value.trim());
-        formData.append('field', document.getElementById('field').value.trim());
-        formData.append('year', document.getElementById('year').value.trim());
-        formData.append('academicYear', document.getElementById('academic-year').value.trim());
-        formData.append('authors', Array.from(document.querySelectorAll('input[name="authors[]"]')).map(input => input.value.trim()).filter(Boolean).join(', '));
-        formData.append('advisor', document.getElementById('advisor').value.trim());
-        formData.append('abstract', document.getElementById('abstract').value.trim());
-        formData.append('coverImageUrl', uploadedImageUrlInput.value);
-        formData.append('researchFileUrls', JSON.stringify(researchFileUrls));
-        formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
+        formData.append('id', `res-${Date.now()}-${Math.floor(Math.random() * 1000000)}`); // Unique ID
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('department', department);
+        formData.append('field', field);
+        formData.append('year', year);
+        formData.append('academicYear', academicYear);
+        formData.append('authors', authorsList.join(', ')); // Join authors with comma
+        formData.append('advisor', advisor);
+        formData.append('abstract', abstract);
+        formData.append('coverImageUrl', uploadedImageUrlInput.value); // Cloudinary URL
+        formData.append('researchFileUrls', JSON.stringify(researchFileUrls)); // JSON string of Cloudinary URLs
+        formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })); // Thai locale timestamp
         formData.append('submittedBy', submittedByUsername);
 
         try {
@@ -668,10 +754,9 @@
 
             const result = await response.json();
 
-            // **แก้ไขตรงนี้**: ตรวจสอบ result.success แทน result.status
-            if (result.success) {
+            if (result.success) { // Apps Script now returns { success: true/false }
                 showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว! ข้อมูลจะถูกตรวจสอบและอนุมัติโดยผู้ดูแลระบบ', 'success');
-                // Clear form and states
+                // Clear form and reset states after successful submission
                 document.getElementById('research-form').reset();
                 categoryItems.forEach(i => i.classList.remove('selected'));
                 selectedCategoryInput.value = '';
@@ -686,7 +771,7 @@
                 coverImagePreviewContainer.classList.add('hidden');
                 uploadedImageDisplay.src = '';
                 imageUrlDisplay.textContent = '';
-                coverImageInput.value = '';
+                coverImageInputFile.value = '';
 
                 uploadedResearchFilesUrlInput.value = '';
                 researchFileListDiv.innerHTML = '';
@@ -704,10 +789,38 @@
         } finally {
             document.getElementById('submit-btn').disabled = false;
             updateSubmitButtonState();
+            // Hide message after a few seconds
             setTimeout(() => {
                 hideFormMessage();
-            }, 7000);
+            }, 7000); 
         }
+    });
+
+    // Initialize state on page load
+    document.addEventListener('DOMContentLoaded', () => {
+        // Ensure the initial author input is set up with the correct button
+        if (authorsContainer.children.length === 0) { // This case should ideally not happen if HTML provides initial input
+            const initialAuthorInput = createAuthorInput();
+            authorsContainer.appendChild(initialAuthorInput);
+            const removeBtn = initialAuthorInput.querySelector('.remove-author');
+            if (removeBtn) removeBtn.replaceWith(createAddButton());
+        } else {
+            // If HTML already has an author input, ensure its button is correct
+            const firstAuthorEntry = authorsContainer.children[0];
+            const existingButton = firstAuthorEntry.querySelector('button');
+            if (existingButton && existingButton.classList.contains('remove-author')) {
+                // If it's a remove button and it's the only one, change it to add
+                if (authorsContainer.children.length === 1) {
+                    existingButton.replaceWith(createAddButton());
+                }
+            } else if (existingButton && existingButton.classList.contains('add-author')) {
+                // If it's an add button and there are multiple, change it to remove
+                if (authorsContainer.children.length > 1) {
+                     existingButton.replaceWith(createRemoveButton());
+                }
+            }
+        }
+        updateSubmitButtonState();
     });
 </script>
 </body>
