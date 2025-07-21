@@ -752,6 +752,7 @@
         formData.append('researchFileUrls', JSON.stringify(researchFileUrls)); // JSON string of Cloudinary URLs
         formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' })); // Thai locale timestamp
         formData.append('submittedBy', submittedByUsername);
+        formData.append('status', 'Pending'); // <<< เพิ่มบรรทัดนี้เพื่อกำหนดสถานะเริ่มต้นเป็น 'Pending'
 
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
