@@ -206,13 +206,13 @@
 
 <script>
     // **Cloudinary Configuration**
-    // เนื่องจากคุณยืนยันว่าใช้ STVC_preset สำหรับทั้งรูปภาพและไฟล์เอกสาร
     const CLOUDINARY_CLOUD_NAME = 'davuwvefc';
-    const CLOUDINARY_UPLOAD_PRESET = 'STVC_preset'; // ใช้ preset เดียวกันตามที่คุณแจ้ง
+    const CLOUDINARY_UPLOAD_PRESET = 'STVC_preset';
 
     // **Google Apps Script Web App URL**
     // **สำคัญ: ต้องอัปเดต URL นี้หลังจาก Deploy Apps Script ใหม่ทุกครั้ง**
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+
     // เลือกหมวดหมู่
     const categoryItems = document.querySelectorAll('.category-item');
     const selectedCategoryInput = document.getElementById('selected-category');
@@ -223,7 +223,7 @@
             item.classList.add('selected');
             selectedCategoryInput.value = item.dataset.category;
             hideFormMessage();
-            updateSubmitButtonState(); // อัปเดตสถานะปุ่มเมื่อเลือกหมวดหมู่
+            updateSubmitButtonState();
         });
     });
 
@@ -263,13 +263,11 @@
         if (authorsContainer.children.length === 0) {
             const initialAuthorInput = createAuthorInput();
             authorsContainer.appendChild(initialAuthorInput);
-            // ถ้ามีแค่คนเดียว ให้เปลี่ยนปุ่มลบเป็นเพิ่ม
             const removeBtn = initialAuthorInput.querySelector('.remove-author');
             if (removeBtn) removeBtn.replaceWith(createAddButton());
         }
-        updateSubmitButtonState(); // ตรวจสอบสถานะปุ่มเมื่อโหลดหน้า
+        updateSubmitButtonState();
     });
-
 
     authorsContainer.addEventListener('click', e => {
         if(e.target.classList.contains('add-author')) {
@@ -277,19 +275,17 @@
             const newAuthorEntry = createAuthorInput();
             authorsContainer.appendChild(newAuthorEntry);
 
-            // ถ้าเพิ่งเพิ่มผู้แต่งคนที่สอง ให้เปลี่ยนปุ่มของคนแรกเป็นปุ่มลบ
-            if (currentAuthorEntries === 1) { // เดิมมี 1 ช่อง แล้วจะเพิ่มเป็น 2 ช่อง
+            if (currentAuthorEntries === 1) {
                 const firstAuthorEntry = authorsContainer.children[0];
                 const addButton = firstAuthorEntry.querySelector('.add-author');
                 if (addButton) {
                     addButton.replaceWith(createRemoveButton());
                 }
             }
-            updateSubmitButtonState(); // อัปเดตสถานะปุ่มเมื่อเพิ่ม/ลบผู้แต่ง
+            updateSubmitButtonState();
         }
         if(e.target.classList.contains('remove-author')) {
             e.target.closest('.author-entry').remove();
-            // ถ้าเหลือผู้แต่งคนเดียว ให้เปลี่ยนปุ่มลบเป็นปุ่มเพิ่ม
             if (authorsContainer.children.length === 1) {
                 const soleAuthorEntry = authorsContainer.querySelector('.author-entry');
                 const removeButton = soleAuthorEntry.querySelector('.remove-author');
@@ -297,22 +293,20 @@
                     removeButton.replaceWith(createAddButton());
                 }
             } else if (authorsContainer.children.length === 0) {
-                // หากลบจนหมด ให้สร้างช่องแรกพร้อมปุ่มเพิ่ม
                 const initialAuthorInput = createAuthorInput();
                 authorsContainer.appendChild(initialAuthorInput);
                 const removeBtn = initialAuthorInput.querySelector('.remove-author');
                 if (removeBtn) removeBtn.replaceWith(createAddButton());
             }
-            updateSubmitButtonState(); // อัปเดตสถานะปุ่มเมื่อเพิ่ม/ลบผู้แต่ง
+            updateSubmitButtonState();
         }
     });
-
 
     // ฟังก์ชันแสดงข้อความสำหรับ Form
     const formMessage = document.getElementById('form-message');
     function showFormMessage(msg, type) {
         formMessage.textContent = msg;
-        formMessage.className = `message ${type}`; // ใช้ className โดยตรง
+        formMessage.className = `message ${type}`;
         formMessage.classList.remove('hidden');
     }
     function hideFormMessage() {
@@ -347,28 +341,26 @@
     // --- การจัดการอัปโหลดรูปภาพปก (Cover Image) ไปยัง Cloudinary ---
     const coverImageUploadBox = document.querySelector('#cover-image-upload').parentElement;
     const coverImageInput = document.getElementById('cover-image-upload');
-    const coverImagePreviewContainer = document.getElementById('cover-image-preview-container'); // เพิ่ม container สำหรับรูปภาพและปุ่มลบ
+    const coverImagePreviewContainer = document.getElementById('cover-image-preview-container');
     const uploadedImageDisplay = document.getElementById('uploaded-image-display');
     const imageUrlDisplay = document.getElementById('image-url-display');
-    const uploadedImageUrlInput = document.getElementById('uploaded-image-url'); // Hidden input to store URL
-    const removeCoverImageButton = document.getElementById('remove-cover-image'); // ปุ่มลบรูปภาพปก
+    const uploadedImageUrlInput = document.getElementById('uploaded-image-url');
+    const removeCoverImageButton = document.getElementById('remove-cover-image');
 
     coverImageUploadBox.addEventListener('click', () => coverImageInput.click());
 
     coverImageInput.addEventListener('change', async () => {
         const file = coverImageInput.files[0];
         if (!file) {
-            // ถ้าไม่มีไฟล์ถูกเลือกหรือถูกยกเลิกการเลือก
             uploadedImageUrlInput.value = '';
-            coverImagePreviewContainer.classList.add('hidden'); // ซ่อน preview
-            uploadedImageDisplay.src = ''; // เคลียร์ src
-            imageUrlDisplay.textContent = ''; // เคลียร์ text
+            coverImagePreviewContainer.classList.add('hidden');
+            uploadedImageDisplay.src = '';
+            imageUrlDisplay.textContent = '';
             hideImageUploadMessage();
             updateSubmitButtonState();
             return;
         }
 
-        // ตรวจสอบชนิดไฟล์ (เฉพาะรูปภาพ)
         const allowedImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedImageTypes.includes(file.type)) {
             showImageUploadMessage('กรุณาเลือกไฟล์รูปภาพ (JPG, PNG, GIF, WEBP) เท่านั้น', 'error');
@@ -381,10 +373,9 @@
             return;
         }
 
-        // ตรวจสอบขนาดไฟล์
         if (file.size > 5 * 1024 * 1024) { // 5MB limit
             showImageUploadMessage('ขนาดรูปภาพต้องไม่เกิน 5MB', 'error');
-            coverImageInput.value = ''; // Clear selected file
+            coverImageInput.value = '';
             coverImagePreviewContainer.classList.add('hidden');
             uploadedImageUrlInput.value = '';
             uploadedImageDisplay.src = '';
@@ -394,14 +385,14 @@
         }
 
         showImageUploadMessage('กำลังอัปโหลดรูปภาพปก...', 'info');
-        document.getElementById('submit-btn').disabled = true; // Disable submit during upload
-        coverImageInput.disabled = true; // ปิดปุ่มอัปโหลดชั่วคราว
-        uploadedImageUrlInput.value = ''; // เคลียร์ URL เก่า
-        coverImagePreviewContainer.classList.add('hidden'); // ซ่อน preview เก่า
+        document.getElementById('submit-btn').disabled = true;
+        coverImageInput.disabled = true;
+        uploadedImageUrlInput.value = '';
+        coverImagePreviewContainer.classList.add('hidden');
 
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET); // ใช้ preset เดียวกัน
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
         try {
             const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -413,7 +404,7 @@
             if (data.secure_url) {
                 uploadedImageDisplay.src = data.secure_url;
                 imageUrlDisplay.textContent = data.secure_url;
-                uploadedImageUrlInput.value = data.secure_url; // เก็บ URL ใน hidden input
+                uploadedImageUrlInput.value = data.secure_url;
                 coverImagePreviewContainer.classList.remove('hidden');
                 showImageUploadMessage('อัปโหลดรูปภาพปกสำเร็จ!', 'success');
             } else {
@@ -430,30 +421,28 @@
         }
     });
 
-    // เพิ่ม Event Listener สำหรับปุ่มลบรูปภาพปก
     removeCoverImageButton.addEventListener('click', () => {
-        uploadedImageUrlInput.value = ''; // Clear hidden input
-        coverImageInput.value = ''; // Clear selected file
-        uploadedImageDisplay.src = ''; // Clear image preview
-        imageUrlDisplay.textContent = ''; // Clear URL text
-        coverImagePreviewContainer.classList.add('hidden'); // Hide the container
+        uploadedImageUrlInput.value = '';
+        coverImageInput.value = '';
+        uploadedImageDisplay.src = '';
+        imageUrlDisplay.textContent = '';
+        coverImagePreviewContainer.classList.add('hidden');
         hideImageUploadMessage();
         updateSubmitButtonState();
     });
-
 
     // --- การจัดการอัปโหลดไฟล์ผลงานวิจัย (PDF/DOCX) ไปยัง Cloudinary ---
     const researchFileUploadBox = document.querySelector('#research-file-upload').parentElement;
     const researchFileInput = document.getElementById('research-file-upload');
     const researchFileListDiv = document.getElementById('research-file-list');
-    const uploadedResearchFilesUrlInput = document.getElementById('uploaded-research-files-url'); // Hidden input for file URLs
-    let pendingFileUploads = 0; // นับจำนวนไฟล์ที่กำลังอัปโหลด
+    const uploadedResearchFilesUrlInput = document.getElementById('uploaded-research-files-url');
+    let pendingFileUploads = 0;
 
     researchFileUploadBox.addEventListener('click', () => researchFileInput.click());
 
     researchFileInput.addEventListener('change', async () => {
-        researchFileListDiv.innerHTML = ''; // Clear previous file list display
-        uploadedResearchFilesUrlInput.value = ''; // Clear old URLs
+        researchFileListDiv.innerHTML = '';
+        uploadedResearchFilesUrlInput.value = '';
         const uploadedFileUrls = [];
 
         if (researchFileInput.files.length === 0) {
@@ -462,42 +451,39 @@
             return;
         }
 
-        // ตรวจสอบชนิดไฟล์ (เฉพาะ PDF และ DOCX)
         const allowedFileTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
         for (const file of researchFileInput.files) {
             if (!allowedFileTypes.includes(file.type)) {
                 showFileUploadMessage(`ไฟล์ "${file.name}" ไม่ใช่ PDF หรือ DOCX กรุณาเลือกไฟล์ใหม่`, 'error');
-                researchFileInput.value = ''; // Clear all selected files
+                researchFileInput.value = '';
                 researchFileListDiv.innerHTML = '';
                 updateSubmitButtonState();
                 return;
             }
-            // ตรวจสอบขนาดไฟล์
             if (file.size > 10 * 1024 * 1024) { // 10MB limit
                 showFileUploadMessage(`ไฟล์ "${file.name}" มีขนาดเกิน 10MB กรุณาเลือกไฟล์ใหม่`, 'error');
-                researchFileInput.value = ''; // Clear all selected files
+                researchFileInput.value = '';
                 researchFileListDiv.innerHTML = '';
                 updateSubmitButtonState();
                 return;
             }
         }
 
-
         pendingFileUploads = researchFileInput.files.length;
         showFileUploadMessage(`กำลังอัปโหลดไฟล์ผลงานวิจัย ${pendingFileUploads} ไฟล์...`, 'info');
-        document.getElementById('submit-btn').disabled = true; // Disable submit during upload
-        researchFileInput.disabled = true; // Disable input during upload
+        document.getElementById('submit-btn').disabled = true;
+        researchFileInput.disabled = true;
 
         for (const file of researchFileInput.files) {
             const fileDiv = document.createElement('div');
-            fileDiv.id = `file-status-${file.name.replace(/[^a-zA-Z0-9.]/g, '-')}`; // สร้าง ID ที่ไม่ซ้ำกันจากชื่อไฟล์
+            fileDiv.id = `file-status-${file.name.replace(/[^a-zA-Z0-9.]/g, '-')}`;
             fileDiv.textContent = `⏳ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) - กำลังอัปโหลด...`;
             fileDiv.className = 'text-gray-700';
             researchFileListDiv.appendChild(fileDiv);
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET); // ใช้ preset เดียวกัน
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
 
             try {
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -509,7 +495,7 @@
                 if (data.secure_url) {
                     uploadedFileUrls.push(data.secure_url);
                     fileDiv.textContent = `✅ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB) - อัปโหลดสำเร็จ`;
-                    fileDiv.classList.remove('text-gray-700'); // Remove info class
+                    fileDiv.classList.remove('text-gray-700');
                     fileDiv.classList.add('text-green-700');
                 } else {
                     fileDiv.textContent = `❌ ${file.name} - อัปโหลดไม่สำเร็จ: ${data.error ? data.error.message : 'ไม่ทราบข้อผิดพลาด'}`;
@@ -542,16 +528,10 @@
     });
 
     // ฟังก์ชันสำหรับควบคุมสถานะของปุ่ม Submit
-    // จะถูกเรียกเมื่อมีการอัปโหลดไฟล์หรือเมื่อฟอร์มถูกรีเซ็ต
     function updateSubmitButtonState() {
         const isImageUploaded = uploadedImageUrlInput.value !== '';
         const areFilesUploaded = JSON.parse(uploadedResearchFilesUrlInput.value || '[]').length > 0;
 
-        // ปุ่มจะถูกเปิดใช้งานถ้า:
-        // 1. มีการอัปโหลดรูปภาพปกแล้ว AND
-        // 2. มีการอัปโหลดไฟล์ผลงานวิจัยแล้ว AND
-        // 3. ไม่มีไฟล์ใดกำลังรออัปโหลด (pendingFileUploads === 0)
-        // 4. ไม่มี error message แสดงอยู่
         const hasFormError = !formMessage.classList.contains('hidden') && formMessage.classList.contains('error');
         const hasImageUploadError = !imageUploadMessage.classList.contains('hidden') && imageUploadMessage.classList.contains('error');
         const hasFileUploadError = !fileUploadMessage.classList.contains('hidden') && fileUploadMessage.classList.contains('error');
@@ -559,14 +539,11 @@
         document.getElementById('submit-btn').disabled = !(isImageUploaded && areFilesUploaded && pendingFileUploads === 0 && !hasFormError && !hasImageUploadError && !hasFileUploadError);
     }
 
-    // เพิ่ม Event Listeners ให้กับช่อง Input ที่เป็น required เพื่อเรียก updateSubmitButtonState
     document.querySelectorAll('#research-form input[required], #research-form select[required], #research-form textarea[required]').forEach(input => {
         input.addEventListener('input', updateSubmitButtonState);
-        input.addEventListener('change', updateSubmitButtonState); // สำหรับ select
+        input.addEventListener('change', updateSubmitButtonState);
     });
-    // เพิ่ม Event Listener สำหรับ input ผู้จัดทำ (อาจจะต้องจับเหตุการณ์ที่ซับซ้อนกว่า input ทั่วไป)
     authorsContainer.addEventListener('input', updateSubmitButtonState);
-
 
     // ปุ่มยกเลิก
     document.getElementById('cancel-btn').addEventListener('click', () => {
@@ -575,31 +552,27 @@
             categoryItems.forEach(i => i.classList.remove('selected'));
             selectedCategoryInput.value = '';
 
-            // ลบผู้จัดทำที่เพิ่มเข้ามา ให้เหลือแค่คนแรกพร้อมปุ่มเพิ่ม
-            authorsContainer.innerHTML = ''; // เคลียร์ทั้งหมด
+            authorsContainer.innerHTML = '';
             const initialAuthorInput = createAuthorInput();
             authorsContainer.appendChild(initialAuthorInput);
             const removeBtn = initialAuthorInput.querySelector('.remove-author');
             if (removeBtn) removeBtn.replaceWith(createAddButton());
 
-
-            // เคลียร์สถานะการอัปโหลดไฟล์และรูปภาพ
             uploadedImageUrlInput.value = '';
             coverImagePreviewContainer.classList.add('hidden');
-            uploadedImageDisplay.src = ''; // เคลียร์รูปภาพใน preview
+            uploadedImageDisplay.src = '';
             imageUrlDisplay.textContent = '';
-            coverImageInput.value = ''; // เคลียร์ไฟล์ที่เลือกใน input (รูปภาพ)
+            coverImageInput.value = '';
 
             uploadedResearchFilesUrlInput.value = '';
             researchFileListDiv.innerHTML = '';
-            researchFileInput.value = ''; // เคลียร์ไฟล์ที่เลือกใน input (เอกสาร)
-
+            researchFileInput.value = '';
 
             hideFormMessage();
             hideImageUploadMessage();
             hideFileUploadMessage();
-            pendingFileUploads = 0; // รีเซ็ตตัวนับการอัปโหลดที่รอดำเนินการ
-            updateSubmitButtonState(); // Ensure submit button state is correct after cancel
+            pendingFileUploads = 0;
+            updateSubmitButtonState();
         }
     });
 
@@ -608,7 +581,6 @@
         e.preventDefault();
 
         // ตรวจสอบความถูกต้องของข้อมูล (Required fields) อีกครั้งก่อนส่ง
-        // เพื่อป้องกันการส่งข้อมูลที่ไม่สมบูรณ์ในกรณีที่ updateSubmitButtonState ไม่ได้ครอบคลุม
         if (!document.getElementById('title').value.trim() ||
             !selectedCategoryInput.value.trim() ||
             !document.getElementById('department').value.trim() ||
@@ -635,13 +607,12 @@
             return;
         }
 
-        // ตรวจสอบว่าอัปโหลดรูปภาพปกแล้ว
         if (!uploadedImageUrlInput.value) {
             showFormMessage('กรุณาอัปโหลดรูปภาพปกผลงานวิจัย', 'error');
             updateSubmitButtonState();
             return;
         }
-        // ตรวจสอบว่าอัปโหลดไฟล์ผลงานวิจัยแล้ว
+
         let researchFileUrls = [];
         try {
             researchFileUrls = JSON.parse(uploadedResearchFilesUrlInput.value || '[]');
@@ -661,11 +632,9 @@
             return;
         }
 
-
         showFormMessage('กำลังส่งข้อมูล... กรุณารอสักครู่', 'info');
         document.getElementById('submit-btn').disabled = true;
 
-        // ดึง username จาก localStorage
         let loggedInUser = null;
         try {
             loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
@@ -674,11 +643,9 @@
         }
         const submittedByUsername = loggedInUser && loggedInUser.username ? loggedInUser.username : 'Anonymous';
 
-
-        // รวบรวมข้อมูลทั้งหมดในรูปแบบ FormData
         const formData = new FormData();
         formData.append('action', 'submitResearch');
-        formData.append('id', `res-${Date.now()}-${Math.floor(Math.random() * 1000000)}`); // ID ที่ไม่ซ้ำกัน
+        formData.append('id', `res-${Date.now()}-${Math.floor(Math.random() * 1000000)}`);
         formData.append('title', document.getElementById('title').value.trim());
         formData.append('category', selectedCategoryInput.value.trim());
         formData.append('department', document.getElementById('department').value.trim());
@@ -691,7 +658,7 @@
         formData.append('coverImageUrl', uploadedImageUrlInput.value);
         formData.append('researchFileUrls', JSON.stringify(researchFileUrls));
         formData.append('timestamp', new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' }));
-        formData.append('submittedBy', submittedByUsername); // เพิ่ม submittedBy
+        formData.append('submittedBy', submittedByUsername);
 
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
@@ -701,34 +668,33 @@
 
             const result = await response.json();
 
-            if (result.success) { // เปลี่ยนจาก result.status เป็น result.success เพื่อให้ตรงกับ Apps Script
+            // **แก้ไขตรงนี้**: ตรวจสอบ result.success แทน result.status
+            if (result.success) {
                 showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว! ข้อมูลจะถูกตรวจสอบและอนุมัติโดยผู้ดูแลระบบ', 'success');
-                // ล้างฟอร์มทั้งหมด
+                // Clear form and states
                 document.getElementById('research-form').reset();
                 categoryItems.forEach(i => i.classList.remove('selected'));
                 selectedCategoryInput.value = '';
 
-                // Reset ผู้จัดทำ
                 authorsContainer.innerHTML = '';
                 const initialAuthorInput = createAuthorInput();
                 authorsContainer.appendChild(initialAuthorInput);
                 const removeBtn = initialAuthorInput.querySelector('.remove-author');
                 if (removeBtn) removeBtn.replaceWith(createAddButton());
 
-
                 uploadedImageUrlInput.value = '';
-                coverImagePreviewContainer.classList.add('hidden'); // ซ่อน container
+                coverImagePreviewContainer.classList.add('hidden');
                 uploadedImageDisplay.src = '';
                 imageUrlDisplay.textContent = '';
-                coverImageInput.value = ''; // เคลียร์ไฟล์ที่เลือกใน input (รูปภาพ)
+                coverImageInput.value = '';
 
                 uploadedResearchFilesUrlInput.value = '';
                 researchFileListDiv.innerHTML = '';
-                researchFileInput.value = ''; // เคลียร์ไฟล์ที่เลือกใน input (เอกสาร)
-
+                researchFileInput.value = '';
 
                 hideImageUploadMessage();
                 hideFileUploadMessage();
+                pendingFileUploads = 0;
             } else {
                 showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
             }
@@ -737,7 +703,7 @@
             showFormMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับ Apps Script', 'error');
         } finally {
             document.getElementById('submit-btn').disabled = false;
-            updateSubmitButtonState(); // เรียกอัปเดตสถานะปุ่มเมื่อเสร็จสิ้นการส่ง
+            updateSubmitButtonState();
             setTimeout(() => {
                 hideFormMessage();
             }, 7000);
