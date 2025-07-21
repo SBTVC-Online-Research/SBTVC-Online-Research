@@ -168,7 +168,7 @@
             showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
             try {
                 // สำหรับ Admin UI เราต้องการดึงข้อมูลจากชีท PENDING_SHEET_NAME
-                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=pending`, { // เพิ่ม ?sheet=pending
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=UploadedImagesData`, { // เพิ่ม ?sheet=pending
                     method: 'GET',
                     redirect: 'follow',
                 });
