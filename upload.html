@@ -153,26 +153,25 @@
 
       <div class="mb-8">
         <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพปกผลงาน (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
-        <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="cover-image-upload" class="hidden" accept="image/*">
+        <div id="coverImageUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+         <input type="file" id="coverImageInputFile" class="hidden" accept="image/*">
           <div>
             <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
           </div>
           <p class="font-medium text-gray-700">ลากรูปภาพหรือคลิกเพื่อเลือก</p>
           <p class="text-sm text-gray-500">รองรับ: JPG, PNG, GIF (สูงสุด 5MB/ไฟล์)</p>
         </div>
-        <div id="cover-image-preview" class="mt-4 text-center hidden">
+      <div id="cover-image-preview-container" class="mt-4 text-center hidden">
             <img id="uploaded-image-display" src="" alt="รูปภาพปก" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
-            <p id="image-url-display" class="text-sm text-blue-600 truncate"></p>
-        </div>
+           <p id="imageUrlDisplay" class="text-sm text-blue-600 truncate"></p>
         <input type="hidden" id="uploaded-image-url" name="coverImageUrl">
         <div id="image-upload-message" class="message hidden"></div>
       </div>
 
       <div class="mb-8">
         <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
-        <div class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-          <input type="file" id="research-file-upload" class="hidden" multiple accept=".pdf,.doc,.docx">
+      <div id="coverImageUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+     <input type="file" id="researchFileInput" class="hidden" multiple accept=".pdf,.doc,.docx">
           <div>
             <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
           </div>
