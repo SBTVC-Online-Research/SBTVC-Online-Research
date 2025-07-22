@@ -188,8 +188,8 @@
                 </h1>
             </div>
             <div class="hidden md:flex items-center space-x-6">
-                <a href="index.html" class="text-gray-700 hover:text-[#FF7A00] hover:underline font-medium transition duration-200">หน้าหลัก</a>
-                <a href="Category/Category.html" class="text-gray-700 hover:text-[#FF7A00] hover:underline font-medium transition duration-200">หมวดหมู่</a>
+                <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
+                <a href="Category/Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
                 <a href="upload.html" id="upload-link-desktop" class="hidden text-gray-700 hover:text-orange-primary font-medium">
                     <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
                 </a>
@@ -393,8 +393,8 @@
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 SBTVC Online Research. All rights reserved.</p>
             <div class="flex justify-center space-x-4 mt-4">
-                <a href="https://www.facebook.com/sbtvc?locale=th_TH" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.youtube.com/@CHANNEL-rk9kq" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.facebook.com/jirat.preminwza" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/watch?v=VbNHA3n8Sbg" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
                
             </div>
         </div>
@@ -833,8 +833,6 @@
                     noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
                 }
             } catch (error) {
-                console.error('Error fetching research data:', error);
-                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
                 noResearchMessage.classList.remove('hidden');
                 noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
             } finally {
