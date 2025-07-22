@@ -1,196 +1,197 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ระบบอัปโหลดผลงานวิจัย</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
-    body {
-      font-family: 'Sarabun', sans-serif;
-      background-color: #f0f4f8;
-    }
-    .upload-box-file {
-      border: 2px dashed hsl(27, 93%, 49%);
-      transition: all 0.3s ease;
-    }
-    .upload-box-file:hover {
-      border-color: #db7c0ed5;
-      background-color: rgba(231, 134, 23, 0.89);
-    }
-    .category-item {
-      transition: all 0.2s ease;
-    }
-    .category-item:hover {
-      transform: translateY(-2px);
-      border-color: #28a745;
-    }
-    .category-item.selected {
-      border-color: #136b27;
-      background-color: #28a745;
-      color: white;
-    }
-    .message {
-        margin-top: 1rem;
-        padding: 0.75rem 1rem;
-        border-radius: 0.375rem;
-        font-weight: 500;
-        text-align: center;
-    }
-    .message.success {
-        background-color: #d1fae5; /* green-100 */
-        color: #065f46; /* green-800 */
-    }
-    .message.error {
-        background-color: #fee2e2; /* red-100 */
-        color: #991b1b; /* red-800 */
-    }
-    .message.info {
-        background-color: #e0f2fe; /* blue-100 */
-        color: #1e40af; /* blue-800 */
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบอัปโหลดผลงานวิจัย</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .upload-box-file {
+            border: 2px dashed hsl(27, 93%, 49%);
+            transition: all 0.3s ease;
+        }
+        .upload-box-file:hover {
+            border-color: #db7c0ed5;
+            background-color: rgba(231, 134, 23, 0.89);
+        }
+        .category-item {
+            transition: all 0.2s ease;
+        }
+        .category-item:hover {
+            transform: translateY(-2px);
+            border-color: #28a745;
+        }
+        .category-item.selected {
+            border-color: #136b27;
+            background-color: #28a745;
+            color: white;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        .message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+        }
+        .message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #991b1b; /* red-800 */
+        }
+        .message.info {
+            background-color: #e0f2fe; /* blue-100 */
+            color: #1e40af; /* blue-800 */
+        }
+    </style>
 </head>
 <body>
 
 <header class="bg-gradient-to-r from-orange-600 to-orange-600 text-white py-6 shadow-lg">
-  <div class="container mx-auto px-4">
-    <h1 class="text-3xl font-bold">ระบบอัปโหลดผลงานวิจัย</h1>
-    <p class="mt-2 text-orange-100">อัปโหลดและจัดการผลงานวิจัยของคุณได้อย่างง่ายดาย</p>
-  </div>
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold">ระบบอัปโหลดผลงานวิจัย</h1>
+        <p class="mt-2 text-orange-100">อัปโหลดและจัดการผลงานวิจัยของคุณได้อย่างง่ายดาย</p>
+    </div>
 </header>
 
 <main class="container mx-auto px-4 py-8">
-  <div class="flex justify-end mb-4">
-    <a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-      ← กลับหน้าหลัก
-    </a>
-  </div>
+    <div class="flex justify-end mb-4">
+        <a href="index.html" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            ← กลับหน้าหลัก
+        </a>
+    </div>
 
-  <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6">อัปโหลดผลงานวิจัยใหม่</h2>
-    <form id="research-form">
-      <div class="mb-6">
-        <label for="title" class="block text-gray-700 font-medium mb-2">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
-        <input type="text" id="title" name="title" class="w-full px-4 py-2 border rounded-lg focus:ring-orange-500 focus:border-orange-500 outline-none" required>
-      </div>
+    <div class="bg-white rounded-lg shadow-lg p-6 md:p-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6">อัปโหลดผลงานวิจัยใหม่</h2>
+        <form id="research-form">
+            <div class="mb-6">
+                <label for="title" class="block text-gray-700 font-medium mb-2">ชื่อผลงานวิจัย <span class="text-red-500">*</span></label>
+                <input type="text" id="title" name="title" class="w-full px-4 py-2 border rounded-lg focus:ring-orange-500 focus:border-orange-500 outline-none" required>
+            </div>
 
-      <div class="mb-6">
-        <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="survey">สำรวจ</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="theory">ทฤษฎี</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="experiment">ทดลอง</div>
-          <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="invention">ประดิษฐ์</div>
-        </div>
-        <input type="hidden" id="selected-category" name="category" required>
-      </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="survey">สำรวจ</div>
+                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="theory">ทฤษฎี</div>
+                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="experiment">ทดลอง</div>
+                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="invention">ประดิษฐ์</div>
+                </div>
+                <input type="hidden" id="selected-category" name="category" required>
+            </div>
 
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label for="department" class="block text-gray-700 font-medium mb-2">สาขาวิชา <span class="text-red-500">*</span></label>
-          <select id="department" name="department" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกสาขาวิชา</option>
-            <option value="computer">คอมพิวเตอร์ธุรกิจ</option>
-            <option value="accounting">การบัญชี</option>
-            <option value="marketing">การตลาด</option>
-            <option value="electronics">อิเล็กทรอนิกส์</option>
-            <option value="mechanics">ช่างยนต์</option>
-          </select>
-        </div>
-        <div>
-          <label for="field" class="block text-gray-700 font-medium mb-2">สาขางาน <span class="text-red-500">*</span></label>
-          <select id="field" name="field" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกสาขางาน</option>
-            <option value="programming">การเขียนโปรแกรม</option>
-            <option value="network">เครือข่าย</option>
-            <option value="web-design">การออกแบบเว็บไซต์</option>
-            <option value="multimedia">มัลติมีเดีย</option>
-          </select>
-        </div>
-      </div>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="department" class="block text-gray-700 font-medium mb-2">สาขาวิชา <span class="text-red-500">*</span></label>
+                    <select id="department" name="department" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                        <option value="" disabled selected>เลือกสาขาวิชา</option>
+                        <option value="computer">คอมพิวเตอร์ธุรกิจ</option>
+                        <option value="accounting">การบัญชี</option>
+                        <option value="marketing">การตลาด</option>
+                        <option value="electronics">อิเล็กทรอนิกส์</option>
+                        <option value="mechanics">ช่างยนต์</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="field" class="block text-gray-700 font-medium mb-2">สาขางาน <span class="text-red-500">*</span></label>
+                    <select id="field" name="field" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                        <option value="" disabled selected>เลือกสาขางาน</option>
+                        <option value="programming">การเขียนโปรแกรม</option>
+                        <option value="network">เครือข่าย</option>
+                        <option value="web-design">การออกแบบเว็บไซต์</option>
+                        <option value="multimedia">มัลติมีเดีย</option>
+                    </select>
+                </div>
+            </div>
 
-      <div class="grid md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label for="year" class="block text-gray-700 font-medium mb-2">ชั้นปี <span class="text-red-500">*</span></label>
-          <select id="year" name="year" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกชั้นปี</option>
-            <option>ปวช.1</option><option>ปวช.2</option><option>ปวช.3</option>
-            <option>ปวส.1</option><option>ปวส.2</option>
-          </select>
-        </div>
-        <div>
-          <label for="academic-year" class="block text-gray-700 font-medium mb-2">ปีการศึกษา <span class="text-red-500">*</span></label>
-          <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกปีการศึกษา</option>
-            <option>2567</option><option>2566</option><option>2565</option><option>2564</option><option>2563</option>
-          </select>
-        </div>
-      </div>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="year" class="block text-gray-700 font-medium mb-2">ชั้นปี <span class="text-red-500">*</span></label>
+                    <select id="year" name="year" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                        <option value="" disabled selected>เลือกชั้นปี</option>
+                        <option>ปวช.1</option><option>ปวช.2</option><option>ปวช.3</option>
+                        <option>ปวส.1</option><option>ปวส.2</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="academic-year" class="block text-gray-700 font-medium mb-2">ปีการศึกษา <span class="text-red-500">*</span></label>
+                    <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                        <option value="" disabled selected>เลือกปีการศึกษา</option>
+                        <option>2567</option><option>2566</option><option>2565</option><option>2564</option><option>2563</option>
+                    </select>
+                </div>
+            </div>
 
-      <div class="mb-6">
-        <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
-        <div id="authors-container">
-          <div class="author-entry flex items-center gap-4 mb-2">
-            <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500" placeholder="ชื่อ-นามสกุล" required>
-            <button type="button" class="add-author bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600">
-              ＋
-            </button>
-          </div>
-        </div>
-      </div>
-<button type="button" id="remove-cover-image" class="mt-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">ลบรูปภาพปก</button>
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2">ชื่อผู้จัดทำ <span class="text-red-500">*</span></label>
+                <div id="authors-container">
+                    <div class="author-entry flex items-center gap-4 mb-2">
+                        <input type="text" name="authors[]" class="flex-1 border rounded-lg px-4 py-2 focus:ring-blue-500 outline-none" placeholder="ชื่อ-นามสกุล" required>
+                        <button type="button" class="add-author bg-green-500 text-white px-3 py-2 rounded-lg hover:bg-green-600">
+                            ＋
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-      <div class="mb-6">
-        <label for="advisor" class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
-        <input type="text" id="advisor" name="advisor" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-      </div>
+            <div class="mb-6">
+                <label for="advisor" class="block text-gray-700 font-medium mb-2">อาจารย์ที่ปรึกษา <span class="text-red-500">*</span></label>
+                <input type="text" id="advisor" name="advisor" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            </div>
 
-      <div class="mb-6">
-        <label for="abstract" class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
-        <textarea id="abstract" name="abstract" rows="4" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required></textarea>
-      </div>
+            <div class="mb-6">
+                <label for="abstract" class="block text-gray-700 font-medium mb-2">บทคัดย่อ <span class="text-red-500">*</span></label>
+                <textarea id="abstract" name="abstract" rows="4" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required></textarea>
+            </div>
 
-      <div class="mb-8">
-        <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพปกผลงาน (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
-        <div id="coverImageUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-         <input type="file" id="coverImageInputFile" class="hidden" accept="image/*">
-          <div>
-            <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
-          </div>
-          <p class="font-medium text-gray-700">ลากรูปภาพหรือคลิกเพื่อเลือก</p>
-          <p class="text-sm text-gray-500">รองรับ: JPG, PNG, GIF (สูงสุด 5MB/ไฟล์)</p>
-        </div>
-      <div id="cover-image-preview-container" class="mt-4 text-center hidden">
-            <img id="uploaded-image-display" src="" alt="รูปภาพปก" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
-           <p id="imageUrlDisplay" class="text-sm text-blue-600 truncate"></p>
-        <input type="hidden" id="uploaded-image-url" name="coverImageUrl">
-        <div id="image-upload-message" class="message hidden"></div>
-      </div>
+            <div class="mb-8">
+                <label class="block text-gray-700 font-medium mb-2">อัปโหลดรูปภาพปกผลงาน (ไม่เกิน 5MB) <span class="text-red-500">*</span></label>
+                <div id="coverImageUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+                   <input type="file" id="coverImageInputFile" class="hidden" accept="image/*">
+                   <div>
+                        <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                   </div>
+                   <p class="font-medium text-gray-700">ลากรูปภาพหรือคลิกเพื่อเลือก</p>
+                   <p class="text-sm text-gray-500">รองรับ: JPG, PNG, GIF (สูงสุด 5MB/ไฟล์)</p>
+                </div>
+                <div id="cover-image-preview-container" class="mt-4 text-center hidden">
+                        <img id="uploaded-image-display" src="" alt="รูปภาพปก" class="max-w-xs mx-auto rounded-lg shadow-md mb-2">
+                        <p id="imageUrlDisplay" class="text-sm text-blue-600 truncate"></p>
+                    <input type="hidden" id="uploaded-image-url" name="coverImageUrl">
+                    <button type="button" id="remove-cover-image" class="mt-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">ลบรูปภาพปก</button>
+                    <div id="image-upload-message" class="message hidden"></div>
+                </div>
+            </div>
 
-      <div class="mb-8">
-        <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
-      <div id="coverImageUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
-     <input type="file" id="researchFileInput" class="hidden" multiple accept=".pdf,.doc,.docx">
-          <div>
-            <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
-          </div>
-          <p class="font-medium text-gray-700">ลากไฟล์หรือคลิกเพื่อเลือก</p>
-          <p class="text-sm text-gray-500">รองรับ: PDF, DOC, DOCX (สูงสุด 10MB/ไฟล์)</p>
-        </div>
-        <div id="research-file-list" class="mt-4 space-y-2"></div>
-        <input type="hidden" id="uploaded-research-files-url" name="researchFileUrls">
-        <div id="file-upload-message" class="message hidden"></div>
-      </div>
+            <div class="mb-8">
+                <label class="block text-gray-700 font-medium mb-2">อัปโหลดไฟล์ผลงานวิจัย (PDF/DOC/DOCX) <span class="text-red-500">*</span></label>
+                <div id="researchFilesUploadArea" class="upload-box-file bg-gray-50 rounded-lg p-8 text-center cursor-pointer">
+                   <input type="file" id="researchFileInput" class="hidden" multiple accept=".pdf,.doc,.docx">
+                   <div>
+                        <svg class="h-12 w-12 mx-auto text-orange-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18"/></svg>
+                   </div>
+                   <p class="font-medium text-gray-700">ลากไฟล์หรือคลิกเพื่อเลือก</p>
+                   <p class="text-sm text-gray-500">รองรับ: PDF, DOC, DOCX (สูงสุด 10MB/ไฟล์)</p>
+                </div>
+                <div id="research-file-list" class="mt-4 space-y-2"></div>
+                <input type="hidden" id="uploaded-research-files-url" name="researchFileUrls">
+                <div id="file-upload-message" class="message hidden"></div>
+            </div>
 
-      <div id="form-message" class="message hidden"></div>
-      <div class="flex justify-end">
-        <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4">ยกเลิก</button>
-        <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">อัปโหลด</button>
-      </div>
-    </form>
-  </div>
+            <div id="form-message" class="message hidden"></div>
+            <div class="flex justify-end">
+                <button type="button" id="cancel-btn" class="px-6 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 mr-4">ยกเลิก</button>
+                <button type="submit" id="submit-btn" class="px-6 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">อัปโหลด</button>
+            </div>
+        </form>
+    </div>
 </main>
 
 
@@ -269,7 +270,7 @@
         }
     }
 
-    // --- Authors Management Logic (คงเดิม) ---
+    // --- Authors Management Logic ---
     function createAuthorInput(value = '') {
         const newAuthorDiv = document.createElement('div');
         newAuthorDiv.className = 'author-entry flex items-center gap-4 mb-2';
@@ -296,7 +297,7 @@
         return removeButton;
     }
 
-    // --- Form Validation and Submission Logic (คงเดิม) ---
+    // --- Form Validation and Submission Logic ---
     function updateSubmitButtonState() {
         const submitBtn = document.getElementById('submit-btn');
         if (!submitBtn) return; // Safeguard if button not found
@@ -340,7 +341,7 @@
         );
     }
 
-    // --- DOMContentLoaded Event Listener (ส่วนที่แก้ไขหลัก) ---
+    // --- DOMContentLoaded Event Listener ---
     document.addEventListener('DOMContentLoaded', () => {
         // กำหนดค่าตัวแปร Element HTML ทั้งหมดเมื่อ DOM โหลดเสร็จแล้ว
         categoryItems = document.querySelectorAll('.category-item');
@@ -366,9 +367,8 @@
         // ตรวจสอบว่า Element ที่จำเป็นสำหรับการอัปโหลดรูปภาพมีอยู่จริง
         if (!coverImageUploadArea || !coverImageInputFile || !coverImagePreviewContainer || !uploadedImageDisplay || !imageUrlDisplay || !uploadedImageUrlInput || !removeCoverImageButton) {
             console.error("Critical HTML elements for cover image upload are missing. Please check your upload.html file for correct IDs.");
-            // อาจจะแสดงข้อความ Error บนหน้าเว็บให้ผู้ใช้ทราบด้วย
             showFormMessage('เกิดข้อผิดพลาด: ไม่พบองค์ประกอบ HTML สำหรับการอัปโหลดรูปภาพปก', 'error');
-            return; // หยุดการทำงานของ script ถ้า Element สำคัญหายไป
+            return;
         }
 
         // ตรวจสอบว่า Element ที่จำเป็นสำหรับการอัปโหลดไฟล์งานวิจัยมีอยู่จริง
@@ -378,7 +378,7 @@
             return;
         }
 
-        // --- Category Selection Logic (ย้ายมาที่นี่) ---
+        // --- Category Selection Logic ---
         categoryItems.forEach(item => {
             item.addEventListener('click', () => {
                 categoryItems.forEach(i => i.classList.remove('selected'));
@@ -389,7 +389,7 @@
             });
         });
 
-        // --- Authors Management Logic (ย้าย Event Listener มาที่นี่) ---
+        // --- Authors Management Logic ---
         authorsContainer.addEventListener('click', e => {
             if(e.target.classList.contains('add-author')) {
                 const currentAuthorEntries = authorsContainer.querySelectorAll('.author-entry').length;
@@ -423,7 +423,7 @@
             }
         });
 
-        // --- Cover Image Upload Logic (ย้าย Event Listener มาที่นี่) ---
+        // --- Cover Image Upload Logic ---
         coverImageUploadArea.addEventListener('click', () => coverImageInputFile.click());
 
         coverImageInputFile.addEventListener('change', async () => {
@@ -499,7 +499,7 @@
             }
         });
 
-        // Drag and Drop for Cover Image (ย้าย Event Listener มาที่นี่)
+        // Drag and Drop for Cover Image
         coverImageUploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             coverImageUploadArea.style.borderColor = '#3b82f6';
@@ -529,7 +529,7 @@
             updateSubmitButtonState();
         });
 
-        // --- Research File Upload Logic (ย้าย Event Listener มาที่นี่) ---
+        // --- Research File Upload Logic ---
         researchFilesUploadArea.addEventListener('click', () => researchFileInput.click());
 
         researchFileInput.addEventListener('change', async () => {
@@ -620,7 +620,7 @@
             }
         });
 
-        // Drag and Drop for Research Files (ย้าย Event Listener มาที่นี่)
+        // Drag and Drop for Research Files
         researchFilesUploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             researchFilesUploadArea.style.borderColor = '#3b82f6';
@@ -642,14 +642,14 @@
             }
         });
 
-        // Add event listeners to all relevant form inputs to update button state (ย้ายมาที่นี่)
+        // Add event listeners to all relevant form inputs to update button state
         document.querySelectorAll('#research-form input:not([type="file"]), #research-form select, #research-form textarea').forEach(input => {
             input.addEventListener('input', updateSubmitButtonState);
             input.addEventListener('change', updateSubmitButtonState);
         });
         authorsContainer.addEventListener('input', updateSubmitButtonState);
 
-        // Cancel button functionality (ย้าย Event Listener มาที่นี่)
+        // Cancel button functionality
         document.getElementById('cancel-btn').addEventListener('click', () => {
             const dialog = document.createElement('div');
             dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
@@ -697,7 +697,7 @@
             };
         });
 
-        // Main form submission handler (ย้าย Event Listener มาที่นี่)
+        // Main form submission handler
         document.getElementById('research-form').addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -775,6 +775,7 @@
             formData.append('title', title);
             formData.append('category', category);
             formData.append('department', department);
+            formData.append('department', department);
             formData.append('field', field);
             formData.append('year', year);
             formData.append('academicYear', academicYear);
@@ -831,11 +832,11 @@
                 updateSubmitButtonState();
                 setTimeout(() => {
                     hideFormMessage();
-                }, 7000); 
+                }, 7000);    
             }
         });
 
-        // Initialize state on page load (ย้ายมาที่นี่)
+        // Initialize state on page load
         if (authorsContainer.children.length === 0) {
             const initialAuthorInput = createAuthorInput();
             authorsContainer.appendChild(initialAuthorInput);
@@ -850,15 +851,13 @@
                 }
             } else if (existingButton && existingButton.classList.contains('add-author')) {
                 if (authorsContainer.children.length > 1) {
-                     existingButton.replaceWith(createRemoveButton());
+                   existingButton.replaceWith(createRemoveButton());
                 }
             }
         }
         updateSubmitButtonState();
     });
 </script>
-
-
 
 </body>
 </html>
