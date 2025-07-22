@@ -230,53 +230,36 @@
             updateStatistics();
         }
 
-     // *** การแก้ไข: จัดการ Research File URLs ให้เป็น Array เสมอ ***
-        let researchFileUrls = [];
-        // console.log("Original Research File URLs from GAS:", researchData["Research File URLs"]); // Debugging line
+        function createResearchCard(researchData, displayId) {
+            const card = document.createElement('div');
+            card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
+            card.id = `card-${researchData.Id}`;
 
-        if (researchData["Research File URLs"]) {
-            try {
-                // Try parsing as JSON first, as our GAS is designed to send it as JSON string
-                const parsedUrls = JSON.parse(researchData["Research File URLs"]);
-                if (Array.isArray(parsedUrls)) {
-                    researchFileUrls = parsedUrls.filter(url => typeof url === 'string'); // Filter out non-string elements
-                } else if (typeof parsedUrls === 'string') {
-                    // If it parses to a single string (e.g., from an old entry), treat it as a single URL
-                    researchFileUrls = [parsedUrls];
-                }
-            } catch (e) {
-                // If JSON.parse fails, it might be a simple comma-separated string or a single URL
-                console.warn("Error parsing Research File URLs (attempting fallback):", researchData["Research File URLs"], e);
-                if (typeof researchData["Research File URLs"] === 'string') {
-                    // Split by comma and trim whitespace, then filter out empty strings
-                    researchFileUrls = researchData["Research File URLs"].split(',').map(url => url.trim()).filter(url => url !== '');
-                } else {
-                    // Fallback for non-string types or unexpected inputs
-                    researchFileUrls = [];
+            let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
+            let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
+            let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
+            
+            // Add status-specific classes to the card
+            if (researchData.Status === 'Approved') card.classList.add('status-approved');
+            else if (researchData.Status === 'Pending') card.classList.add('status-pending');
+            else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
+
+            let researchFileLinksHtml = '';
+            if (researchData['Research File URLs']) {
+                try {
+                    const fileUrls = JSON.parse(researchData['Research File URLs']);
+                    if (Array.isArray(fileUrls) && fileUrls.length > 0) {
+                        researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
+                        fileUrls.forEach((url, index) => {
+                            researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
+                        });
+                        researchFileLinksHtml += '</div>';
+                    }
+                } catch (e) {
+                    console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
+                    researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
                 }
             }
-        }
-        // console.log("Processed Research File URLs:", researchFileUrls); // Debugging line
-        // *** สิ้นสุดการแก้ไข ***
-
-        let researchFileHtml = '';
-        if (researchFileUrls.length > 0) {
-            researchFileHtml = `
-                <div class="mt-2 text-gray-700 text-sm">
-                    <p class="font-semibold">ไฟล์งานวิจัย:</p>
-                    <ul>
-            `;
-            // ใช้ map เพื่อสร้าง <li> สำหรับแต่ละ URL
-            researchFileUrls.forEach((url, index) => {
-                researchFileHtml += `<li><a href="${url}" target="_blank" class="text-blue-600 hover:underline break-all">ไฟล์ ${index + 1}</a></li>`;
-            });
-            researchFileHtml += `
-                    </ul>
-                </div>
-            `;
-        } else {
-            researchFileHtml = `<div class="mt-2 text-red-500 text-sm">ไม่พบไฟล์งานวิจัย</div>`;
-        }
 
             card.innerHTML = `
                 <div class="relative">
