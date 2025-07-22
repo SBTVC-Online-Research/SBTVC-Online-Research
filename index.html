@@ -16,19 +16,19 @@
             background-color: #f7f7f7;
         }
         .orange-primary {
-            color: #FF5722; /* สีส้มหลัก */
+            color: #c73e14; /* สีส้มหลัก */
         }
         .bg-orange-primary {
             background-color: #FF5722;
         }
         .hover\:bg-orange-secondary:hover {
-            background-color: #E64A19; /* สีส้มเข้มขึ้นเมื่อ hover */
+            background-color: #ee400c; /* สีส้มเข้มขึ้นเมื่อ hover */
         }
         .border-orange-primary {
             border-color: #FF5722;
         }
         .hover\:bg-orange-light:hover {
-            background-color: #FFCCBC; /* สีส้มอ่อนเมื่อ hover */
+            background-color: #997367; /* สีส้มอ่อนเมื่อ hover */
         }
         .dropdown {
             position: relative;
@@ -353,37 +353,23 @@
         <section class="mb-12 bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">สำรวจตามหมวดหมู่</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <a href="Category/Category.html?category=วิทยาศาสตร์" class="block p-4 text-center bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
+                <a href="Category/Explore.html" class="block p-4 text-center bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
                     <i class="fas fa-flask text-2xl mb-2"></i>
-                    <p class="font-medium">วิทยาศาสตร์</p>
+                    <p class="font-medium">สำรวจ</p>
                 </a>
-                <a href="Category/Category.html?category=เทคโนโลยี" class="block p-4 text-center bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
+                <a href="Category/Theory.html" class="block p-4 text-center bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
                     <i class="fas fa-microchip text-2xl mb-2"></i>
-                    <p class="font-medium">เทคโนโลยี</p>
+                    <p class="font-medium">ทฤษฎี</p>
                 </a>
-                <a href="Category/Category.html?category=วิศวกรรมศาสตร์" class="block p-4 text-center bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">
+                <a href="Category/Experiment.html" class="block p-4 text-center bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">
                     <i class="fas fa-hard-hat text-2xl mb-2"></i>
-                    <p class="font-medium">วิศวกรรมศาสตร์</p>
+                    <p class="font-medium">ทดลอง</p>
                 </a>
-                <a href="Category/Category.html?category=คณิตศาสตร์" class="block p-4 text-center bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
+                <a href="Category/Invent.html" class="block p-4 text-center bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
                     <i class="fas fa-calculator text-2xl mb-2"></i>
-                    <p class="font-medium">คณิตศาสตร์</p>
+                    <p class="font-medium">ประดิษฐ์</p>
                 </a>
-                <a href="Category/Category.html?category=เกษตรกรรม" class="block p-4 text-center bg-yellow-100 text-yellow-800 rounded-lg hover:bg-yellow-200 transition">
-                    <i class="fas fa-seedling text-2xl mb-2"></i>
-                    <p class="font-medium">เกษตรกรรม</p>
-                </a>
-                <a href="Category/Category.html?category=อุตสาหกรรม" class="block p-4 text-center bg-indigo-100 text-indigo-800 rounded-lg hover:bg-indigo-200 transition">
-                    <i class="fas fa-industry text-2xl mb-2"></i>
-                    <p class="font-medium">อุตสาหกรรม</p>
-                </a>
-                <a href="Category/Category.html?category=บริหารธุรกิจ" class="block p-4 text-center bg-pink-100 text-pink-800 rounded-lg hover:bg-pink-200 transition">
-                    <i class="fas fa-chart-line text-2xl mb-2"></i>
-                    <p class="font-medium">บริหารธุรกิจ</p>
-                </a>
-                <a href="Category/Category.html?category=อื่นๆ" class="block p-4 text-center bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition">
-                    <i class="fas fa-ellipsis-h text-2xl mb-2"></i>
-                    <p class="font-medium">อื่นๆ</p>
+                
                 </a>
             </div>
         </section>
@@ -861,6 +847,8 @@
                     noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
                 }
             } catch (error) {
+                console.error('Error fetching research data:', error);
+                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
                 noResearchMessage.classList.remove('hidden');
                 noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
             } finally {
