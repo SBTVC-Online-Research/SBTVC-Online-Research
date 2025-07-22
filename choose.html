@@ -244,27 +244,39 @@
             else if (researchData.Status === 'Pending') card.classList.add('status-pending');
             else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
 
-            let researchFileLinksHtml = '';
-            if (researchData['Research File URLs']) {
-                try {
-                    const fileUrls = JSON.parse(researchData['Research File URLs']);
-                    if (Array.isArray(fileUrls) && fileUrls.length > 0) {
-                        researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
-                        fileUrls.forEach((url, index) => {
-                            researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
-                        });
-                        researchFileLinksHtml += '</div>';
-                    }
-                } catch (e) {
-                    console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
-                    researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
-                }
+           let researchFileLinksHtml = '';
+if (researchData['Research File URLs']) {
+    try {
+        let fileUrls = researchData['Research File URLs'];
+
+        if (typeof fileUrls === 'string') {
+            // ลอง parse JSON ก่อน
+            try {
+                fileUrls = JSON.parse(fileUrls);
+            } catch (e) {
+                // ถ้า parse ไม่ได้ ให้เปลี่ยนเป็น array เดี่ยว
+                fileUrls = [fileUrls];
             }
+        }
+
+        if (Array.isArray(fileUrls) && fileUrls.length > 0) {
+            researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
+            fileUrls.forEach((url, index) => {
+                researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
+            });
+            researchFileLinksHtml += '</div>';
+        }
+    } catch (e) {
+        console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
+        researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
+    }
+}
+
 
             card.innerHTML = `
                 <div class="relative">
                     <img
-                        src="${researchData.ImageUrl || 'https://via.placeholder.com/400x300/F3F4F6/9CA3AF?text=No+Image'}"
+                        src="${researchData.ImageUrl || 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'}"
                         alt="Research Cover ${researchData.Title || researchData.Id}"
                         class="w-full h-64 object-cover"
                         onerror="handleImageError(this, '${researchData.Id}')"
