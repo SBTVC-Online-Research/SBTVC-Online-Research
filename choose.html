@@ -138,9 +138,13 @@
         let researches = []; // Stores all research data currently displayed
         let researchDisplayCounter = 0; // Use to generate unique IDs for display numbering
 
-        // **Google Apps Script Web App URL** //
-        // *** สำคัญมาก: โปรดแทนที่ด้วย URL ของ Web App ของคุณเองหลังจาก Deploy Apps Script เป็นเวอร์ชันใหม่ ***
+        // Google Apps Script Web App URL
+        // IMPORTANT: Replace with your own Web App URL after deploying Apps Script.
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+
+        // The name of the sheet where pending research data is stored.
+        // This MUST match the sheet name in your Google Sheet where 'upload.html' saves data.
+        const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // <<< FIXED: Changed to match your Google Sheet
 
         // DOM elements for display and messages
         const statusMessageDiv = document.getElementById('status-message');
@@ -163,12 +167,14 @@
             element.textContent = '';
         }
 
-        // --- Load Research Data from Google Sheet (PENDING_SHEET_NAME) ---
+        // --- Load Research Data from Google Sheet ---
         async function loadResearchDataFromGoogleSheet() {
             showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
             try {
-                // สำหรับ Admin UI เราต้องการดึงข้อมูลจากชีท PENDING_SHEET_NAME
-                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=UploadedImagesData`, { // เพิ่ม ?sheet=pending
+                // For the Admin UI, we want to fetch data from the PENDING_RESEARCH_SHEET_NAME.
+                // The Apps Script's doGet function should be configured to return data from this sheet
+                // when '?sheet=UploadedImagesData' is passed.
+                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=${PENDING_RESEARCH_SHEET_NAME}`, { // <<< FIXED: Request data from 'UploadedImagesData' sheet
                     method: 'GET',
                     redirect: 'follow',
                 });
@@ -205,8 +211,14 @@
         }
 
         function addResearchToGrid(researchData) {
+            // Check if researchData.Id exists and if a card with this ID is already in the DOM
+            if (!researchData.Id || document.getElementById(`card-${researchData.Id}`)) {
+                return; // Skip if no ID or already exists
+            }
+
+            // Check if research is already in the local 'researches' array
             if (researches.some(r => r.Id === researchData.Id)) {
-                return;
+                return; // Already exists in array, skip adding
             }
 
             researches.push(researchData);
@@ -227,6 +239,7 @@
             let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
             let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
             
+            // Add status-specific classes to the card
             if (researchData.Status === 'Approved') card.classList.add('status-approved');
             else if (researchData.Status === 'Pending') card.classList.add('status-pending');
             else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
@@ -251,7 +264,7 @@
             card.innerHTML = `
                 <div class="relative">
                     <img
-                        src="${researchData.ImageUrl || 'https://via.placeholder.com/400x300?text=No+Image+Available'}"
+                        src="${researchData.ImageUrl || 'https://via.placeholder.com/400x300/F3F4F6/9CA3AF?text=No+Image'}"
                         alt="Research Cover ${researchData.Title || researchData.Id}"
                         class="w-full h-64 object-cover"
                         onerror="handleImageError(this, '${researchData.Id}')"
@@ -327,20 +340,11 @@
 
         // --- Image Error Handling ---
         function handleImageError(imgElement, researchId) {
-            const errorSvg = `
-                <svg width="100%" height="100%" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect width="400" height="300" fill="#F3F4F6"/>
-                    <path d="M200 150L170 80L230 80L200 150Z" fill="#9CA3AF"/>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" x="180" y="130">
-                        <circle cx="20" cy="20" r="20" fill="#EF4444"/>
-                        <path d="M26 14L14 26M14 26L26 14" stroke="white" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <text x="200" y="200" text-anchor="middle" fill="#6B7280" font-family="Sarabun, Arial" font-size="14">ไม่สามารถโหลดรูปภาพได้</text>
-                </svg>
-            `;
-            imgElement.src = `data:image/svg+xml;base64,${btoa(errorSvg)}`;
-            imgElement.alt = `ไม่สามารถโหลดรูปภาพ #${researchId} ได้`;
-            imgElement.classList.add('object-contain');
+            // Placeholder image in case the actual image URL fails to load
+            imgElement.src = `https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image`;
+            imgElement.alt = `Could not load image for #${researchId}`;
+            imgElement.classList.remove('object-cover'); // Remove object-cover if it was set
+            imgElement.classList.add('object-contain'); // Use object-contain for placeholder
         }
 
         // --- Update Research Status on Google Sheet ---
@@ -374,43 +378,66 @@
 
         // --- Delete Research from Google Sheet ---
         async function deleteResearch(researchId) {
-            if (!confirm('คุณแน่ใจหรือไม่ที่จะลบงานวิจัยนี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้!')) {
-                return;
-            }
+            // Using a custom modal/dialog instead of alert() or confirm()
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
+            dialog.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                    <p class="text-lg font-semibold mb-4">คุณแน่ใจหรือไม่ที่จะลบงานวิจัยนี้?</p>
+                    <p class="text-gray-600 mb-6">การดำเนินการนี้ไม่สามารถย้อนกลับได้!</p>
+                    <div class="flex justify-center space-x-4">
+                        <button id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">ยืนยันการลบ</button>
+                        <button id="cancelDeleteBtn" class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition">ยกเลิก</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
 
-            showMessage(statusMessageDiv, 'กำลังลบงานวิจัย...', 'info');
-            try {
-                const formData = new FormData();
-                formData.append('action', 'delete');
-                formData.append('id', researchId);
+            return new Promise((resolve) => {
+                document.getElementById('confirmDeleteBtn').onclick = async () => {
+                    document.body.removeChild(dialog);
+                    showMessage(statusMessageDiv, 'กำลังลบงานวิจัย...', 'info');
+                    try {
+                        const formData = new FormData();
+                        formData.append('action', 'delete');
+                        formData.append('id', researchId);
 
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const result = await response.json();
+                        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                            method: 'POST',
+                            body: formData,
+                        });
+                        const result = await response.json();
 
-                if (result.status === 'success') {
-                    // Remove from local array and DOM
-                    const researchIndex = researches.findIndex(r => r.Id === researchId);
-                    if (researchIndex !== -1) {
-                        researches.splice(researchIndex, 1);
-                        const card = document.getElementById(`card-${researchId}`);
-                        if (card) {
-                            card.remove();
+                        if (result.status === 'success') {
+                            // Remove from local array and DOM
+                            const researchIndex = researches.findIndex(r => r.Id === researchId);
+                            if (researchIndex !== -1) {
+                                researches.splice(researchIndex, 1);
+                                const card = document.getElementById(`card-${researchId}`);
+                                if (card) {
+                                    card.remove();
+                                }
+                                updateStatistics();
+                            }
+                            showMessage(statusMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
+                        } else {
+                            showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
                         }
-                        updateStatistics();
+                    } catch (error) {
+                        console.error('Error deleting research from Google Sheet:', error);
+                        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
+                    } finally {
+                        setTimeout(() => hideMessage(statusMessageDiv), 3000);
+                        resolve(true); // Resolve the promise
                     }
-                    showMessage(statusMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
-                } else {
-                    showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error deleting research from Google Sheet:', error);
-                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
-            } finally {
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            }
+                };
+                document.getElementById('cancelDeleteBtn').onclick = () => {
+                    document.body.removeChild(dialog);
+                    showMessage(statusMessageDiv, 'ยกเลิกการลบงานวิจัย', 'info');
+                    setTimeout(() => hideMessage(statusMessageDiv), 3000);
+                    resolve(false); // Resolve the promise
+                };
+            });
         }
 
         // --- Update Statistics ---
@@ -435,14 +462,35 @@
 
         // --- Clear All Displayed Research (Does NOT clear Google Sheet) ---
         function clearAllDisplayedResearch() {
-            if (confirm('คุณต้องการล้างงานวิจัยที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่? (จะไม่ลบข้อมูลใน Google Sheet)')) {
+            // Using a custom modal/dialog instead of alert() or confirm()
+            const dialog = document.createElement('div');
+            dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
+            dialog.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                    <p class="text-lg font-semibold mb-4">คุณต้องการล้างงานวิจัยที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่?</p>
+                    <p class="text-gray-600 mb-6">(จะไม่ลบข้อมูลใน Google Sheet)</p>
+                    <div class="flex justify-center space-x-4">
+                        <button id="confirmClearBtn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">ยืนยันการล้าง</button>
+                        <button id="cancelClearBtn" class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition">ยกเลิก</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(dialog);
+
+            document.getElementById('confirmClearBtn').onclick = () => {
+                document.body.removeChild(dialog);
                 researches = [];
                 researchGrid.innerHTML = '';
                 updateStatistics();
                 researchDisplayCounter = 0;
                 showMessage(statusMessageDiv, 'ล้างงานวิจัยที่แสดงทั้งหมดแล้ว', 'info');
                 setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            }
+            };
+            document.getElementById('cancelClearBtn').onclick = () => {
+                document.body.removeChild(dialog);
+                showMessage(statusMessageDiv, 'ยกเลิกการล้างข้อมูล', 'info');
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
+            };
         }
 
         // --- Export Results (from currently displayed researches) ---
@@ -470,9 +518,8 @@
                     year: res.Year,
                     academicYear: res['Academic Year'],
                     authors: res.Authors,
-                    advisor: res.Advisor,
-                    abstract: res.Abstract,
-                    researchFileUrls: res['Research File URLs'],
+                    // Ensure researchFileUrls is correctly handled (it's already a JSON string from Apps Script)
+                    researchFileUrls: res['Research File URLs'], 
                     timestamp: res.Timestamp
                 }))
             };
