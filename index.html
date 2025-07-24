@@ -846,11 +846,6 @@
                     noResearchMessage.classList.remove('hidden');
                     noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
                 }
-            } catch (error) {
-                console.error('Error fetching research data:', error);
-                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
-                noResearchMessage.classList.remove('hidden');
-                noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
             } finally {
                 loadingMessage.classList.add('hidden');
             }
