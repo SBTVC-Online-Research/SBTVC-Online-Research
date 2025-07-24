@@ -459,51 +459,51 @@
 // ให้แทนที่ฟังก์ชัน exportResults() เดิมทั้งหมดด้วยฟังก์ชันนี้
 
 async function exportResults() {
-    const selectedCheckboxes = document.querySelectorAll('.selected-checkbox:checked');
-    if (selectedCheckboxes.length === 0) {
-        alert('โปรดเลือกงานวิจัยที่ต้องการส่งออกอย่างน้อย 1 รายการ');
+    // ดึงรายการที่สถานะ Approved
+    const approvedResearches = researches.filter(r => r.Status === 'Approved');
+
+    if (approvedResearches.length === 0) {
+        alert('ไม่มีงานวิจัยที่ได้รับการอนุมัติเพื่อส่งออก');
         return;
     }
 
-    showMessage(statusMessageDiv, `กำลังส่งออก ${selectedCheckboxes.length} รายการ...`, 'info');
+    showMessage(statusMessageDiv, `กำลังส่งออก ${approvedResearches.length} รายการที่อนุมัติแล้ว...`, 'info');
 
-    // 1. ดึง ID และข้อมูล Object ทั้งหมดของรายการที่ถูกเลือก
-    const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-id'));
-    const dataToExport = researches.filter(r => selectedIds.includes(r.Id));
+    // เพิ่มฟิลด์ passe = 'pass' ในแต่ละรายการ
+    const dataToExport = approvedResearches.map(r => ({
+        ...r,
+        passe: 'pass'
+    }));
 
     try {
-        // 2. ส่งข้อมูลไปที่ Google Apps Script เป็น JSON
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            // สร้าง object ที่มี action และข้อมูลทั้งหมดที่เลือก
             body: JSON.stringify({
-                action: 'exportSelected',
-                sheetName: 'copy',      // ระบุชื่อชีทปลายทาง
-                researches: dataToExport  // ส่งข้อมูลทั้งหมดที่เลือก
+                action: 'exportApprovedWithPass',
+                sheetName: 'upload',
+                researches: dataToExport
             }),
             redirect: 'follow'
         });
 
         const result = await response.json();
 
-        // 3. แสดงผลลัพธ์ที่ได้รับจากหลังบ้าน
         if (result.status === 'success') {
             showMessage(statusMessageDiv, `ส่งออกสำเร็จ! (${result.message})`, 'success');
         } else {
-            throw new Error(result.message);
+            throw new Error(result.message || 'ส่งออกล้มเหลว');
         }
-
     } catch (error) {
-        console.error('Error exporting data:', error);
+        console.error('Error exporting approved data:', error);
         showMessage(statusMessageDiv, `เกิดข้อผิดพลาดในการส่งออก: ${error.message}`, 'error');
     } finally {
-        // เพิ่มเวลาแสดงผลเพื่อให้ผู้ใช้อ่านข้อความทัน
         setTimeout(() => hideMessage(statusMessageDiv), 5000);
     }
 }
+
     
     // --- Initialize ---
     document.addEventListener('DOMContentLoaded', () => {
