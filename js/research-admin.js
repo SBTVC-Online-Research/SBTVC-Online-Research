@@ -58,6 +58,45 @@ async function loadResearchDataFromGoogleSheet() {
     }
 }
 
+async function exportResults() {
+    showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลที่ได้รับอนุมัติ...', 'info');
+
+    try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'exportApprovedWithPass'
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success' && Array.isArray(result.data)) {
+            const approvedData = result.data;
+            
+            if (approvedData.length === 0) {
+                showMessage(statusMessageDiv, 'ไม่พบบันทึกที่ผ่านการอนุมัติพร้อม pass', 'info');
+            } else {
+                console.log('Exported Data:', approvedData); // หรือจะโหลดไฟล์ CSV, JSON ฯลฯ
+
+                // แสดงจำนวนรายการ
+                showMessage(statusMessageDiv, `ส่งออกสำเร็จทั้งหมด ${approvedData.length} รายการ`, 'success');
+            }
+        } else {
+            showMessage(statusMessageDiv, `การส่งออกล้มเหลว: ${result.message || 'ไม่ทราบสาเหตุ'}`, 'error');
+        }
+    } catch (error) {
+        console.error("Error exporting:", error);
+        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการส่งออก', 'error');
+    } finally {
+        setTimeout(() => hideMessage(statusMessageDiv), 4000);
+    }
+}
+
+
 function addResearchToGrid(researchData) {
     if (!researchData.Id || document.getElementById(`card-${researchData.Id}`)) return;
     if (researches.some(r => r.Id === researchData.Id)) return;
