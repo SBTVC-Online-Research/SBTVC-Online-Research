@@ -276,7 +276,8 @@ if (researchData['Research File URLs']) {
             card.innerHTML = `
                 <div class="relative">
                     <img
-                        src="${researchData.ImageUrl || 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'}"
+                       src="${researchData.ImageUrl || researchData['Image URL'] || 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'}"
+
                         alt="Research Cover ${researchData.Title || researchData.Id}"
                         class="w-full h-64 object-cover"
                         onerror="handleImageError(this, '${researchData.Id}')"
