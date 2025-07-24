@@ -507,35 +507,59 @@ if (researchData['Research File URLs']) {
         }
 
         // --- Export Results (from currently displayed researches) ---
-        function exportResults() {
-            if (researches.length === 0) {
-                showMessage(statusMessageDiv, 'ไม่มีงานวิจัยให้ส่งออก', 'info');
-                return;
-            }
-            
-            const results = {
-                timestamp: new Date().toISOString(),
-                total: researches.length,
-                pending: researches.filter(r => r.Status === 'Pending').length,
-                approved: researches.filter(r => r.Status === 'Approved').length,
-                rejected: researches.filter(r => r.Status === 'Rejected').length,
-                researches: researches.map(res => ({
-                    id: res.Id,
-                    username: res.Username,
-                    imageUrl: res.ImageUrl,
-                    status: res.Status,
-                    title: res.Title,
-                    category: res.Category,
-                    department: res.Department,
-                    field: res.Field,
-                    year: res.Year,
-                    academicYear: res['Academic Year'],
-                    authors: res.Authors,
-                    // Ensure researchFileUrls is correctly handled (it's already a JSON string from Apps Script)
-                    researchFileUrls: res['Research File URLs'], 
-                    timestamp: res.Timestamp
-                }))
-            };
+      function exportResults() {
+    const approvedResearches = researches.filter(r => r.Status === 'Approved');
+    
+    if (approvedResearches.length === 0) {
+        showMessage(statusMessageDiv, 'ไม่มีงานวิจัยที่อนุมัติให้ส่งออก', 'info');
+        return;
+    }
+
+    showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลไปยัง Google Sheet...', 'info');
+
+    // เตรียมข้อมูลสำหรับส่งไป Google Apps Script
+    const payload = {
+        action: 'exportApproved',
+        data: approvedResearches.map(res => ({
+            Id: res.Id,
+            Username: res.Username,
+            Title: res.Title,
+            Category: res.Category,
+            Department: res.Department,
+            Field: res.Field,
+            Year: res.Year,
+            AcademicYear: res['Academic Year'],
+            Authors: res.Authors,
+            Advisor: res.Advisor,
+            ImageUrl: res.ImageUrl || res['Image URL'] || '',
+            ResearchFileUrls: res['Research File URLs'],
+            Status: res.Status,
+            Timestamp: res.Timestamp,
+        }))
+    };
+
+    fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.status === 'success') {
+            showMessage(statusMessageDiv, 'ส่งออกสำเร็จแล้วไปยัง Sheet "copy"!', 'success');
+        } else {
+            showMessage(statusMessageDiv, `ส่งออกล้มเหลว: ${result.message}`, 'error');
+        }
+    })
+    .catch(err => {
+        console.error('Export error:', err);
+        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
+    })
+    .finally(() => {
+        setTimeout(() => hideMessage(statusMessageDiv), 3000);
+    });
+}
+
             
             const dataStr = JSON.stringify(results, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
