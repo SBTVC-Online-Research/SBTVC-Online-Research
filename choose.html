@@ -507,57 +507,48 @@ if (researchData['Research File URLs']) {
         }
 
         // --- Export Results (from currently displayed researches) ---
-      function exportResults() {
-    const approvedResearches = researches.filter(r => r.Status === 'Approved');
-    
-    if (approvedResearches.length === 0) {
-        showMessage(statusMessageDiv, 'ไม่มีงานวิจัยที่อนุมัติให้ส่งออก', 'info');
-        return;
-    }
+     function exportResults() {
+  const selectedIndexes = Array.from(document.querySelectorAll('.selected-checkbox:checked'))
+                              .map(cb => parseInt(cb.dataset.index));
 
-    showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลไปยัง Google Sheet...', 'info');
+  if (selectedIndexes.length === 0) {
+    showMessage(document.getElementById('status-message'), 'กรุณาเลือกรายการที่ต้องการส่งออก', 'info');
+    return;
+  }
 
-    // เตรียมข้อมูลสำหรับส่งไป Google Apps Script
-    const payload = {
-        action: 'exportApproved',
-        data: approvedResearches.map(res => ({
-            Id: res.Id,
-            Username: res.Username,
-            Title: res.Title,
-            Category: res.Category,
-            Department: res.Department,
-            Field: res.Field,
-            Year: res.Year,
-            AcademicYear: res['Academic Year'],
-            Authors: res.Authors,
-            Advisor: res.Advisor,
-            ImageUrl: res.ImageUrl || res['Image URL'] || '',
-            ResearchFileUrls: res['Research File URLs'],
-            Status: res.Status,
-            Timestamp: res.Timestamp,
-        }))
-    };
+  const selected = selectedIndexes.map(i => researches[i]); // `researches` คือ array ทั้งหมดที่โหลดมา
 
-    fetch(GOOGLE_APPS_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload),
-        headers: { 'Content-Type': 'application/json' }
+  google.script.run
+    .withSuccessHandler(() => {
+      showMessage(document.getElementById('status-message'), 'ส่งออกสำเร็จ', 'success');
     })
-    .then(res => res.json())
-    .then(result => {
-        if (result.status === 'success') {
-            showMessage(statusMessageDiv, 'ส่งออกสำเร็จแล้วไปยัง Sheet "copy"!', 'success');
-        } else {
-            showMessage(statusMessageDiv, `ส่งออกล้มเหลว: ${result.message}`, 'error');
-        }
+    .withFailureHandler(err => {
+      showMessage(document.getElementById('status-message'), 'เกิดข้อผิดพลาด: ' + err.message, 'error');
     })
-    .catch(err => {
-        console.error('Export error:', err);
-        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการส่งออกข้อมูล', 'error');
-    })
-    .finally(() => {
-        setTimeout(() => hideMessage(statusMessageDiv), 3000);
-    });
+    .exportSelectedToCopy(selected); // ส่ง array ไปยัง Apps Script
+}
+
+            function renderResearchCard(research, index) {
+  const grid = document.getElementById('researchGrid');
+
+  const card = document.createElement('div');
+  card.className = `research-card border-l-4 rounded-lg shadow bg-white p-4 ${
+    research.Status === 'Approved' ? 'status-approved' :
+    research.Status === 'Rejected' ? 'status-rejected' : 'status-pending'
+  }`;
+
+  card.innerHTML = `
+    <div class="flex justify-between items-start">
+      <h2 class="text-xl font-semibold text-gray-800">${research.Title || 'ไม่มีชื่อเรื่อง'}</h2>
+      <input type="checkbox" class="selected-checkbox" data-index="${index}" />
+    </div>
+    <p class="text-sm text-gray-600 mt-1">${research.Authors || ''}</p>
+    <p class="mt-2 text-sm"><span class="font-semibold">หมวด:</span> ${research.Category || '-'}</p>
+    <p class="text-sm"><span class="font-semibold">ปี:</span> ${research.Year || '-'}</p>
+    <p class="text-sm"><span class="font-semibold">สถานะ:</span> ${research.Status}</p>
+  `;
+
+  grid.appendChild(card);
 }
 
             
