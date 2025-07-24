@@ -535,8 +535,8 @@ if (researchData['Research File URLs']) {
             ResearchFileUrls: res['Research File URLs'],
             Status: res.Status,
             Timestamp: res.Timestamp,
-        }))
-    };
+        });
+    }
 
     fetch(GOOGLE_APPS_SCRIPT_URL, {
         method: 'POST',
