@@ -538,7 +538,8 @@
     try {
         showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลไปยัง Sheet ปลายทาง...', 'info');
 
-        const response = await fetch('https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec', {
+    const response = await fetch('https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec?sheet=UploadedImagesData');
+
             method: 'POST',
             body: JSON.stringify({
                 sheetName: 'copy', // ปรับให้ตรงกับชื่อชีทใน sheet ปลายทาง
