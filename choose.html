@@ -521,11 +521,11 @@
                 setTimeout(() => hideMessage(statusMessageDiv), 3000);
             };
         }
-
-        // --- Export Results (from currently displayed researches) ---
-     async function exportResults() {
+        
+// --- Export Results (from currently displayed researches) ---
+async function exportResults() {
     const selectedIds = Array.from(document.querySelectorAll('.selected-checkbox:checked'))
-                             .map(cb => cb.dataset.id);
+                                 .map(cb => cb.dataset.id);
 
     if (selectedIds.length === 0) {
         showMessage(statusMessageDiv, 'กรุณาเลือกรายการที่ต้องการส่งออก', 'info');
@@ -538,11 +538,12 @@
     try {
         showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลไปยัง Sheet ปลายทาง...', 'info');
 
-    const response = await fetch('https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec?sheet=UploadedImagesData');
-
+        // *** แก้ไขตรงนี้ ***
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { // ใช้ GOOGLE_APPS_SCRIPT_URL ที่คุณกำหนดไว้
             method: 'POST',
             body: JSON.stringify({
-                sheetName: 'copy', // ปรับให้ตรงกับชื่อชีทใน sheet ปลายทาง
+                action: 'exportSelected', // ต้องเพิ่ม action เพื่อให้ Apps Script รู้ว่าทำอะไร
+                sheetName: 'copy', // ชีทปลายทางที่คุณต้องการ
                 researches: selectedResearches
             }),
             headers: {
@@ -553,6 +554,8 @@
         const result = await response.json();
         if (result.status === 'success') {
             showMessage(statusMessageDiv, 'ส่งออกข้อมูลไปยัง Sheet ปลายทางสำเร็จ!', 'success');
+            // หลังจากส่งออกสำเร็จ อาจจะต้องโหลดข้อมูลใหม่เพื่ออัปเดตสถานะ หรือลบข้อมูลที่ถูกย้ายออกจากหน้า Admin
+            loadResearchDataFromGoogleSheet(); // โหลดข้อมูลใหม่เพื่อแสดงข้อมูลปัจจุบัน
         } else {
             showMessage(statusMessageDiv, `ส่งข้อมูลล้มเหลว: ${result.message}`, 'error');
         }
