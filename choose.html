@@ -523,32 +523,45 @@
         }
 
         // --- Export Results (from currently displayed researches) ---
-        function exportResults() {
-            const selectedIds = Array.from(document.querySelectorAll('.selected-checkbox:checked'))
-                                     .map(cb => cb.dataset.id);
+     async function exportResults() {
+    const selectedIds = Array.from(document.querySelectorAll('.selected-checkbox:checked'))
+                             .map(cb => cb.dataset.id);
 
-            if (selectedIds.length === 0) {
-                showMessage(statusMessageDiv, 'กรุณาเลือกรายการที่ต้องการส่งออก', 'info');
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-                return;
+    if (selectedIds.length === 0) {
+        showMessage(statusMessageDiv, 'กรุณาเลือกรายการที่ต้องการส่งออก', 'info');
+        setTimeout(() => hideMessage(statusMessageDiv), 3000);
+        return;
+    }
+
+    const selectedResearches = researches.filter(r => selectedIds.includes(r.Id));
+
+    try {
+        showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลไปยัง Sheet ปลายทาง...', 'info');
+
+        const response = await fetch('https://script.google.com/macros/s/YOUR_NEW_DEPLOYED_SCRIPT_URL/exec', {
+            method: 'POST',
+            body: JSON.stringify({
+                sheetName: 'Sheet1', // ปรับให้ตรงกับชื่อชีทใน sheet ปลายทาง
+                researches: selectedResearches
+            }),
+            headers: {
+                'Content-Type': 'application/json'
             }
+        });
 
-            const selectedResearches = researches.filter(r => selectedIds.includes(r.Id));
-
-            // Create a Blob and download the JSON file directly in the browser
-            const dataStr = JSON.stringify(selectedResearches, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `research-review-results-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            showMessage(statusMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
-            setTimeout(() => hideMessage(statusMessageDiv), 3000);
+        const result = await response.json();
+        if (result.status === 'success') {
+            showMessage(statusMessageDiv, 'ส่งออกข้อมูลไปยัง Sheet ปลายทางสำเร็จ!', 'success');
+        } else {
+            showMessage(statusMessageDiv, `ส่งข้อมูลล้มเหลว: ${result.message}`, 'error');
         }
+    } catch (error) {
+        console.error('Error exporting to sheet copy:', error);
+        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการส่งข้อมูลไปยัง Sheet ปลายทาง', 'error');
+    } finally {
+        setTimeout(() => hideMessage(statusMessageDiv), 3000);
+    }
+}
 
         // Function that was defined but not used and had issues, removed or modified as per the above `exportResults`
         // function renderResearchCard(research, index) { /* ... */ }
