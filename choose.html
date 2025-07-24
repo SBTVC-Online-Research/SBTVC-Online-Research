@@ -135,428 +135,391 @@
     </div>
 
     <script>
-        let researches = []; // Stores all research data currently displayed
-        let researchDisplayCounter = 0; // Use to generate unique IDs for display numbering
+    let researches = []; // Stores all research data currently displayed
+    let researchDisplayCounter = 0; // Use to generate unique IDs for display numbering
 
-        // Google Apps Script Web App URL
-        // IMPORTANT: Replace with your own Web App URL after deploying Apps Script.
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+    // Google Apps Script Web App URL
+    // IMPORTANT: Replace with your own Web App URL after deploying Apps Script.
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-        // The name of the sheet where pending research data is stored.
-        // This MUST match the sheet name in your Google Sheet where 'upload.html' saves data.
-        const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // <<< FIXED: Changed to match your Google Sheet
+    // The name of the sheet where pending research data is stored.
+    // This MUST match the sheet name in your Google Sheet where 'upload.html' saves data.
+    const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // <<< FIXED: Changed to match your Google Sheet
 
-        // DOM elements for display and messages
-        const statusMessageDiv = document.getElementById('status-message');
-        const researchGrid = document.getElementById('researchGrid');
-        const noDataMessage = document.getElementById('noDataMessage'); // Added for no data message
-        const totalCountSpan = document.getElementById('totalCount');
-        const pendingCountSpan = document.getElementById('pendingCount');
-        const approvedCountSpan = document.getElementById('approvedCount');
-        const rejectedCountSpan = document.getElementById('rejectedCount');
+    // DOM elements for display and messages
+    const statusMessageDiv = document.getElementById('status-message');
+    const researchGrid = document.getElementById('researchGrid');
+    const noDataMessage = document.getElementById('noDataMessage'); // Added for no data message
+    const totalCountSpan = document.getElementById('totalCount');
+    const pendingCountSpan = document.getElementById('pendingCount');
+    const approvedCountSpan = document.getElementById('approvedCount');
+    const rejectedCountSpan = document.getElementById('rejectedCount');
 
-        // --- Message Display Function ---
-        function showMessage(element, msg, type) {
-            element.textContent = msg;
-            element.className = `message ${type}`;
-            element.classList.remove('hidden');
-        }
+    // --- Message Display Function ---
+    function showMessage(element, msg, type) {
+        element.textContent = msg;
+        element.className = `message ${type}`;
+        element.classList.remove('hidden');
+    }
 
-        function hideMessage(element) {
-            element.classList.add('hidden');
-            element.textContent = '';
-        }
+    function hideMessage(element) {
+        element.classList.add('hidden');
+        element.textContent = '';
+    }
 
-        // --- Load Research Data from Google Sheet ---
-        async function loadResearchDataFromGoogleSheet() {
-            showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
-            try {
-                const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=${PENDING_RESEARCH_SHEET_NAME}`, {
-                    method: 'GET',
-                    redirect: 'follow',
-                });
-                const data = await response.json();
-
-                researches = []; // Clear current researches array
-                researchGrid.innerHTML = ''; // Clear current display
-                researchDisplayCounter = 0; // Reset display counter
-                noDataMessage.classList.add('hidden'); // Hide no data message initially
-
-                if (data.status === 'success' && Array.isArray(data.data)) {
-                    if (data.data.length === 0) {
-                        showMessage(statusMessageDiv, 'ไม่พบข้อมูลงานวิจัยที่รอดำเนินการ', 'info');
-                        noDataMessage.classList.remove('hidden'); // Show no data message
-                    } else {
-                        data.data.forEach(item => {
-                            if (item.Id) {
-                                addResearchToGrid(item);
-                            }
-                        });
-                        showMessage(statusMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
-                    }
-                } else if (data.status === 'error') {
-                    showMessage(statusMessageDiv, `โหลดข้อมูลล้มเหลว: ${data.message}`, 'error');
-                } else {
-                    showMessage(statusMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
-                }
-            } catch (error) {
-                console.error('Error loading research data from Google Sheet:', error);
-                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
-            } finally {
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            }
-        }
-
-        function addResearchToGrid(researchData) {
-            // Check if researchData.Id exists and if a card with this ID is already in the DOM
-            if (!researchData.Id || document.getElementById(`card-${researchData.Id}`)) {
-                return; // Skip if no ID or already exists
-            }
-
-            // Check if research is already in the local 'researches' array
-            if (researches.some(r => r.Id === researchData.Id)) {
-                return; // Already exists in array, skip adding
-            }
-
-            researches.push(researchData);
-
-            researchDisplayCounter++;
-            const card = createResearchCard(researchData, researchDisplayCounter);
-            researchGrid.appendChild(card);
-
-            updateStatistics();
-        }
-
-        function createResearchCard(researchData, displayId) {
-            const card = document.createElement('div');
-            card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
-            card.id = `card-${researchData.Id}`;
-
-            let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
-            let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
-            let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
-            
-            // Add status-specific classes to the card
-            if (researchData.Status === 'Approved') card.classList.add('status-approved');
-            else if (researchData.Status === 'Pending') card.classList.add('status-pending');
-            else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
-
-            let researchFileLinksHtml = '';
-            // Ensure 'Research File URLs' exists and is not null/undefined before parsing
-            if (researchData['Research File URLs']) {
-                try {
-                    let fileUrls = researchData['Research File URLs'];
-
-                    if (typeof fileUrls === 'string') {
-                        try {
-                            fileUrls = JSON.parse(fileUrls);
-                        } catch (e) {
-                            fileUrls = [fileUrls]; // If not valid JSON, treat as a single URL
-                        }
-                    }
-
-                    if (Array.isArray(fileUrls) && fileUrls.length > 0) {
-                        researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
-                        fileUrls.forEach((url, index) => {
-                            researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
-                        });
-                        researchFileLinksHtml += '</div>';
-                    }
-                } catch (e) {
-                    console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
-                    researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
-                }
-            }
-
-
-            card.innerHTML = `
-                <div class="relative">
-                    <img
-                        src="${researchData.ImageUrl || researchData['Image URL'] || 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'}"
-                        alt="Research Cover ${researchData.Title || researchData.Id}"
-                        class="w-full h-64 object-cover"
-                        onerror="handleImageError(this, '${researchData.Id}')"
-                    >
-                    <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
-                        #${displayId}
-                    </div>
-                    <div class="absolute bottom-3 left-3 bg-white rounded-lg px-3 py-1 text-xs font-semibold text-gray-700 shadow-md">
-                        ID: ${researchData.Id}
-                    </div>
-                </div>
-                <div class="p-4">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2" title="${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}">${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}</h3>
-                    <div class="text-sm">
-                        <p class="card-detail-group"><span class="card-detail-label">ผู้ใช้:</span> <span class="card-detail-value">${researchData.Username || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">หมวดหมู่:</span> <span class="card-detail-value">${researchData.Category || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">สาขา/ภาควิชา:</span> <span class="card-detail-value">${researchData.Department || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">สาขา/แขนงวิชา:</span> <span class="card-detail-value">${researchData.Field || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">ปีที่ตีพิมพ์:</span> <span class="card-detail-value">${researchData.Year || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">ปีการศึกษา:</span> <span class="card-detail-value">${researchData['Academic Year'] || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">ผู้แต่ง:</span> <span class="card-detail-value">${researchData.Authors || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">อาจารย์ที่ปรึกษา:</span> <span class="card-detail-value">${researchData.Advisor || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">บทคัดย่อ:</span> <span class="card-detail-value truncate" title="${researchData.Abstract || 'ไม่ระบุ'}">${researchData.Abstract || 'ไม่ระบุ'}</span></p>
-                        <p class="card-detail-group"><span class="card-detail-label">สถานะปัจจุบัน:</span> <span class="font-semibold">${researchData.Status || 'Pending'}</span></p>
-                    </div>
-                    ${researchFileLinksHtml}
-                    
-                    <div class="mt-4 flex justify-around space-x-2">
-                        <label class="flex items-center cursor-pointer group">
-                            <input
-                                type="radio"
-                                name="status-${researchData.Id}"
-                                value="Approved"
-                                class="checkbox-approved w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
-                                onchange="updateResearchStatus('${researchData.Id}', 'Approved')"
-                                ${approvedChecked}
-                            >
-                            <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ อนุมัติ</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer group">
-                            <input
-                                type="radio"
-                                name="status-${researchData.Id}"
-                                value="Rejected"
-                                class="checkbox-rejected w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
-                                onchange="updateResearchStatus('${researchData.Id}', 'Rejected')"
-                                ${rejectedChecked}
-                            >
-                            <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ไม่อนุมัติ</span>
-                        </label>
-                        <label class="flex items-center cursor-pointer group">
-                            <input
-                                type="radio"
-                                name="status-${researchData.Id}"
-                                value="Pending"
-                                class="checkbox-pending w-5 h-5 text-amber-600 border-2 border-gray-300 rounded focus:ring-amber-500"
-                                onchange="updateResearchStatus('${researchData.Id}', 'Pending')"
-                                ${pendingChecked}
-                            >
-                            <span class="ml-2 text-amber-700 font-medium group-hover:text-amber-800">รอดำเนินการ</span>
-                        </label>
-                    </div>
-                    <div class="mt-4 text-center">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 selected-checkbox" data-id="${researchData.Id}">
-                            <span class="ml-2 text-gray-700">เลือกเพื่อส่งออก</span>
-                        </label>
-                    </div>
-                    <button
-                        onclick="deleteResearch('${researchData.Id}')"
-                        class="w-full mt-3 text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
-                    >
-                        ลบงานวิจัยนี้
-                    </button>
-                </div>
-            `;
-            return card;
-        }
-
-        // --- Image Error Handling ---
-        function handleImageError(imgElement, researchId) {
-            // Placeholder image in case the actual image URL fails to load
-            imgElement.src = `https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image`;
-            imgElement.alt = `Could not load image for #${researchId}`;
-            imgElement.classList.remove('object-cover'); // Remove object-cover if it was set
-            imgElement.classList.add('object-contain'); // Use object-contain for placeholder
-        }
-
-        // --- Update Research Status on Google Sheet ---
-        async function updateResearchStatus(researchId, status) {
-            showMessage(statusMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
-            try {
-                const formData = new FormData();
-                formData.append('action', 'updateStatus');
-                formData.append('id', researchId);
-                formData.append('status', status);
-                formData.append('sheetName', PENDING_RESEARCH_SHEET_NAME); // Pass sheet name to Apps Script
-
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                });
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    // Update the status in the local 'researches' array
-                    const researchItem = researches.find(r => r.Id === researchId);
-                    if (researchItem) {
-                        researchItem.Status = status;
-                        // Re-render the specific card to update its visual status
-                        const cardElement = document.getElementById(`card-${researchId}`);
-                        if (cardElement) {
-                            // Remove previous status classes
-                            cardElement.classList.remove('status-approved', 'status-pending', 'status-rejected');
-                            // Add new status class
-                            if (status === 'Approved') cardElement.classList.add('status-approved');
-                            else if (status === 'Pending') cardElement.classList.add('status-pending');
-                            else if (status === 'Rejected') cardElement.classList.add('status-rejected');
-                        }
-                    }
-                    updateStatistics(); // Update counts
-                    showMessage(statusMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
-                } else {
-                    showMessage(statusMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error updating status on Google Sheet:', error);
-                showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
-            } finally {
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            }
-        }
-
-        // --- Delete Research from Google Sheet ---
-        async function deleteResearch(researchId) {
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
-            dialog.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
-                    <p class="text-lg font-semibold mb-4">คุณแน่ใจหรือไม่ที่จะลบงานวิจัยนี้?</p>
-                    <p class="text-gray-600 mb-6">การดำเนินการนี้ไม่สามารถย้อนกลับได้!</p>
-                    <div class="flex justify-center space-x-4">
-                        <button id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">ยืนยันการลบ</button>
-                        <button id="cancelDeleteBtn" class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition">ยกเลิก</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(dialog);
-
-            return new Promise((resolve) => {
-                document.getElementById('confirmDeleteBtn').onclick = async () => {
-                    document.body.removeChild(dialog);
-                    showMessage(statusMessageDiv, 'กำลังลบงานวิจัย...', 'info');
-                    try {
-                        const formData = new FormData();
-                        formData.append('action', 'delete');
-                        formData.append('id', researchId);
-                        formData.append('sheetName', PENDING_RESEARCH_SHEET_NAME); // Pass sheet name
-
-                        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                            method: 'POST',
-                            body: formData,
-                        });
-                        const result = await response.json();
-
-                        if (result.status === 'success') {
-                            // Remove from local array and DOM
-                            const researchIndex = researches.findIndex(r => r.Id === researchId);
-                            if (researchIndex !== -1) {
-                                researches.splice(researchIndex, 1);
-                                const card = document.getElementById(`card-${researchId}`);
-                                if (card) {
-                                    card.remove();
-                                }
-                                updateStatistics();
-                            }
-                            showMessage(statusMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
-                        } else {
-                            showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
-                        }
-                    } catch (error) {
-                        console.error('Error deleting research from Google Sheet:', error);
-                        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
-                    } finally {
-                        setTimeout(() => hideMessage(statusMessageDiv), 3000);
-                        resolve(true); // Resolve the promise
-                    }
-                };
-                document.getElementById('cancelDeleteBtn').onclick = () => {
-                    document.body.removeChild(dialog);
-                    showMessage(statusMessageDiv, 'ยกเลิกการลบงานวิจัย', 'info');
-                    setTimeout(() => hideMessage(statusMessageDiv), 3000);
-                    resolve(false); // Resolve the promise
-                };
+    // --- Load Research Data from Google Sheet ---
+    async function loadResearchDataFromGoogleSheet() {
+        showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
+        try {
+            const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=${PENDING_RESEARCH_SHEET_NAME}`, {
+                method: 'GET',
+                redirect: 'follow',
             });
-        }
+            const data = await response.json();
 
-        // --- Update Statistics ---
-        function updateStatistics() {
-            const total = researches.length;
-            const pending = researches.filter(r => r.Status === 'Pending').length;
-            const approved = researches.filter(r => r.Status === 'Approved').length;
-            const rejected = researches.filter(r => r.Status === 'Rejected').length;
-            
-            totalCountSpan.textContent = total;
-            pendingCountSpan.textContent = pending;
-            approvedCountSpan.textContent = approved;
-            rejectedCountSpan.textContent = rejected;
+            researches = []; // Clear current researches array
+            researchGrid.innerHTML = ''; // Clear current display
+            researchDisplayCounter = 0; // Reset display counter
+            noDataMessage.classList.add('hidden'); // Hide no data message initially
 
-            // Show/hide "No data" message based on total researches
-            if (total === 0) {
-                noDataMessage.classList.remove('hidden');
+            if (data.status === 'success' && Array.isArray(data.data)) {
+                if (data.data.length === 0) {
+                    showMessage(statusMessageDiv, 'ไม่พบข้อมูลงานวิจัยที่รอดำเนินการ', 'info');
+                    noDataMessage.classList.remove('hidden'); // Show no data message
+                } else {
+                    data.data.forEach(item => {
+                        if (item.Id) {
+                            addResearchToGrid(item);
+                        }
+                    });
+                    showMessage(statusMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
+                }
+            } else if (data.status === 'error') {
+                showMessage(statusMessageDiv, `โหลดข้อมูลล้มเหลว: ${data.message}`, 'error');
             } else {
-                noDataMessage.classList.add('hidden');
+                showMessage(statusMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
             }
-        }
-
-        // --- Clear All Displayed Research (Does NOT clear Google Sheet) ---
-        function clearAllDisplayedResearch() {
-            const dialog = document.createElement('div');
-            dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
-            dialog.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
-                    <p class="text-lg font-semibold mb-4">คุณต้องการล้างงานวิจัยที่แสดงทั้งหมดบนหน้าจอนี้หรือไม่?</p>
-                    <p class="text-gray-600 mb-6">(จะไม่ลบข้อมูลใน Google Sheet)</p>
-                    <div class="flex justify-center space-x-4">
-                        <button id="confirmClearBtn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">ยืนยันการล้าง</button>
-                        <button id="cancelClearBtn" class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition">ยกเลิก</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(dialog);
-
-            document.getElementById('confirmClearBtn').onclick = () => {
-                document.body.removeChild(dialog);
-                researches = [];
-                researchGrid.innerHTML = '';
-                updateStatistics();
-                researchDisplayCounter = 0;
-                showMessage(statusMessageDiv, 'ล้างงานวิจัยที่แสดงทั้งหมดแล้ว', 'info');
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            };
-            document.getElementById('cancelClearBtn').onclick = () => {
-                document.body.removeChild(dialog);
-                showMessage(statusMessageDiv, 'ยกเลิกการล้างข้อมูล', 'info');
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-            };
-        }
-
-        // --- Export Results (from currently displayed researches) ---
-        function exportResults() {
-            const selectedIds = Array.from(document.querySelectorAll('.selected-checkbox:checked'))
-                                     .map(cb => cb.dataset.id);
-
-            if (selectedIds.length === 0) {
-                showMessage(statusMessageDiv, 'กรุณาเลือกรายการที่ต้องการส่งออก', 'info');
-                setTimeout(() => hideMessage(statusMessageDiv), 3000);
-                return;
-            }
-
-            const selectedResearches = researches.filter(r => selectedIds.includes(r.Id));
-
-            // Create a Blob and download the JSON file directly in the browser
-            const dataStr = JSON.stringify(selectedResearches, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `research-review-results-${new Date().toISOString().split('T')[0]}.json`;
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            showMessage(statusMessageDiv, 'ส่งออกผลลัพธ์สำเร็จ!', 'success');
+        } catch (error) {
+            console.error('Error loading research data from Google Sheet:', error);
+            showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูลจาก Google Sheet', 'error');
+        } finally {
             setTimeout(() => hideMessage(statusMessageDiv), 3000);
         }
+    }
 
-        // Function that was defined but not used and had issues, removed or modified as per the above `exportResults`
-        // function renderResearchCard(research, index) { /* ... */ }
+    function addResearchToGrid(researchData) {
+        // Check if researchData.Id exists and if a card with this ID is already in the DOM
+        if (!researchData.Id || document.getElementById(`card-${researchData.Id}`)) {
+            return; // Skip if no ID or already exists
+        }
 
-        // Load research data from Google Sheet when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            loadResearchDataFromGoogleSheet();
+        // Check if research is already in the local 'researches' array
+        if (researches.some(r => r.Id === researchData.Id)) {
+            return; // Already exists in array, skip adding
+        }
+
+        researches.push(researchData);
+
+        researchDisplayCounter++;
+        const card = createResearchCard(researchData, researchDisplayCounter);
+        researchGrid.appendChild(card);
+
+        updateStatistics();
+    }
+
+    function createResearchCard(researchData, displayId) {
+        const card = document.createElement('div');
+        card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
+        card.id = `card-${researchData.Id}`;
+
+        let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
+        let pendingChecked = researchData.Status === 'Pending' ? 'checked' : '';
+        let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
+        
+        // Add status-specific classes to the card
+        if (researchData.Status === 'Approved') card.classList.add('status-approved');
+        else if (researchData.Status === 'Pending') card.classList.add('status-pending');
+        else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
+
+        let researchFileLinksHtml = '';
+        // Ensure 'Research File URLs' exists and is not null/undefined before parsing
+        if (researchData['Research File URLs']) {
+            try {
+                let fileUrls = researchData['Research File URLs'];
+
+                if (typeof fileUrls === 'string') {
+                    try {
+                        fileUrls = JSON.parse(fileUrls);
+                    } catch (e) {
+                        fileUrls = [fileUrls]; // If not valid JSON, treat as a single URL
+                    }
+                }
+
+                if (Array.isArray(fileUrls) && fileUrls.length > 0) {
+                    researchFileLinksHtml = '<div class="mt-2 text-sm text-gray-600">';
+                    fileUrls.forEach((url, index) => {
+                        researchFileLinksHtml += `<a href="${url}" target="_blank" class="block text-blue-600 hover:underline">ไฟล์งานวิจัย #${index + 1}</a>`;
+                    });
+                    researchFileLinksHtml += '</div>';
+                }
+            } catch (e) {
+                console.error("Error parsing Research File URLs:", researchData['Research File URLs'], e);
+                researchFileLinksHtml = `<div class="mt-2 text-sm text-red-600">URL ไฟล์งานวิจัยไม่ถูกต้อง: ${researchData['Research File URLs']}</div>`;
+            }
+        }
+
+
+        card.innerHTML = `
+            <div class="relative">
+                <img
+                    src="${researchData.ImageUrl || researchData['Image URL'] || 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'}"
+                    alt="Research Cover ${researchData.Title || researchData.Id}"
+                    class="w-full h-64 object-cover"
+                    onerror="handleImageError(this, '${researchData.Id}')"
+                >
+                <div class="absolute top-3 right-3 bg-white rounded-full px-2 py-1 text-sm font-medium text-gray-600">
+                    #${displayId}
+                </div>
+                <div class="absolute bottom-3 left-3 bg-white rounded-lg px-3 py-1 text-xs font-semibold text-gray-700 shadow-md">
+                    ID: ${researchData.Id}
+                </div>
+            </div>
+            <div class="p-4">
+                <h3 class="text-lg font-bold text-gray-800 mb-2" title="${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}">${researchData.Title || 'ไม่ระบุชื่อเรื่อง'}</h3>
+                <div class="text-sm">
+                    <p class="card-detail-group"><span class="card-detail-label">ผู้ใช้:</span> <span class="card-detail-value">${researchData.Username || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">หมวดหมู่:</span> <span class="card-detail-value">${researchData.Category || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">สาขา/ภาควิชา:</span> <span class="card-detail-value">${researchData.Department || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">สาขา/แขนงวิชา:</span> <span class="card-detail-value">${researchData.Field || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">ปีที่ตีพิมพ์:</span> <span class="card-detail-value">${researchData.Year || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">ปีการศึกษา:</span> <span class="card-detail-value">${researchData['Academic Year'] || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">ผู้แต่ง:</span> <span class="card-detail-value">${researchData.Authors || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">อาจารย์ที่ปรึกษา:</span> <span class="card-detail-value">${researchData.Advisor || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">บทคัดย่อ:</span> <span class="card-detail-value truncate" title="${researchData.Abstract || 'ไม่ระบุ'}">${researchData.Abstract || 'ไม่ระบุ'}</span></p>
+                    <p class="card-detail-group"><span class="card-detail-label">สถานะปัจจุบัน:</span> <span class="font-semibold">${researchData.Status || 'Pending'}</span></p>
+                </div>
+                ${researchFileLinksHtml}
+                
+                <div class="mt-4 flex justify-around space-x-2">
+                    <label class="flex items-center cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="status-${researchData.Id}"
+                            value="Approved"
+                            class="checkbox-approved w-5 h-5 text-green-600 border-2 border-gray-300 rounded focus:ring-green-500"
+                            onchange="updateResearchStatus('${researchData.Id}', 'Approved')"
+                            ${approvedChecked}
+                        >
+                        <span class="ml-2 text-green-700 font-medium group-hover:text-green-800">✓ อนุมัติ</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="status-${researchData.Id}"
+                            value="Rejected"
+                            class="checkbox-rejected w-5 h-5 text-red-600 border-2 border-gray-300 rounded focus:ring-red-500"
+                            onchange="updateResearchStatus('${researchData.Id}', 'Rejected')"
+                            ${rejectedChecked}
+                        >
+                        <span class="ml-2 text-red-700 font-medium group-hover:text-red-800">✗ ไม่อนุมัติ</span>
+                    </label>
+                    <label class="flex items-center cursor-pointer group">
+                        <input
+                            type="radio"
+                            name="status-${researchData.Id}"
+                            value="Pending"
+                            class="checkbox-pending w-5 h-5 text-amber-600 border-2 border-gray-300 rounded focus:ring-amber-500"
+                            onchange="updateResearchStatus('${researchData.Id}', 'Pending')"
+                            ${pendingChecked}
+                        >
+                        <span class="ml-2 text-amber-700 font-medium group-hover:text-amber-800">รอดำเนินการ</span>
+                    </label>
+                </div>
+                <div class="mt-4 text-center">
+                    <label class="inline-flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-blue-600 selected-checkbox" data-id="${researchData.Id}">
+                        <span class="ml-2 text-gray-700">เลือกเพื่อส่งออก</span>
+                    </label>
+                </div>
+                <button
+                    onclick="deleteResearch('${researchData.Id}')"
+                    class="w-full mt-3 text-gray-500 hover:text-red-600 text-sm font-medium transition-colors duration-200"
+                >
+                    ลบงานวิจัยนี้
+                </button>
+            </div>
+        `;
+        return card;
+    }
+
+    // --- Image Error Handling ---
+    function handleImageError(imgElement, researchId) {
+        // Placeholder image in case the actual image URL fails to load
+        imgElement.src = `https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image`;
+        imgElement.alt = `Could not load image for #${researchId}`;
+        imgElement.classList.remove('object-cover'); // Remove object-cover if it was set
+        imgElement.classList.add('object-contain'); // Use object-contain for placeholder
+    }
+
+    // --- Update Research Status on Google Sheet ---
+    async function updateResearchStatus(researchId, status) {
+        showMessage(statusMessageDiv, 'กำลังอัปเดตสถานะ...', 'info');
+        try {
+            const formData = new FormData();
+            formData.append('action', 'updateStatus');
+            formData.append('id', researchId);
+            formData.append('status', status);
+            formData.append('sheetName', PENDING_RESEARCH_SHEET_NAME); // Pass sheet name to Apps Script
+
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                // Update the status in the local 'researches' array
+                const researchItem = researches.find(r => r.Id === researchId);
+                if (researchItem) {
+                    researchItem.Status = status;
+                    // Re-render the specific card to update its visual status
+                    const cardElement = document.getElementById(`card-${researchId}`);
+                    if (cardElement) {
+                        // Remove previous status classes
+                        cardElement.classList.remove('status-approved', 'status-pending', 'status-rejected');
+                        // Add new status class
+                        if (status === 'Approved') cardElement.classList.add('status-approved');
+                        else if (status === 'Pending') cardElement.classList.add('status-pending');
+                        else if (status === 'Rejected') cardElement.classList.add('status-rejected');
+                    }
+                }
+                updateStatistics(); // Update counts
+                showMessage(statusMessageDiv, 'อัปเดตสถานะสำเร็จ!', 'success');
+            } else {
+                showMessage(statusMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error updating status on Google Sheet:', error);
+            showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการอัปเดตสถานะ', 'error');
+        } finally {
+            setTimeout(() => hideMessage(statusMessageDiv), 3000);
+        }
+    }
+
+    // --- Delete Research from Google Sheet ---
+    async function deleteResearch(researchId) {
+        const dialog = document.createElement('div');
+        dialog.className = 'fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50';
+        dialog.innerHTML = `
+            <div class="bg-white p-6 rounded-lg shadow-xl max-w-sm w-full text-center">
+                <p class="text-lg font-semibold mb-4">คุณแน่ใจหรือไม่ที่จะลบงานวิจัยนี้?</p>
+                <p class="text-gray-600 mb-6">การดำเนินการนี้ไม่สามารถย้อนกลับได้!</p>
+                <div class="flex justify-center space-x-4">
+                    <button id="confirmDeleteBtn" class="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600 transition">ยืนยันการลบ</button>
+                    <button id="cancelDeleteBtn" class="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition">ยกเลิก</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(dialog);
+
+        return new Promise((resolve) => {
+            document.getElementById('confirmDeleteBtn').onclick = async () => {
+                document.body.removeChild(dialog);
+                showMessage(statusMessageDiv, 'กำลังลบงานวิจัย...', 'info');
+                try {
+                    const formData = new FormData();
+                    formData.append('action', 'delete');
+                    formData.append('id', researchId);
+                    formData.append('sheetName', PENDING_RESEARCH_SHEET_NAME); // Pass sheet name
+
+                    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        body: formData,
+                    });
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        // Remove from local array and DOM
+                        const researchIndex = researches.findIndex(r => r.Id === researchId);
+                        if (researchIndex !== -1) {
+                            researches.splice(researchIndex, 1);
+                            const card = document.getElementById(`card-${researchId}`);
+                            if (card) {
+                                card.remove();
+                            }
+                            updateStatistics();
+                        }
+                        showMessage(statusMessageDiv, 'ลบงานวิจัยสำเร็จ!', 'success');
+                    } else {
+                        showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message || 'ไม่ทราบข้อผิดพลาด'}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting research from Google Sheet:', error);
+                    showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการลบงานวิจัย', 'error');
+                } finally {
+                    setTimeout(() => hideMessage(statusMessageDiv), 3000);
+                    resolve(true); // Resolve the promise
+                }
+            };
+            document.getElementById('cancelDeleteBtn').onclick = () => {
+                document.body.removeChild(dialog);
+                showMessage(statusMessageDiv, 'ยกเลิกการลบงานวิจัย', 'info');
+                setTimeout(() => hideMessage(statusMessageDiv), 3000);
+                resolve(false); // Resolve the promise
+            };
         });
-    </script>
+    }
+
+    // --- Update Statistics ---
+    function updateStatistics() {
+        const total = researches.length;
+        const pending = researches.filter(r => r.Status === 'Pending').length;
+        const approved = researches.filter(r => r.Status === 'Approved').length;
+        const rejected = researches.filter(r => r.Status === 'Rejected').length;
+
+        if (totalCountSpan) totalCountSpan.textContent = total;
+        if (pendingCountSpan) pendingCountSpan.textContent = pending;
+        if (approvedCountSpan) approvedCountSpan.textContent = approved;
+        if (rejectedCountSpan) rejectedCountSpan.textContent = rejected;
+
+        // Show or hide "no data" message depending on total
+        if (total === 0 && noDataMessage) {
+            noDataMessage.classList.remove('hidden');
+        } else if (noDataMessage) {
+            noDataMessage.classList.add('hidden');
+        }
+    }
+
+    // --- Search Research by Title ---
+    function searchResearch() {
+        const input = document.getElementById('searchInput');
+        if (!input) return;
+        const filter = input.value.toLowerCase();
+
+        researches.forEach(research => {
+            const card = document.getElementById(`card-${research.Id}`);
+            if (card) {
+                const title = (research.Title || '').toLowerCase();
+                if (title.indexOf(filter) > -1) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    // --- Initialize ---
+    document.addEventListener('DOMContentLoaded', () => {
+        loadResearchDataFromGoogleSheet();
+
+        // Add search input event listener if exists
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', searchResearch);
+        }
+    });
+</script>
+
 </body>
 </html>
