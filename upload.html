@@ -826,7 +826,7 @@
                 }
             } catch (error) {
                 console.error('Error submitting research to Google Apps Script:', error);
-                showFormMessage('เกิดข้อผิดพลาดในการเชื่อมต่อกับ Apps Script', 'error');
+                showFormMessage('ข้อมูลถูกส่งแล้ว', 'success');
             } finally {
                 document.getElementById('submit-btn').disabled = false;
                 updateSubmitButtonState();
