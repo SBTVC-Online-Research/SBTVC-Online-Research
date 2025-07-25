@@ -76,16 +76,23 @@
                 <input type="text" id="title" name="title" class="w-full px-4 py-2 border rounded-lg focus:ring-orange-500 focus:border-orange-500 outline-none" required>
             </div>
 
-            <div class="mb-6">
-                <label class="block text-gray-700 font-medium mb-2">หมวดหมู่ <span class="text-red-500">*</span></label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="survey">สำรวจ</div>
-                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="theory">ทฤษฎี</div>
-                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="experiment">ทดลอง</div>
-                    <div class="category-item border p-4 rounded-lg text-center cursor-pointer" data-category="invention">ประดิษฐ์</div>
-                </div>
-                <input type="hidden" id="selected-category" name="category" required>
-            </div>
+       <div class="mb-6">
+  <label class="block text-gray-700 font-medium mb-2">
+    หมวดหมู่ <span class="text-red-500">*</span>
+  </label>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="category-item border p-4 rounded-lg text-center cursor-pointer"
+         data-category="survey" onclick="selectCategory(this)">สำรวจ</div>
+    <div class="category-item border p-4 rounded-lg text-center cursor-pointer"
+         data-category="theory" onclick="selectCategory(this)">ทฤษฎี</div>
+    <div class="category-item border p-4 rounded-lg text-center cursor-pointer"
+         data-category="experiment" onclick="selectCategory(this)">ทดลอง</div>
+    <div class="category-item border p-4 rounded-lg text-center cursor-pointer"
+         data-category="invention" onclick="selectCategory(this)">ประดิษฐ์</div>
+  </div>
+  <input type="hidden" id="selected-category" name="category" required>
+</div>
+
 
             <div class="grid md:grid-cols-2 gap-6 mb-6">
                 <div>
@@ -289,13 +296,7 @@
         return addButton;
     }
 
-    function createRemoveButton() {
-        const removeButton = document.createElement('button');
-        removeButton.type = 'button';
-        removeButton.className = 'remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition';
-        removeButton.textContent = '－';
-        return removeButton;
-    }
+    
 
     // --- Form Validation and Submission Logic ---
     function updateSubmitButtonState() {
@@ -857,6 +858,50 @@
         }
         updateSubmitButtonState();
     });
+
+   function selectCategory(selectedEl) {
+    const categoryItems = document.querySelectorAll('.category-item');
+    const hiddenInput = document.getElementById('selected-category');
+
+    // คลาสสีที่อาจมีให้ลบออกก่อน เพื่อไม่ให้ทับกัน
+    const allColorClasses = [
+      'bg-green-200', 'border-green-500', 'text-green-700',
+      'bg-red-200', 'border-red-500', 'text-red-700',
+      'bg-orange-200', 'border-orange-500', 'text-orange-700',
+      'bg-yellow-200', 'border-yellow-500', 'text-yellow-700'
+    ];
+
+    // ลบคลาสสีเก่าจากทุกหมวดหมู่
+    categoryItems.forEach(item => {
+      allColorClasses.forEach(cls => item.classList.remove(cls));
+    });
+
+    // เลือกสีตามหมวดหมู่
+    const category = selectedEl.getAttribute('data-category');
+    let colorClasses = '';
+
+    switch (category) {
+      case 'survey':
+        colorClasses = 'bg-green-200 border-green-500 text-green-700';
+        break;
+      case 'theory':
+        colorClasses = 'bg-red-200 border-red-500 text-red-700';
+        break;
+      case 'experiment':
+        colorClasses = 'bg-orange-200 border-orange-500 text-orange-700';
+        break;
+      case 'invention':
+        colorClasses = 'bg-yellow-200 border-yellow-500 text-yellow-700';
+        break;
+    }
+
+    // เพิ่มคลาสสีใหม่ให้กับ element ที่ถูกคลิก
+    selectedEl.classList.add(...colorClasses.split(' '));
+
+    // เซ็ตค่า input hidden
+    hiddenInput.value = category;
+  }
+
 </script>
 
 </body>
