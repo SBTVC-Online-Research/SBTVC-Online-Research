@@ -286,36 +286,18 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <input type="text" id="searchInput" placeholder="ค้นหาด้วยชื่อเรื่อง, ผู้แต่ง, คำสำคัญ..." class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
                 <select id="categorySelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    <option value="">-- เลือกหมวดหมู่ --</option>
+                    <option value="">เลือกหมวดหมู่</option>
                     <option value="สำรวจ">สำรวจ</option>
                     <option value="ทฤษฎี">ทฤษฎี</option>
                     <option value="ทดลอง">ทดลอง</option>
                     <option value="ประดิษฐ์">ประดิษฐ์</option>
-
                 </select>
-                <select id="yearSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    <option value="">-- เลือกปี --</option>
-                    <option value="2568">2568</option>
-                    <option value="2567">2567</option>
-                    <option value="2566">2566</option>
-                    <option value="2565">2565</option>
-                    <option value="2564">2564</option>
-                    <option value="2563">2563</option>
-                    <option value="2562">2562</option>
-                    <option value="2561">2561</option>
-                    <option value="2560">2560</option>
-                    <option value="2559">2559</option>
-                    <option value="2558">2558</option>
-                    <option value="2557">2557</option>
-                    <option value="2556">2556</option>
-                    <option value="2555">2555</option>
-                    <option value="2554">2554</option>
-                    <option value="2553">2553</option>
-                    <option value="2552">2552</option>
-                    <option value="2551">2551</option>
-                    </select>
+<select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+            <option value="" disabled selected>เลือกปีการศึกษา</option>
+            <option>2567</option><option>2566</option><option>2565</option><option>2564</option><option>2563</option><option>2562</option><option>2561</option><option>2560</option><option>2559</option><option>2558</option><option>2557</option><option>2556</option><option>2555</option><option>2554</option><option>2553</option><option>2552</option><option>2551</option><option>2550</option><option>2549</option><option>2548</option><option>2547</option><option>2546</option><option>2545</option><option>2544</option><option>2543</option><option>2542</option><option>2541</option>
+          </select>
                 <select id="levelSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    <option value="">-- เลือกระดับ --</option>
+                    <option value="">เลือกระดับ</option>
                     <option value="ปวช.1">ปวช.1</option>
                     <option value="ปวช.2">ปวช.2</option>
                     <option value="ปวช.3">ปวช.3</option>
@@ -342,13 +324,9 @@
             <div id="researchCards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <p id="noResearchMessage" class="hidden text-center col-span-full text-gray-500">ไม่พบงานวิจัยที่ตรงกับเงื่อนไขการค้นหา</p>
             </div>
-            <div id="loadingMessage" class="text-center py-8 text-gray-600 text-lg">
-                <i class="fas fa-spinner fa-spin mr-2"></i> กำลังโหลดงานวิจัย...
-            </div>
+            
         </section>
-
-         <!-- Card 1 -->
-  <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+         <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
        data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
        data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
        data-category="สำรวจ"
@@ -379,19 +357,19 @@
         <section class="mb-12 bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">สำรวจตามหมวดหมู่</h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <a href="Category/samruat.html" class="block p-4 text-center bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
+                <a href="Category/Explore.html" class="block p-4 text-center bg-blue-100 text-blue-800 rounded-lg hover:bg-blue-200 transition">
                     <i class="fas fa-flask text-2xl mb-2"></i>
                     <p class="font-medium">สำรวจ</p>
                 </a>
-                <a href="Category/tidsadee.html" class="block p-4 text-center bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
+                <a href="Category/Theory.html" class="block p-4 text-center bg-green-100 text-green-800 rounded-lg hover:bg-green-200 transition">
                     <i class="fas fa-microchip text-2xl mb-2"></i>
                     <p class="font-medium">ทฤษฎี</p>
                 </a>
-                <a href="Category/todlong.html" class="block p-4 text-center bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">
+                <a href="Category/Experiment.html" class="block p-4 text-center bg-red-100 text-red-800 rounded-lg hover:bg-red-200 transition">
                     <i class="fas fa-hard-hat text-2xl mb-2"></i>
                     <p class="font-medium">ทดลอง</p>
                 </a>
-                <a href="Category/pradit.html" class="block p-4 text-center bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
+                <a href="Category/Invent.html" class="block p-4 text-center bg-purple-100 text-purple-800 rounded-lg hover:bg-purple-200 transition">
                     <i class="fas fa-calculator text-2xl mb-2"></i>
                     <p class="font-medium">ประดิษฐ์</p>
                 </a>
@@ -422,14 +400,14 @@
   <!-- Custom Glow Effect -->
   <style>
     .glow-hover:hover {
-      color: #1DB954; /* สีเขียว Spotify */
-      text-shadow: 0 0 8px #1DB954, 0 0 16px #1DB954;
+      color: #000000; /* สีเขียว Spotify */
+      text-shadow: 0 0 8px #000000, 0 0 16px #000000;
     }
   </style>
 </head>
 <body class="flex justify-center items-center min-h-screen bg-white">
 
-  <a href="choose.html" class="text-gray-800 text-1xl glow-hover transition duration-300">
+  <a href="Admin/R_R_S.html" class="text-gray-800 text-1xl glow-hover transition duration-300">
     <i class="fab fa-spotify"></i>
   </a>
 
@@ -872,6 +850,11 @@
                     noResearchMessage.classList.remove('hidden');
                     noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
                 }
+            } catch (error) {
+                console.error('Error fetching research data:', error);
+                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
+                noResearchMessage.classList.remove('hidden');
+                noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
             } finally {
                 loadingMessage.classList.add('hidden');
             }
