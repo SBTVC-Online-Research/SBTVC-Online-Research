@@ -3,274 +3,380 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>รายละเอียดงานวิจัย</title>
-    <link rel="stylesheet" href="style.css"> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <title>ระบบเว็บไซต์จัดเก็บผลงานวิจัย - รายละเอียด</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        orange: {
+                            light: '#FFF0E5',
+                            primary: '#FF6B00',
+                            dark: '#CC5500'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        /* CSS เพิ่มเติมหรือปรับปรุงเล็กน้อยเพื่อการแสดงผล */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
+            font-family: 'Sarabun', sans-serif;
+            background-color: #f8fafc;
         }
-        .container {
-            max-width: 960px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3 {
-            color: #0056b3;
-            margin-bottom: 15px;
-        }
-        .research-detail p {
-            margin-bottom: 8px;
-        }
-        .abstract-content, .objective-content, .benefit-content {
-            background-color: #e9ecef;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            white-space: pre-wrap; /* เพื่อรักษารูปแบบการขึ้นบรรทัดใหม่จากข้อมูล */
-        }
-        .file-links a {
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-        .file-links a:hover {
-            background-color: #0056b3;
-        }
-        #loadingMessage, #errorMessage {
-            padding: 20px;
-            text-align: center;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        #loadingMessage {
-            color: #007bff;
-        }
-        #errorMessage {
-            color: #dc3545;
-        }
-        .related-research {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-        }
-        .related-list a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .related-list a:hover {
-            text-decoration: underline;
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8C40 100%);
         }
     </style>
 </head>
 <body>
-
-    <header class="bg-dark text-white py-3">
-        <div class="container d-flex justify-content-between align-items-center">
-            <h1>STBVC Online Research</h1>
-            <nav>
-                <a href="index.html" class="btn btn-primary">หน้าแรก</a>
-                <a href="research-upload.html" class="btn btn-outline-light">อัปโหลดงานวิจัย</a>
-                </nav>
+    <!-- Header -->
+    <header class="gradient-bg text-white">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center mb-4 md:mb-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mr-3" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838l-2.727 1.17 1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+                    </svg>
+                    <div>
+                        <h1 class="text-2xl font-bold">ระบบจัดเก็บผลงานวิจัย</h1>
+                        <p class="text-orange-100"></p>
+                    </div>
+                </div>
+                <div class="flex space-x-4">
+                    <button class="bg-white text-orange-primary px-4 py-2 rounded-lg font-medium hover:bg-orange-50 transition duration-300">เข้าสู่ระบบ</button>
+                    <button class="bg-orange-dark text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-primary transition duration-300 border border-orange-dark">ลงทะเบียน</button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main class="container mt-4">
-        <section class="research-detail">
-            <p id="loadingMessage" style="display: none;">กำลังโหลดข้อมูล...</p>
-            <p id="errorMessage" style="display: none;">ไม่พบข้อมูลงานวิจัย หรือเกิดข้อผิดพลาดในการโหลด</p>
+    <!-- Breadcrumb -->
+    <div class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <nav class="flex" aria-label="Breadcrumb">
+                <ol class="inline-flex items-center space-x-1 md:space-x-3">
+                    <li class="inline-flex items-center">
+                        <a href="index.html" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-orange-primary">
+                            <svg class="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            หน้าหลัก
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <a href="Category/samruat.html" class="ml-1 text-sm font-medium text-gray-700 hover:text-orange-primary md:ml-2">งานวิจัย</a>
+                        </div>
+                    </li>
+                    <li aria-current="page">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-1 text-sm font-medium text-orange-primary md:ml-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+        </div>
+    </div>
 
-            <h1 id="researchTitleTH"></h1>
-            <h2 id="researchTitleENG" class="text-muted fs-4"></h2>
-            
-            <p><strong>ผู้แต่ง:</strong> <span id="researchAuthors"></span></p>
-            <p><strong>อาจารย์ที่ปรึกษา:</strong> <span id="researchAdvisor"></span></p>
-            <p><strong>สาขางานวิจัย:</strong> <span id="researchField"></span></p>
-            <p><strong>ประเภทงานวิจัย:</strong> <span id="researchCategory"></span></p>
-            <p><strong>ปีที่เผยแพร่:</strong> <span id="researchYear"></span></p>
-            <p><strong>ปีการศึกษา:</strong> <span id="researchAcademicYear"></span></p>
-            
-            <h3>บทคัดย่อ</h3>
-            <div id="researchAbstract" class="abstract-content"></div>
-
-            <h3>วัตถุประสงค์</h3>
-            <div id="researchObjective" class="objective-content"></div>
-
-            <h3>ประโยชน์ที่ได้รับ</h3>
-            <div id="researchBenefit" class="benefit-content"></div>
-
-            <h3>ไฟล์เอกสารและการอ้างอิง</h3>
-            <div id="researchFiles" class="file-links">
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <!-- Research Header -->
+            <div class="bg-orange-light p-8 border-b border-orange-200">
+                <div class="flex justify-between items-start mb-4">
+                    <div class="flex space-x-3">
+                        <span class="px-3 py-1 bg-orange-primary text-white text-sm rounded-full">สำรวจ</span>
+                        <span class="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full">ระดับวิทยาลัย</span>
+                    </div>
+                    <span class="text-gray-600">ปีที่เผยแพร่: 2568</span>
                 </div>
-            <p><strong>การอ้างอิง:</strong> <span id="researchReference"></span></p>
-            
-        </section>
-
-        <section class="related-research">
-            <h2>งานวิจัยที่เกี่ยวข้อง</h2>
-            <div class="related-list" id="relatedResearchList">
-                <p>จะแสดงงานวิจัยที่เกี่ยวข้องที่นี่ (ยังไม่ได้นำข้อมูลมาใส่).</p>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h1>
+                <h2 class="text-xl text-gray-600 mb-6">การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold text-xl">ส</div>
+                    <div class="ml-4">
+                        <p class="font-medium text-gray-800">นายธนวิชญ์ จันทร์โชติ</p>
+                        <p class="text-gray-600 text-sm">อาจารย์ประจำสาขาเทคโนโลยีสารสนเทศ</p>
+                    </div>
                 </div>
-        </section>
+            </div>
+
+            <!-- Research Details -->
+            <div class="p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Left Column - Main Details -->
+                    <div class="md:col-span-2">
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                รายละเอียดงานวิจัย
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ชื่องานวิจัย (ภาษาไทย)</p>
+                                        <p class="font-medium text-gray-800">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ชื่องานวิจัย (ภาษาอังกฤษ)</p>
+                                        <p class="font-medium text-gray-800">Research Repository Website System</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ชื่อผู้แต่ง</p>
+                                        <p class="font-medium text-gray-800">นายธนวิชญ์ จันทร์โชติ</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">สาขางานวิจัย</p>
+                                        <p class="font-medium text-gray-800">เทคโนโลยีสารสนเทศ</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ประเภทงานวิจัย</p>
+                                        <p class="font-medium text-gray-800">วิจัยเชิงสำรวจ</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 mb-1">ปีที่เผยแพร่</p>
+                                        <p class="font-medium text-gray-800">2568</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                บทคัดย่อ
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <p class="text-gray-800 leading-relaxed">
+                                    การวิจัยครั้งนี้มีวัตถุประสงค์เพื่อพัฒนาระบบเว็บไซต์จัดเก็บผลงานวิจัยของวิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี) เพื่อเป็นแหล่งรวบรวมและเผยแพร่ผลงานวิจัยของบุคลากรและนักศึกษา โดยระบบสามารถจัดเก็บข้อมูลงานวิจัยในรูปแบบดิจิทัล สืบค้นข้อมูลได้อย่างมีประสิทธิภาพ และแสดงผลข้อมูลในรูปแบบที่เข้าใจง่าย
+                                </p>
+                                <p class="text-gray-800 leading-relaxed mt-4">
+                                    ผลการวิจัยพบว่า ระบบที่พัฒนาขึ้นสามารถจัดเก็บข้อมูลงานวิจัยได้อย่างเป็นระบบ มีการแบ่งหมวดหมู่ตามสาขาและประเภทงานวิจัย ผู้ใช้สามารถค้นหาข้อมูลได้หลากหลายรูปแบบ และสามารถดาวน์โหลดเอกสารงานวิจัยฉบับเต็มได้ ผลการประเมินความพึงพอใจของผู้ใช้งานระบบอยู่ในระดับดีมาก (ค่าเฉลี่ย 4.75) แสดงให้เห็นว่าระบบที่พัฒนาขึ้นสามารถตอบสนองความต้องการของผู้ใช้งานได้อย่างมีประสิทธิภาพ
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                                </svg>
+                                
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-orange-light text-orange-primary px-3 py-1.5 rounded-full text-sm font-medium"></span>
+                                <span class="bg-orange-light text-orange-primary px-3 py-1.5 rounded-full text-sm font-medium"></span>
+                                <span class="bg-orange-light text-orange-primary px-3 py-1.5 rounded-full text-sm font-medium"></span>
+                                <span class="bg-orange-light text-orange-primary px-3 py-1.5 rounded-full text-sm font-medium"></span>
+                                <span class="bg-orange-light text-orange-primary px-3 py-1.5 rounded-full text-sm font-medium"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                                วัตถุประสงค์การวิจัย
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                                    <li>เพื่อพัฒนาระบบเว็บไซต์จัดเก็บผลงานวิจัยของวิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</li>
+                                    <li>เพื่อประเมินประสิทธิภาพของระบบเว็บไซต์จัดเก็บผลงานวิจัยที่พัฒนาขึ้น</li>
+                                    <li>เพื่อศึกษาความพึงพอใจของผู้ใช้งานที่มีต่อระบบเว็บไซต์จัดเก็บผลงานวิจัย</li>
+                                </ol>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                </svg>
+                                ประโยชน์ที่ได้รับ
+                            </h3>
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <ol class="list-decimal list-inside space-y-2 text-gray-800">
+                                    <li>วิทยาลัยมีระบบจัดเก็บผลงานวิจัยที่เป็นระบบและมีประสิทธิภาพ</li>
+                                    <li>บุคลากรและนักศึกษาสามารถเข้าถึงข้อมูลงานวิจัยได้สะดวกและรวดเร็ว</li>
+                                    <li>เป็นแหล่งเผยแพร่ผลงานวิจัยของวิทยาลัยสู่สาธารณะ</li>
+                                    <li>ส่งเสริมการแลกเปลี่ยนความรู้และต่อยอดงานวิจัยภายในวิทยาลัย</li>
+                                    <li>ลดการใช้ทรัพยากรกระดาษในการจัดเก็บเอกสารงานวิจัย</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column - Download and Related -->
+                    <div>
+                        <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                ดาวน์โหลดเอกสาร
+                            </h3>
+                            <div class="space-y-4">
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">รายงานฉบับเต็ม</p>
+                                        <p class="text-sm text-gray-500">PDF • 2.4 MB</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">บทคัดย่อ</p>
+                                        <p class="text-sm text-gray-500">PDF • 420 KB</p>
+                                    </div>
+                                </a>
+                                <a href="#" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-500 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                    <div>
+                                        <p class="font-medium text-gray-800">นำเสนอผลงาน</p>
+                                        <p class="text-sm text-gray-500">PPTX • 1.8 MB</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-md p-6 mb-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                ข้อมูลการอ้างอิง
+                            </h3>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <p class="text-gray-800 text-sm">ธนวิชญ์ จันทร์โชติ. (2568). ระบบเว็บไซต์จัดเก็บผลงานวิจัย. วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี).</p>
+                            </div>
+                            <div class="mt-4 flex justify-between">
+                                <button class="text-orange-primary hover:text-orange-dark flex items-center text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                    </svg>
+                                    คัดลอกการอ้างอิง
+                                </button>
+                                <button class="text-orange-primary hover:text-orange-dark flex items-center text-sm font-medium">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                    
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl shadow-md p-6 border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                งานวิจัยที่เกี่ยวข้อง
+                                 </h3>
+                            <div class="space-y-4">
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                                <a href="#" class="block p-4 bg-gray-50 rounded-lg hover:bg-orange-light transition duration-300">
+                                    <p class="font-medium text-gray-800 mb-1"></p>
+                                    <p class="text-sm text-gray-600 mb-2"></p>
+                                    <div class="flex items-center">
+                                        <span class="bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded"></span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+                           
 
-    <footer class="bg-dark text-white text-center py-3 mt-4">
-        <p>&copy; 2024 STBVC Online Research. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-xl font-bold mb-4">วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</h2>
+                    <p class="text-gray-300 mb-2">เลขที่ 37 หมู่ 8 ตำบลบ้านเก่า อำเภอพานทอง</p>
+                    <p class="text-gray-300 mb-2">จังหวัดชลบุรี 20110</p>
+                    <p class="text-gray-300">โทรศัพท์: 038 447 241 </p>
+                </div>
+                <div class="grid grid-cols-2 gap-8 sm:gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4"></h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4"></h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                            <li><a href="#" class="text-gray-300 hover:text-white"></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-6 border-gray-700">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <p class="text-sm text-gray-400">© 2025 วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
+                <div class="flex space-x-6 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // *** โค้ด JavaScript สำหรับดึงข้อมูลและแสดงผล ***
-        document.addEventListener('DOMContentLoaded', function() {
-            // URL ของ Google Apps Script Web App ของคุณ
-            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
-
-            // ดึงค่า 'id' จาก URL Parameter (เช่น OnlineMMM.html?id=123)
-            const params = new URLSearchParams(window.location.search);
-            const researchId = params.get('id');
-
-            // อ้างอิง Element ต่างๆ ใน HTML
-            const loadingMessage = document.getElementById('loadingMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const researchDetailSection = document.querySelector('.research-detail'); 
-
-            // ตรวจสอบว่ามี ID ใน URL หรือไม่
-            if (!researchId) {
-                researchDetailSection.style.display = 'none'; // ซ่อนส่วนรายละเอียด
-                errorMessage.textContent = 'ไม่พบ ID งานวิจัยใน URL กรุณาระบุ ID ที่ถูกต้อง (เช่น ?id=1)';
-                errorMessage.style.display = 'block';
-                return;
-            }
-
-            // แสดงข้อความกำลังโหลด
-            loadingMessage.style.display = 'block';
-            errorMessage.style.display = 'none'; // ซ่อนข้อความข้อผิดพลาด
-
-            // ทำการ Fetch ข้อมูลจาก Google Apps Script Web App
-            fetch(`${WEB_APP_URL}?id=${researchId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    loadingMessage.style.display = 'none'; // ซ่อนข้อความกำลังโหลดเมื่อได้ข้อมูล
-
-                    // ตรวจสอบว่า Apps Script ส่งข้อผิดพลาดกลับมาหรือไม่ หรือข้อมูลว่างเปล่า
-                    if (data.status === 'error' || !data || Object.keys(data).length === 0) {
-                        researchDetailSection.style.display = 'none';
-                        errorMessage.textContent = 'ไม่พบข้อมูลงานวิจัยสำหรับ ID นี้ หรือเกิดข้อผิดพลาดในการโหลดข้อมูล';
-                        errorMessage.style.display = 'block';
-                        return;
-                    }
-
-                    // ข้อมูลงานวิจัยที่ได้มา (เป็น Object เดียว)
-                    const research = data;
-
-                    // กรอกข้อมูลลงใน Element ต่างๆ ใน HTML
-                    document.getElementById('researchTitleTH').textContent = research.Title || 'ไม่มีชื่อเรื่อง (ไทย)';
-                    // ใช้ Department หรือ Category มาแสดงในชื่อเรื่อง ENG ถ้าไม่มี Title Eng
-                    document.getElementById('researchTitleENG').textContent = research.Department || research.Category || 'ไม่มีข้อมูลเพิ่มเติม';
-
-                    document.getElementById('researchAuthors').textContent = research.Authors || 'ไม่ระบุ';
-                    document.getElementById('researchAdvisor').textContent = research.Advisor || 'ไม่ระบุ';
-                    document.getElementById('researchField').textContent = research.Field || 'ไม่ระบุ';
-                    document.getElementById('researchCategory').textContent = research.Category || 'ไม่ระบุ';
-                    document.getElementById('researchYear').textContent = research.Year || 'ไม่ระบุ';
-                    document.getElementById('researchAcademicYear').textContent = research['Academic Year'] || 'ไม่ระบุ';
-                    
-                    // แสดง Abstract พร้อมขึ้นบรรทัดใหม่จาก \n
-                    document.getElementById('researchAbstract').innerHTML = research.Abstract ? research.Abstract.replace(/\n/g, '<br>') : 'ไม่มีบทคัดย่อ';
-                    
-                    // แสดง Objective และ Benefit (สมมติว่ามีคอลัมน์เหล่านี้ใน Google Sheet)
-                    document.getElementById('researchObjective').innerHTML = research.Objective ? research.Objective.replace(/\n/g, '<br>') : 'ยังไม่มีข้อมูลวัตถุประสงค์';
-                    document.getElementById('researchBenefit').innerHTML = research.Benefit ? research.Benefit.replace(/\n/g, '<br>') : 'ยังไม่มีข้อมูลประโยชน์ที่ได้รับ';
-
-                    // จัดการลิงก์ไฟล์เอกสาร (Research File URLs)
-                    const researchFilesDiv = document.getElementById('researchFiles');
-                    researchFilesDiv.innerHTML = ''; // เคลียร์เนื้อหาเก่าออก
-
-                    if (research['Research File URLs']) {
-                        try {
-                            // พยายาม Parse JSON string เป็น Array
-                            const fileUrls = JSON.parse(research['Research File URLs']);
-                            if (Array.isArray(fileUrls) && fileUrls.length > 0) {
-                                fileUrls.forEach(url => {
-                                    if (url) {
-                                        const link = document.createElement('a');
-                                        link.href = url;
-                                        link.target = '_blank'; // เปิดในแท็บใหม่
-                                        let linkText = 'ดาวน์โหลดเอกสาร';
-                                        // ปรับข้อความลิงก์ตามประเภทไฟล์
-                                        if (url.toLowerCase().includes('.pdf')) {
-                                            linkText = 'ดาวน์โหลด PDF';
-                                        } else if (url.toLowerCase().includes('.pptx') || url.toLowerCase().includes('.ppt')) {
-                                            linkText = 'ดาวน์โหลด PPTX';
-                                        } else if (url.toLowerCase().includes('abstract')) { // ตัวอย่างการระบุลิงก์บทคัดย่อ
-                                            linkText = 'ลิงก์บทคัดย่อ';
-                                        }
-                                        link.textContent = linkText;
-                                        link.classList.add('button', 'download-button'); // เพิ่มคลาสสำหรับจัดสไตล์
-                                        researchFilesDiv.appendChild(link);
-                                        researchFilesDiv.appendChild(document.createElement('br')); // ขึ้นบรรทัดใหม่
-                                    }
-                                });
-                            } else if (typeof fileUrls === 'string' && fileUrls) { // กรณีมีแค่ URL เดียวที่ไม่ได้อยู่ใน Array
-                                const link = document.createElement('a');
-                                link.href = fileUrls;
-                                link.target = '_blank';
-                                link.textContent = 'ดาวน์โหลดเอกสาร';
-                                link.classList.add('button', 'download-button');
-                                researchFilesDiv.appendChild(link);
-                            }
-                        } catch (e) {
-                            console.error('Error parsing Research File URLs:', e);
-                            researchFilesDiv.innerHTML = '<p>เกิดข้อผิดพลาดในการแสดงลิงก์เอกสาร</p>';
-                        }
-                    } else {
-                        researchFilesDiv.innerHTML = '<p>ไม่มีไฟล์เอกสารสำหรับการดาวน์โหลด</p>';
-                    }
-
-                    document.getElementById('researchReference').textContent = research.Reference || 'ไม่มีข้อมูลการอ้างอิง';
-
-                    // แสดงส่วนรายละเอียดหลังจากโหลดข้อมูลสำเร็จ
-                    researchDetailSection.style.display = 'block';
-
-                })
-                .catch(error => {
-                    console.error('Fetch error:', error);
-                    loadingMessage.style.display = 'none';
-                    researchDetailSection.style.display = 'none';
-                    errorMessage.textContent = `เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}`;
-                    errorMessage.style.display = 'block';
-                });
-
-            // ส่วนของ "งานวิจัยที่เกี่ยวข้อง" (Related Research)
-            // โค้ดส่วนนี้ยังเป็นโครงสร้างและตัวอย่างเท่านั้น
-            // เพื่อดึงข้อมูลงานวิจัยที่เกี่ยวข้อง คุณจะต้องตัดสินใจว่าจะดึงจากเกณฑ์ใด
-            // เช่น ดึงจาก Category, Field หรือ Authors เดียวกัน
-            // และคุณอาจจะต้องเรียกใช้ Apps Script API อีกครั้งเพื่อดึงข้อมูลทั้งหมด
-            // แล้วค่อยมา Filter หรือจะสร้าง API แยกสำหรับ Related Research โดยเฉพาะก็ได้
-            // ตัวอย่างโค้ดที่ถูกคอมเมนต์ไว้ในบทสนทนาก่อนหน้า เป็นแนวทางเริ่มต้น
-            // เมื่อคุณพร้อมที่จะพัฒนาส่วนนี้ สามารถแจ้งผมได้เลยครับ
-        });
-    </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'954aa28dc79d8949',t:'MTc1MDc1MTQzNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
