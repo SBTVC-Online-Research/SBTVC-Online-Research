@@ -201,7 +201,7 @@
     // **Cloudinary Configuration** (เปลี่ยนเป็น Cloud name และ Upload preset ของคุณ)
     const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- เปลี่ยนตรงนี้เป็น Cloud name ของคุณ
     const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- เปลี่ยนตรงนี้ (ตั้งชื่อใหม่ เช่น research_photo_preset)
-    const CLOUDINARY_FILE_UPLOAD_PRESET = 'STVC_preset'; // <-- เปลี่ยนตรงนี้ (ตั้งชื่อใหม่ เช่น research_file_preset)
+    const CLOUDINARY_FILE_UPLOAD_PRESET = 'aekasan'; // <-- เปลี่ยนตรงนี้ (ตั้งชื่อใหม่ เช่น research_file_preset)
 
     // **Google Apps Script Web App URL** //
     // *** สำคัญมาก: URL ของคุณถูกนำมาใช้ที่นี่แล้ว ***
@@ -308,7 +308,7 @@
         const titleFilled = document.getElementById('title') && document.getElementById('title').value.trim() !== '';
         const categorySelected = selectedCategoryInput && selectedCategoryInput.value.trim() !== '';
         const departmentSelected = document.getElementById('department') && document.getElementById('department').value.trim() !== '';
-        const fieldFilled = document.getElementById('field') && document.getElementById('field').value.trim() !== '';
+      
         const yearFilled = document.getElementById('year') && document.getElementById('year').value.trim() !== '';
         const academicYearFilled = document.getElementById('academic-year') && document.getElementById('academic-year').value.trim() !== '';
         const advisorFilled = document.getElementById('advisor') && document.getElementById('advisor').value.trim() !== '';
@@ -326,7 +326,7 @@
             });
         }
 
-        const allFormFieldsValid = titleFilled && categorySelected && departmentSelected && fieldFilled && yearFilled && academicYearFilled && allAuthorsFilled && advisorFilled && abstractFilled;
+        const allFormFieldsValid = titleFilled && categorySelected && departmentSelected  && yearFilled && academicYearFilled && allAuthorsFilled && advisorFilled && abstractFilled;
 
         submitBtn.disabled = !(
             allFormFieldsValid &&
@@ -771,7 +771,7 @@
             formData.append('title', title);
             formData.append('category', category);
             formData.append('department', department);
-            formData.append('department', department);
+           
             formData.append('field', field);
             formData.append('year', year);
             formData.append('academicYear', academicYear);
@@ -820,10 +820,11 @@
                 } else {
                     showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
                 }
-            } catch (error) {
-                console.error('Error submitting research to Google Apps Script:', error);
-                showFormMessage('ข้อมูลถูกส่งแล้ว', 'success');
-            } finally {
+           } catch (error) {
+    console.error('Error submitting research to Google Apps Script:', error);
+    // เปลี่ยนบรรทัดนี้
+    showFormMessage('เกิดข้อผิดพลาดร้ายแรง ไม่สามารถส่งข้อมูลได้ โปรดลองอีกครั้ง', 'error');
+} finally {
                 document.getElementById('submit-btn').disabled = false;
                 updateSubmitButtonState();
                 setTimeout(() => {
