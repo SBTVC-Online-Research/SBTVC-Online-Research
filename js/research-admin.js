@@ -1,9 +1,11 @@
 let researches = [];
 let researchDisplayCounter = 0;
 
+// ตรวจสอบให้แน่ใจว่า URL นี้ถูกต้องและเป็นเวอร์ชันที่ Deploy ล่าสุด (ลงท้ายด้วย /exec)
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
-const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData';
+const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // ชื่อชีทใน Google Sheet
 
+// อ้างอิงถึง Element ต่างๆ ใน HTML
 const statusMessageDiv = document.getElementById('status-message');
 const researchGrid = document.getElementById('researchGrid');
 const noDataMessage = document.getElementById('noDataMessage');
@@ -11,113 +13,211 @@ const totalCountSpan = document.getElementById('totalCount');
 const pendingCountSpan = document.getElementById('pendingCount');
 const approvedCountSpan = document.getElementById('approvedCount');
 const rejectedCountSpan = document.getElementById('rejectedCount');
+const loadingSpinner = document.getElementById('loading-spinner'); // ต้องมี element นี้ใน HTML
 
+// --- ฟังก์ชันช่วยเหลือสำหรับการแสดงผล UI ---
+
+/**
+ * แสดงข้อความสถานะบนหน้าเว็บ
+ * @param {HTMLElement} element - Element ที่ต้องการแสดงข้อความ
+ * @param {string} msg - ข้อความที่จะแสดง
+ * @param {'info'|'success'|'error'} type - ประเภทของข้อความสำหรับกำหนด class
+ */
 function showMessage(element, msg, type) {
     element.textContent = msg;
     element.className = `message ${type}`;
     element.classList.remove('hidden');
 }
 
+/**
+ * ซ่อนข้อความสถานะ
+ * @param {HTMLElement} element - Element ที่ต้องการซ่อน
+ */
 function hideMessage(element) {
     element.classList.add('hidden');
     element.textContent = '';
 }
 
+/**
+ * แสดง/ซ่อน Loading Spinner
+ * @param {boolean} show - true เพื่อแสดง, false เพื่อซ่อน
+ */
+function showLoadingSpinner(show) {
+    if (show) {
+        loadingSpinner.classList.remove('hidden');
+    } else {
+        loadingSpinner.classList.add('hidden');
+    }
+}
+
+// --- ฟังก์ชันดึงข้อมูลและอัปเดต UI หลัก ---
+
+/**
+ * ดึงข้อมูลงานวิจัยจาก Google Sheet ผ่าน Apps Script
+ */
 async function loadResearchDataFromGoogleSheet() {
     showMessage(statusMessageDiv, 'กำลังดึงข้อมูลจาก Google Sheet...', 'info');
-    try {
-        const response = await fetch(`${GOOGLE_APPS_SCRIPT_URL}?sheet=${PENDING_RESEARCH_SHEET_NAME}`);
-        const data = await response.json();
+    showLoadingSpinner(true);
 
+    try {
+        // แก้ไข: ลบ ?sheet=${PENDING_RESEARCH_SHEET_NAME} ออก เพราะ Apps Script ไม่ได้ใช้ parameter นี้ใน doGet
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+        
+        // ตรวจสอบว่า HTTP response สำเร็จหรือไม่ (status 200-299)
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP Error! Status: ${response.status}, Message: ${errorText.substring(0, 200)}...`);
+        }
+
+        const data = await response.json(); // แปลง response เป็น JSON
+
+        // ล้างข้อมูลเก่าและรีเซ็ต UI
         researches = [];
         researchGrid.innerHTML = '';
         researchDisplayCounter = 0;
-        noDataMessage.classList.add('hidden');
+        noDataMessage.classList.add('hidden'); // ซ่อนข้อความไม่มีข้อมูลไว้ก่อน
 
         if (data.status === 'success' && Array.isArray(data.data)) {
             if (data.data.length === 0) {
                 showMessage(statusMessageDiv, 'ไม่พบข้อมูลงานวิจัยที่รอดำเนินการ', 'info');
-                noDataMessage.classList.remove('hidden');
+                noDataMessage.classList.remove('hidden'); // แสดงข้อความไม่มีข้อมูล
             } else {
                 data.data.forEach(item => {
+                    // ตรวจสอบว่ามี Id ก่อนเพิ่ม เพื่อป้องกันข้อมูลที่ไม่สมบูรณ์
                     if (item.Id) {
                         addResearchToGrid(item);
+                    } else {
+                        console.warn('Skipping research item due to missing ID:', item);
                     }
                 });
                 showMessage(statusMessageDiv, 'โหลดข้อมูลสำเร็จ!', 'success');
             }
         } else {
-            showMessage(statusMessageDiv, 'รูปแบบข้อมูลไม่ถูกต้องจาก Google Sheet', 'error');
+            // กรณี Apps Script ส่ง status: 'error' หรือรูปแบบข้อมูลไม่ถูกต้อง
+            console.error('Data format error from Google Apps Script:', data);
+            showMessage(statusMessageDiv, `รูปแบบข้อมูลไม่ถูกต้องจาก Google Apps Script: ${data.message || 'ไม่ทราบสาเหตุ'}`, 'error');
         }
     } catch (error) {
+        // ดักจับข้อผิดพลาดระดับเครือข่าย หรือปัญหาในการแปลง JSON
         console.error('Error loading data:', error);
-        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการโหลดข้อมูล', 'error');
+        showMessage(statusMessageDiv, `เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}`, 'error');
     } finally {
-        updateStatistics();
-        setTimeout(() => hideMessage(statusMessageDiv), 3000);
+        updateStatistics(); // อัปเดตสถิติเสมอไม่ว่าจะเกิดอะไรขึ้น
+        showLoadingSpinner(false); // ซ่อน spinner เสมอ
+        setTimeout(() => hideMessage(statusMessageDiv), 3000); // ซ่อนข้อความสถานะหลังจาก 3 วินาที
     }
 }
+
+/**
+ * ส่งออกข้อมูลที่ได้รับการอนุมัติและมีค่า 'pass'
+ */
 async function exportResults() {
-    // แสดงข้อความว่ากำลังดำเนินการ
     showMessage(statusMessageDiv, 'กำลังส่งออกข้อมูลที่ได้รับอนุมัติ...', 'info');
+    showLoadingSpinner(true);
 
     try {
-        // ส่งคำขอ POST ไปยัง Google Apps Script
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                action: 'exportApprovedWithPass' // ระบุ action ที่ต้องการให้ Apps Script ทำ
+                action: 'exportApprovedWithPass'
             })
         });
 
-        // ตรวจสอบสถานะ HTTP Response ก่อนอ่าน JSON
-        // ถ้าสถานะไม่ใช่ 2xx (เช่น 404, 500) ให้ถือเป็นข้อผิดพลาด
         if (!response.ok) {
-            const errorText = await response.text(); // พยายามอ่านข้อความ Error จาก Response
+            const errorText = await response.text();
             console.error('HTTP Error during export:', response.status, errorText);
             showMessage(statusMessageDiv, `เกิดข้อผิดพลาด HTTP: ${response.status} - ${errorText.substring(0, 100)}...`, 'error');
-            return; // หยุดการทำงานทันที
+            return;
         }
 
-        // อ่าน JSON response จาก Google Apps Script
         const result = await response.json();
 
-        // ตรวจสอบว่า Apps Script ส่งผลลัพธ์สำเร็จและมีข้อมูลหรือไม่
         if (result.status === 'success' && Array.isArray(result.data)) {
             const approvedData = result.data;
 
             if (approvedData.length === 0) {
                 showMessage(statusMessageDiv, 'ไม่พบบันทึกที่ผ่านการอนุมัติพร้อม pass', 'info');
             } else {
-                console.log('Exported Data:', approvedData); // แสดงข้อมูลที่ได้รับใน console
-                // **จุดที่คุณอาจต้องการเพิ่มโค้ด:**
-                // ถ้าคุณต้องการให้ดาวน์โหลดเป็นไฟล์ CSV/JSON จริงๆ
-                // คุณจะต้องใช้โค้ด JavaScript เพื่อสร้างและทริกเกอร์การดาวน์โหลดที่นี่
-                // เช่น: createDownloadableFile(approvedData, 'approved_research.csv');
+                console.log('Exported Data:', approvedData);
+                // *** ส่วนนี้คือจุดที่คุณจะเพิ่มโค้ดสำหรับการดาวน์โหลดไฟล์จริง ๆ ***
+                // เช่น การสร้าง CSV หรือ JSON Blob และทริกเกอร์การดาวน์โหลด
+                // ตัวอย่าง (ถ้าต้องการสร้าง CSV):
+                // const csv = convertArrayOfObjectsToCSV(approvedData);
+                // downloadFile(csv, 'approved_research.csv', 'text/csv');
+                // หรือถ้าเป็น JSON:
+                // downloadFile(JSON.stringify(approvedData, null, 2), 'approved_research.json', 'application/json');
 
                 showMessage(statusMessageDiv, `ส่งออกสำเร็จทั้งหมด ${approvedData.length} รายการ`, 'success');
             }
         } else {
-            // กรณีที่ Apps Script ส่ง status: 'error' หรือรูปแบบข้อมูลไม่ถูกต้อง
             console.error('Export failed from Google Apps Script:', result);
             showMessage(statusMessageDiv, `การส่งออกล้มเหลว: ${result.message || 'ไม่ทราบสาเหตุ'}`, 'error');
         }
     } catch (error) {
-        // ดักจับข้อผิดพลาดระดับเครือข่าย หรือปัญหาในการแปลง JSON
         console.error("Error during export (network or JSON parsing):", error);
-        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการเชื่อมต่อหรือประมวลผลข้อมูล (โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต)', 'error');
+        showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการเชื่อมต่อหรือประมวลผลข้อมูล', 'error');
     } finally {
-        // ซ่อนข้อความสถานะหลังจากหน่วงเวลา
+        showLoadingSpinner(false);
         setTimeout(() => hideMessage(statusMessageDiv), 4000);
     }
 }
 
- function updateStatistics() {
+/**
+ * ฟังก์ชันช่วยในการแปลง Array of Objects เป็น CSV (ตัวอย่าง)
+ * คุณอาจต้องปรับแต่งให้เข้ากับโครงสร้างข้อมูลของคุณ
+ */
+function convertArrayOfObjectsToCSV(data) {
+    if (data.length === 0) return '';
+
+    const headers = Object.keys(data[0]);
+    const csvRows = [];
+
+    // Add headers
+    csvRows.push(headers.join(','));
+
+    // Add rows
+    for (const row of data) {
+        const values = headers.map(header => {
+            const val = row[header];
+            // จัดการค่าที่มี comma หรือ quote
+            const stringVal = (val === null || val === undefined) ? '' : String(val);
+            if (stringVal.includes(',') || stringVal.includes('"')) {
+                return `"${stringVal.replace(/"/g, '""')}"`;
+            }
+            return stringVal;
+        });
+        csvRows.push(values.join(','));
+    }
+
+    return csvRows.join('\n');
+}
+
+/**
+ * ฟังก์ชันช่วยในการดาวน์โหลดไฟล์ (ตัวอย่าง)
+ */
+function downloadFile(content, filename, contentType) {
+    const blob = new Blob([content], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
+/**
+ * อัปเดตสถิติการนับงานวิจัยในแต่ละสถานะ
+ */
+function updateStatistics() {
     const total = researches.length;
-    const pending = researches.filter(r => r.Status === 'Pending' || !r.Status).length;
+    // นับ Pending รวมถึงรายการที่ Status เป็นค่าว่างด้วย
+    const pending = researches.filter(r => r.Status === 'Pending' || r.Status === '').length; 
     const approved = researches.filter(r => r.Status === 'Approved').length;
     const rejected = researches.filter(r => r.Status === 'Rejected').length;
 
@@ -126,21 +226,29 @@ async function exportResults() {
     approvedCountSpan.textContent = approved;
     rejectedCountSpan.textContent = rejected;
 
-    // ตรวจสอบว่ามีข้อมูลหรือไม่ เพื่อแสดง/ซ่อน noDataMessage
-    if (total === 0 && researchGrid.children.length === 0) { // ตรวจสอบว่า grid ว่างจริง ๆ
+    // แสดง/ซ่อนข้อความ "ไม่พบข้อมูล"
+    if (total === 0) {
         noDataMessage.classList.remove('hidden');
     } else {
         noDataMessage.classList.add('hidden');
     }
 }
 
-
+/**
+ * อัปเดตสถานะของงานวิจัยใน Google Sheet และ UI
+ * @param {string} id - ID ของงานวิจัย
+ * @param {string} newStatus - สถานะใหม่ ('Approved', 'Pending', 'Rejected')
+ */
 async function updateResearchStatus(id, newStatus) {
     const cardElement = document.getElementById(`card-${id}`);
     if (!cardElement) return;
 
     showMessage(statusMessageDiv, `กำลังอัปเดตสถานะ ID: ${id} เป็น ${newStatus}...`, 'info');
-    showLoadingSpinner(true); // เพิ่มฟังก์ชันนี้เพื่อแสดง spinner
+    showLoadingSpinner(true);
+
+    // เก็บสถานะเดิมไว้เผื่อกรณีเกิดข้อผิดพลาด
+    const currentResearch = researches.find(r => String(r.Id) === String(id));
+    const oldStatus = currentResearch ? currentResearch.Status : null;
 
     try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
@@ -158,7 +266,12 @@ async function updateResearchStatus(id, newStatus) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('HTTP Error updating status:', response.status, errorText);
-            showMessage(statusMessageDiv, `ข้อผิดพลาด HTTP ในการอัปเดตสถานะ: ${response.status}`, 'error');
+            showMessage(statusMessageDiv, `ข้อผิดพลาด HTTP ในการอัปเดตสถานะ: ${response.status} - ${errorText.substring(0, 100)}...`, 'error');
+            // ถ้าเกิดข้อผิดพลาด HTTP ให้คืนค่า radio button เดิม
+            if (oldStatus) {
+                const radio = cardElement.querySelector(`input[name="status-${id}"][value="${oldStatus}"]`);
+                if (radio) radio.checked = true;
+            }
             return;
         }
 
@@ -169,6 +282,10 @@ async function updateResearchStatus(id, newStatus) {
             const researchIndex = researches.findIndex(r => String(r.Id) === String(id));
             if (researchIndex !== -1) {
                 researches[researchIndex].Status = newStatus;
+                // หากมีการส่งค่า 'passe' กลับมา (เช่น 'pass') ให้อัปเดตด้วย (ไม่จำเป็นต้องมีใน Front-end แต่ถ้า Apps Script ส่งมาก็รับไว้)
+                if (result.passeStatus) { 
+                    researches[researchIndex].passe = result.passeStatus;
+                }
             }
 
             // อัปเดต UI ของการ์ด
@@ -184,32 +301,33 @@ async function updateResearchStatus(id, newStatus) {
             }
             showMessage(statusMessageDiv, result.message, 'success');
         } else {
-            console.error('Failed to update status:', result.message);
+            console.error('Failed to update status from Apps Script:', result.message);
             showMessage(statusMessageDiv, `อัปเดตสถานะล้มเหลว: ${result.message}`, 'error');
             // คืนค่า radio button เดิมถ้าอัปเดตไม่สำเร็จ
-            const currentResearch = researches.find(r => String(r.Id) === String(id));
-            if (currentResearch) {
-                const radio = cardElement.querySelector(`input[name="status-${id}"][value="${currentResearch.Status}"]`);
+            if (oldStatus) {
+                const radio = cardElement.querySelector(`input[name="status-${id}"][value="${oldStatus}"]`);
                 if (radio) radio.checked = true;
             }
         }
     } catch (error) {
-        console.error('Error updating status:', error);
+        console.error('Error updating status (network or JSON parsing):', error);
         showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการเชื่อมต่อเพื่ออัปเดตสถานะ', 'error');
         // คืนค่า radio button เดิมถ้าอัปเดตไม่สำเร็จ
-        const currentResearch = researches.find(r => String(r.Id) === String(id));
-        if (currentResearch) {
-            const radio = cardElement.querySelector(`input[name="status-${id}"][value="${currentResearch.Status}"]`);
+        if (oldStatus) {
+            const radio = cardElement.querySelector(`input[name="status-${id}"][value="${oldStatus}"]`);
             if (radio) radio.checked = true;
         }
     } finally {
         updateStatistics(); // อัปเดตสถิติหลังจากเปลี่ยนสถานะ
+        showLoadingSpinner(false);
         setTimeout(() => hideMessage(statusMessageDiv), 3000);
-        showLoadingSpinner(false); // ซ่อน spinner
     }
 }
 
-
+/**
+ * ลบงานวิจัยออกจาก Google Sheet และ UI
+ * @param {string} id - ID ของงานวิจัยที่ต้องการลบ
+ */
 async function deleteResearch(id) {
     if (!confirm(`คุณแน่ใจหรือไม่ที่ต้องการลบงานวิจัย ID: ${id} นี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้`)) {
         return;
@@ -233,7 +351,7 @@ async function deleteResearch(id) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('HTTP Error deleting research:', response.status, errorText);
-            showMessage(statusMessageDiv, `ข้อผิดพลาด HTTP ในการลบ: ${response.status}`, 'error');
+            showMessage(statusMessageDiv, `ข้อผิดพลาด HTTP ในการลบ: ${response.status} - ${errorText.substring(0, 100)}...`, 'error');
             return;
         }
 
@@ -249,46 +367,40 @@ async function deleteResearch(id) {
             researches = researches.filter(r => String(r.Id) !== String(id));
             showMessage(statusMessageDiv, result.message, 'success');
         } else {
-            console.error('Failed to delete research:', result.message);
+            console.error('Failed to delete research from Apps Script:', result.message);
             showMessage(statusMessageDiv, `ลบงานวิจัยล้มเหลว: ${result.message}`, 'error');
         }
     } catch (error) {
-        console.error('Error deleting research:', error);
+        console.error('Error deleting research (network or JSON parsing):', error);
         showMessage(statusMessageDiv, 'เกิดข้อผิดพลาดในการเชื่อมต่อเพื่อลบงานวิจัย', 'error');
     } finally {
         updateStatistics(); // อัปเดตสถิติหลังจากลบ
-        setTimeout(() => hideMessage(statusMessageDiv), 3000);
         showLoadingSpinner(false);
+        setTimeout(() => hideMessage(statusMessageDiv), 3000);
     }
 }
 
-
-const loadingSpinner = document.getElementById('loading-spinner');
-
-function showLoadingSpinner(show) {
-    if (show) {
-        loadingSpinner.classList.remove('hidden');
-    } else {
-        loadingSpinner.classList.add('hidden');
-    }
-}
-
-// ... (โค้ดที่เหลือของคุณ) ...
-
+/**
+ * ล้างการแสดงผลงานวิจัยทั้งหมดบนหน้าเว็บ (ไม่ได้ลบข้อมูลใน Sheet)
+ */
 function clearAllDisplayedResearch() {
-    researchGrid.innerHTML = ''; // ล้าง HTML ใน grid
-    researches = []; // ล้างข้อมูลใน array
-    researchDisplayCounter = 0; // รีเซ็ต counter
-    updateStatistics(); // อัปเดตสถิติ (จะเป็น 0 ทั้งหมด)
+    researchGrid.innerHTML = '';
+    researches = [];
+    researchDisplayCounter = 0;
+    updateStatistics();
     showMessage(statusMessageDiv, 'ล้างข้อมูลที่แสดงทั้งหมดแล้ว (ข้อมูลใน Sheet ยังคงอยู่)', 'info');
     setTimeout(() => hideMessage(statusMessageDiv), 3000);
 }
 
-
-
+/**
+ * เพิ่มงานวิจัยลงใน Grid แสดงผล
+ * @param {Object} researchData - ข้อมูลงานวิจัย
+ */
 function addResearchToGrid(researchData) {
-    if (!researchData.Id || document.getElementById(`card-${researchData.Id}`)) return;
-    if (researches.some(r => r.Id === researchData.Id)) return;
+    // ป้องกันการเพิ่มซ้ำซ้อน
+    if (!researchData.Id || researches.some(r => String(r.Id) === String(researchData.Id))) {
+        return;
+    }
 
     researches.push(researchData);
     researchDisplayCounter++;
@@ -296,24 +408,34 @@ function addResearchToGrid(researchData) {
     researchGrid.appendChild(card);
 }
 
+/**
+ * สร้าง HTML Card สำหรับงานวิจัยแต่ละรายการ
+ * @param {Object} researchData - ข้อมูลงานวิจัย
+ * @param {number} displayId - ลำดับการแสดงผลในการ์ด
+ * @returns {HTMLElement} - Element ของ Card งานวิจัย
+ */
 function createResearchCard(researchData, displayId) {
     const card = document.createElement('div');
     card.className = 'research-card bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200';
     card.id = `card-${researchData.Id}`;
 
+    // กำหนดสถานะ checked สำหรับ radio button
     let approvedChecked = researchData.Status === 'Approved' ? 'checked' : '';
     let pendingChecked = (researchData.Status === 'Pending' || !researchData.Status) ? 'checked' : '';
     let rejectedChecked = researchData.Status === 'Rejected' ? 'checked' : '';
     
+    // เพิ่ม class ตามสถานะ
     if (researchData.Status === 'Approved') card.classList.add('status-approved');
     else if (researchData.Status === 'Pending' || !researchData.Status) card.classList.add('status-pending');
     else if (researchData.Status === 'Rejected') card.classList.add('status-rejected');
 
+    // จัดการ Image URL (รับได้ทั้ง ImageUrl และ Image URL)
     let imageUrl = (researchData.ImageUrl || researchData['Image URL'] || '').trim();
     if (!imageUrl) {
-        imageUrl = 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image';
+        imageUrl = 'https://placehold.co/400x300/F3F4F6/9CA3AF?text=No+Image'; // รูปภาพสำรอง
     }
 
+    // จัดการ Research File URLs (แปลงจาก JSON String หรือ Array)
     let researchFileLinksHtml = '';
     if (researchData['Research File URLs']) {
         try {
@@ -322,7 +444,7 @@ function createResearchCard(researchData, displayId) {
                 try {
                     fileUrls = JSON.parse(fileUrls);
                 } catch (e) {
-                    fileUrls = [fileUrls];
+                    fileUrls = [fileUrls]; // ถ้าไม่ใช่ JSON string ก็ถือว่าเป็น URL เดี่ยวๆ
                 }
             }
             if (Array.isArray(fileUrls) && fileUrls.length > 0) {
@@ -389,8 +511,13 @@ function createResearchCard(researchData, displayId) {
     return card;
 }
 
-
-// เรียกตอนโหลด
+// --- Event Listener เมื่อ DOM โหลดเสร็จสิ้น ---
 window.addEventListener('DOMContentLoaded', () => {
     loadResearchDataFromGoogleSheet();
+    // คุณอาจต้องผูก Event Listener สำหรับปุ่ม Export และ Clear All ที่นี่ด้วย
+    // ตัวอย่าง:
+    // const exportButton = document.getElementById('exportButton');
+    // if (exportButton) exportButton.addEventListener('click', exportResults);
+    // const clearButton = document.getElementById('clearAllButton');
+    // if (clearButton) clearButton.addEventListener('click', clearAllDisplayedResearch);
 });
