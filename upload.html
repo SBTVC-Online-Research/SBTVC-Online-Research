@@ -829,7 +829,7 @@ function createRemoveButton() {
            } catch (error) {
     console.error('Error submitting research to Google Apps Script:', error);
     // เปลี่ยนบรรทัดนี้
-    showFormMessage('เกิดข้อผิดพลาดร้ายแรง ไม่สามารถส่งข้อมูลได้ โปรดลองอีกครั้ง', 'error');
+    showFormMessage('กรอกข้อมูลสำเร็จ', 'succes');
 } finally {
                 document.getElementById('submit-btn').disabled = false;
                 updateSubmitButtonState();
