@@ -712,7 +712,7 @@ function createRemoveButton() {
             const advisor = document.getElementById('advisor') ? document.getElementById('advisor').value.trim() : '';
             const abstract = document.getElementById('abstract') ? document.getElementById('abstract').value.trim() : '';
 
-            if (!title || !category || !department || !field || !year || !academicYear || !advisor || !abstract) {
+            if (!title || !category || !department || !year || !academicYear || !advisor || !abstract) {
                 showFormMessage('กรุณากรอกข้อมูลให้ครบถ้วนทุกช่องที่มีเครื่องหมาย *', 'error');
                 updateSubmitButtonState();
                 return;
