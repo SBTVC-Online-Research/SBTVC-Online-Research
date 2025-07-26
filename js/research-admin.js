@@ -2,8 +2,9 @@ let researches = [];
 let researchDisplayCounter = 0;
 
 // ตรวจสอบให้แน่ใจว่า URL นี้ถูกต้องและเป็นเวอร์ชันที่ Deploy ล่าสุด (ลงท้ายด้วย /exec)
+// URL นี้ควรตรงกับ URL ที่ได้จากการ Deploy Google Apps Script ใหม่
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
-const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // ชื่อชีทใน Google Sheet
+const PENDING_RESEARCH_SHEET_NAME = 'UploadedImagesData'; // ชื่อชีทใน Google Sheet (ใช้ใน Apps Script)
 
 // อ้างอิงถึง Element ต่างๆ ใน HTML
 const statusMessageDiv = document.getElementById('status-message');
@@ -14,6 +15,11 @@ const pendingCountSpan = document.getElementById('pendingCount');
 const approvedCountSpan = document.getElementById('approvedCount');
 const rejectedCountSpan = document.getElementById('rejectedCount');
 const loadingSpinner = document.getElementById('loading-spinner'); // ต้องมี element นี้ใน HTML
+
+// อ้างอิงปุ่มต่างๆ (ต้องมีใน HTML)
+const exportButton = document.getElementById('exportButton');
+const clearAllButton = document.getElementById('clearAllButton');
+const refreshButton = document.getElementById('refreshButton'); // หากมีปุ่มรีเฟรช
 
 // --- ฟังก์ชันช่วยเหลือสำหรับการแสดงผล UI ---
 
@@ -43,10 +49,12 @@ function hideMessage(element) {
  * @param {boolean} show - true เพื่อแสดง, false เพื่อซ่อน
  */
 function showLoadingSpinner(show) {
-    if (show) {
-        loadingSpinner.classList.remove('hidden');
-    } else {
-        loadingSpinner.classList.add('hidden');
+    if (loadingSpinner) { // ตรวจสอบว่า element มีอยู่จริง
+        if (show) {
+            loadingSpinner.classList.remove('hidden');
+        } else {
+            loadingSpinner.classList.add('hidden');
+        }
     }
 }
 
@@ -60,7 +68,7 @@ async function loadResearchDataFromGoogleSheet() {
     showLoadingSpinner(true);
 
     try {
-        // แก้ไข: ลบ ?sheet=${PENDING_RESEARCH_SHEET_NAME} ออก เพราะ Apps Script ไม่ได้ใช้ parameter นี้ใน doGet
+        // ไม่จำเป็นต้องระบุ ?sheet=${PENDING_RESEARCH_SHEET_NAME} ใน doGet ของ Apps Script นี้
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
         
         // ตรวจสอบว่า HTTP response สำเร็จหรือไม่ (status 200-299)
@@ -142,14 +150,9 @@ async function exportResults() {
                 showMessage(statusMessageDiv, 'ไม่พบบันทึกที่ผ่านการอนุมัติพร้อม pass', 'info');
             } else {
                 console.log('Exported Data:', approvedData);
-                // *** ส่วนนี้คือจุดที่คุณจะเพิ่มโค้ดสำหรับการดาวน์โหลดไฟล์จริง ๆ ***
-                // เช่น การสร้าง CSV หรือ JSON Blob และทริกเกอร์การดาวน์โหลด
-                // ตัวอย่าง (ถ้าต้องการสร้าง CSV):
-                // const csv = convertArrayOfObjectsToCSV(approvedData);
-                // downloadFile(csv, 'approved_research.csv', 'text/csv');
-                // หรือถ้าเป็น JSON:
-                // downloadFile(JSON.stringify(approvedData, null, 2), 'approved_research.json', 'application/json');
-
+                // สร้าง CSV และดาวน์โหลด
+                const csv = convertArrayOfObjectsToCSV(approvedData);
+                downloadFile(csv, 'approved_research.csv', 'text/csv');
                 showMessage(statusMessageDiv, `ส่งออกสำเร็จทั้งหมด ${approvedData.length} รายการ`, 'success');
             }
         } else {
@@ -166,25 +169,43 @@ async function exportResults() {
 }
 
 /**
- * ฟังก์ชันช่วยในการแปลง Array of Objects เป็น CSV (ตัวอย่าง)
- * คุณอาจต้องปรับแต่งให้เข้ากับโครงสร้างข้อมูลของคุณ
+ * ฟังก์ชันช่วยในการแปลง Array of Objects เป็น CSV
+ * จะใช้ Headers จาก Object แรกเป็นชื่อคอลัมน์
  */
 function convertArrayOfObjectsToCSV(data) {
     if (data.length === 0) return '';
 
-    const headers = Object.keys(data[0]);
+    // ตรวจสอบให้แน่ใจว่า headers ตรงกับ HEADER_PENDING_SHEET ใน Apps Script
+    // เพื่อให้ลำดับและชื่อคอลัมน์ถูกต้อง
+    const headers = [
+      'Timestamp', 'Username', 'Image URL', 'Status', 'Id', 'Title', 'Category',
+      'Department', 'Field', 'Year', 'Academic Year', 'Authors', 'Advisor',
+      'Abstract', 'Research File URLs', 'passe'
+    ];
+    
     const csvRows = [];
 
     // Add headers
-    csvRows.push(headers.join(','));
+    csvRows.push(headers.map(header => {
+        // จัดการ header ที่มี comma หรือ quote
+        const stringVal = String(header);
+        if (stringVal.includes(',') || stringVal.includes('"')) {
+            return `"${stringVal.replace(/"/g, '""')}"`;
+        }
+        return stringVal;
+    }).join(','));
 
     // Add rows
     for (const row of data) {
         const values = headers.map(header => {
-            const val = row[header];
-            // จัดการค่าที่มี comma หรือ quote
+            let val = row[header];
+            // จัดการ Research File URLs ที่อาจเป็น Array ของ URL
+            if (header === 'Research File URLs' && Array.isArray(val)) {
+                val = JSON.stringify(val); // แปลงกลับเป็น JSON string เพื่อเก็บใน CSV
+            }
             const stringVal = (val === null || val === undefined) ? '' : String(val);
-            if (stringVal.includes(',') || stringVal.includes('"')) {
+            if (stringVal.includes(',') || stringVal.includes('"') || stringVal.includes('\n') || stringVal.includes('\r')) {
+                // Escape quotes and wrap in double quotes
                 return `"${stringVal.replace(/"/g, '""')}"`;
             }
             return stringVal;
@@ -196,7 +217,10 @@ function convertArrayOfObjectsToCSV(data) {
 }
 
 /**
- * ฟังก์ชันช่วยในการดาวน์โหลดไฟล์ (ตัวอย่าง)
+ * ฟังก์ชันช่วยในการดาวน์โหลดไฟล์
+ * @param {string} content - เนื้อหาของไฟล์
+ * @param {string} filename - ชื่อไฟล์
+ * @param {string} contentType - ชนิดของ Content (เช่น 'text/csv', 'application/json')
  */
 function downloadFile(content, filename, contentType) {
     const blob = new Blob([content], { type: contentType });
@@ -210,14 +234,13 @@ function downloadFile(content, filename, contentType) {
     URL.revokeObjectURL(url);
 }
 
-
 /**
  * อัปเดตสถิติการนับงานวิจัยในแต่ละสถานะ
  */
 function updateStatistics() {
     const total = researches.length;
     // นับ Pending รวมถึงรายการที่ Status เป็นค่าว่างด้วย
-    const pending = researches.filter(r => r.Status === 'Pending' || r.Status === '').length; 
+    const pending = researches.filter(r => r.Status === 'Pending' || r.Status === '').length;
     const approved = researches.filter(r => r.Status === 'Approved').length;
     const rejected = researches.filter(r => r.Status === 'Rejected').length;
 
@@ -283,7 +306,7 @@ async function updateResearchStatus(id, newStatus) {
             if (researchIndex !== -1) {
                 researches[researchIndex].Status = newStatus;
                 // หากมีการส่งค่า 'passe' กลับมา (เช่น 'pass') ให้อัปเดตด้วย (ไม่จำเป็นต้องมีใน Front-end แต่ถ้า Apps Script ส่งมาก็รับไว้)
-                if (result.passeStatus) { 
+                if (result.passeStatus) {
                     researches[researchIndex].passe = result.passeStatus;
                 }
             }
@@ -514,10 +537,15 @@ function createResearchCard(researchData, displayId) {
 // --- Event Listener เมื่อ DOM โหลดเสร็จสิ้น ---
 window.addEventListener('DOMContentLoaded', () => {
     loadResearchDataFromGoogleSheet();
-    // คุณอาจต้องผูก Event Listener สำหรับปุ่ม Export และ Clear All ที่นี่ด้วย
-    // ตัวอย่าง:
-    // const exportButton = document.getElementById('exportButton');
-    // if (exportButton) exportButton.addEventListener('click', exportResults);
-    // const clearButton = document.getElementById('clearAllButton');
-    // if (clearButton) clearButton.addEventListener('click', clearAllDisplayedResearch);
+
+    // ผูก Event Listener สำหรับปุ่มต่างๆ
+    if (exportButton) {
+        exportButton.addEventListener('click', exportResults);
+    }
+    if (clearAllButton) {
+        clearAllButton.addEventListener('click', clearAllDisplayedResearch);
+    }
+    if (refreshButton) { // หากมีปุ่มรีเฟรช
+        refreshButton.addEventListener('click', loadResearchDataFromGoogleSheet);
+    }
 });
