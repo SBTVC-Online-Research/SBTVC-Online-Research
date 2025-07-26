@@ -104,10 +104,8 @@
             <option value="marketing">ไฟฟ้ากำลัง</option>
             <option value="electronics">อิเล็กทรอนิกส์</option>
             <option value="mechanics">เครื่องมือกล</option>
-            <option value="mechanics">เครื่องกล</option>
-            <option value="mechanics">เทคนิคพื้นฐาน</option>
-            <option value="mechanics">สามัญสัมพันธ์</option>
-            <option value="mechanics">ช่างอุสาหกรรมฐานวิทย์ศาสตร์</option>
+         
+         
                     </select>
                 </div>
             
@@ -291,6 +289,14 @@
         return addButton;
     }
 
+    // วางฟังก์ชันนี้ใกล้ๆ กับ function createAddButton()
+function createRemoveButton() {
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition';
+    removeButton.textContent = '－';
+    return removeButton;
+}
     
 
     // --- Form Validation and Submission Logic ---
