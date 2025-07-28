@@ -164,7 +164,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center mb-6">
                 <div class="mb-4 md:mb-0">
                     <h2 class="text-2xl font-bold text-gray-800">ผลการค้นหา</h2>
-                    <p class="text-gray-600">พบ 2 รายการ</p>
+                    <p class="text-gray-600">พบ 1 รายการ</p>
                 </div>
                 
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -176,61 +176,36 @@
             <!-- Grid View (Default) -->
             <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Research Card 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
-                    <div class="h-48 bg-orange-light flex items-center justify-center relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center research-card-overlay">
-                            <button onclick="window.location.href='../ex(1).html'" class="px-4 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition mr-2">ดูรายละเอียด</button>
-                            <button class="px-4 py-2 bg-white text-orange-primary rounded-md hover:bg-gray-100 transition">ดาวน์โหลด</button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between mb-2">
-                            <span class="px-3 py-1 bg-orange-light text-orange-primary text-sm rounded-full">สำรวจ</span>
-                            <span class="text-gray-500 text-sm">2566</span>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">การพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษา</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">การวิจัยนี้มุ่งศึกษาวิธีการพัฒนาทักษะการคิดวิเคราะห์ของนักเรียนระดับมัธยมศึกษาผ่านกิจกรรมการเรียนรู้แบบ Active Learning</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold">ส</div>
-                                <span class="ml-2 text-gray-700">ดร.สมชาย ใจดี</span>
-                            </div>
-                            <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">ระดับชาติ</span>
-                        </div>
-                    </div>
-                </div>
+                <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+       data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
+       data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
+       data-category="สำรวจ"
+       data-year="2568"
+       data-level="ระดับวิลัย">
+    <a href="../OnlineMMM.html">
+      <div class="h-40 overflow-hidden">
+        <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752544289/e28f254b-24e5-431b-8ab5-f3d3e092cef3.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+      </div>
+    </a>
+    <div class="p-6">
+      <div class="flex justify-between mb-2">
+        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">สำรวจ</span>
+        <span class="text-gray-500 text-sm">2567</span>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h3>
+      <p class="text-gray-600 mb-4">การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์</p>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ส</div>
+          <span class="ml-2 text-gray-700">นายธนวิชญ์ จันทร์โชติ</span>
+        </div>
+     
+      </div>
+    </div>
+  </div>
                 
                 <!-- Research Card 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition research-card">
-                    <div class="h-48 bg-orange-light flex items-center justify-center relative">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-orange-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                        </svg>
-                        <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 transition-opacity duration-300 flex items-center justify-center research-card-overlay">
-                            <button onclick="openModal('researchDetailModal')" class="px-4 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition mr-2">ดูรายละเอียด</button>
-                            <button class="px-4 py-2 bg-white text-orange-primary rounded-md hover:bg-gray-100 transition">ดาวน์โหลด</button>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between mb-2">
-                            <span class="px-3 py-1 bg-orange-light text-orange-primary text-sm rounded-full">สำรวจ</span>
-                            <span class="text-gray-500 text-sm">2565</span>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">การศึกษาคุณสมบัติของสารสกัดจากพืชสมุนไพรไทย</h3>
-                        <p class="text-gray-600 mb-4 line-clamp-2">งานวิจัยนี้ศึกษาคุณสมบัติต้านอนุมูลอิสระและฤทธิ์ต้านจุลชีพของสารสกัดจากพืชสมุนไพรไทย 5 ชนิด เพื่อประยุกต์ใช้ในผลิตภัณฑ์เวชสำอาง</p>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 bg-orange-primary rounded-full flex items-center justify-center text-white font-bold">ว</div>
-                                <span class="ml-2 text-gray-700">ดร.วิภา สมุนไพร</span>
-                            </div>
-                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">ระดับนานาชาติ</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+               
             
             <!-- List View (Hidden by default) -->
             <div id="listView" class="hidden">
