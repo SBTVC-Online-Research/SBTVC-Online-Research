@@ -118,7 +118,7 @@
     </section>
 
     <!-- Search and Filter Section -->
-  <section class="py-8 bg-white shadow-md">
+    <section class="py-8 bg-white shadow-md">
         <div class="container mx-auto px-4">
             <div class="bg-white rounded-lg p-6">
                 <h3 class="text-xl font-semibold mb-4 text-gray-800">ค้นหางานวิจัย</h3>
@@ -128,30 +128,34 @@
                     </div>
                     <div class="md:w-1/5">
                         <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">ระดับกาารศึกษา</option>
-                    <option value="ปวช.1">ปวช.1</option>
-                    <option value="ปวช.2">ปวช.2</option>
-                    <option value="ปวช.3">ปวช.3</option>
-                    <option value="ปวส.1">ปวส.1</option>
-                           <option value="ปวส.2">ปวส.2</option> 
+                            <option value="">หมวดหมู่ทั้งหมด</option>
+                            <option value="education">การศึกษา</option>
+                            <option value="science">วิทยาศาสตร์</option>
+                            <option value="technology">เทคโนโลยี</option>
+                            <option value="agriculture">เกษตรกรรม</option>
+                            <option value="medicine">การแพทย์</option>
+                            <option value="social">สังคมศาสตร์</option>
                         </select>
                     </div>
                     <div class="md:w-1/5">
-                        <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกปีการศึกษา</option>
-            <option>2567</option><option>2566</option><option>2565</option><option>2564</option><option>2563</option><option>2562</option><option>2561</option><option>2560</option><option>2559</option><option>2558</option><option>2557</option><option>2556</option><option>2555</option><option>2554</option><option>2553</option><option>2552</option><option>2551</option><option>2550</option><option>2549</option><option>2548</option><option>2547</option><option>2546</option><option>2545</option><option>2544</option><option>2543</option><option>2542</option><option>2541</option>
-          </select>
-                    </div>
-                       <div class="md:w-1/5">
                         <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">แผนกวิชา</option>
-                            <option value="เทคโนโลยีคอมพิวเตอร์">เทคโนโลยีคอมพิวเตอร์</option>
-                            <option value="เมคคาทรอนิค">เมคคาทรอนิค</option>
-                            <option value="ไฟฟ้ากำลัง">ไฟฟ้ากำลัง</option>
-                            <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
+                            <option value="">ปีงานวิจัย</option>
+                            <option value="2023">2566</option>
+                            <option value="2022">2565</option>
+                            <option value="2021">2564</option>
+                            <option value="2020">2563</option>
+                            <option value="2019">2562</option>
                         </select>
                     </div>
-                   
+                    <div class="md:w-1/5">
+                        <select class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+                            <option value="">ระดับผลงาน</option>
+                            <option value="national">ระดับชาติ</option>
+                            <option value="international">ระดับนานาชาติ</option>
+                            <option value="regional">ระดับภูมิภาค</option>
+                            <option value="local">ระดับท้องถิ่น</option>
+                        </select>
+                    </div>
                     <button class="px-6 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ค้นหา</button>
                 </div>
                 
@@ -164,9 +168,7 @@
                 <div class="mb-4 md:mb-0">
                     <h2 class="text-2xl font-bold text-gray-800">ผลการค้นหา</h2>
                     <p class="text-gray-600">พบ 1 รายการ</p>
-                </div>
-                  
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                </div>                   
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
@@ -182,7 +184,7 @@
        data-category="สำรวจ"
        data-year="2568"
        data-level="ระดับวิลัย">
-    <a href="../OnlineKKK.html">
+    <a href="../Category/OnlineKKK.html">
       <div class="h-40 overflow-hidden">
         <img src="https://res.cloudinary.com/dksxdgzcv/image/upload/v1753714483/ka2s1fpmclv3mgdw8ute.png" />
       </div>
@@ -317,10 +319,11 @@
     </section>
 
     <!-- Popular Categories -->
-   
+    
+                
 
     <!-- Footer -->
-   </a>
+    </a>
             </div>
         </section>
     </main>
@@ -359,6 +362,33 @@
 
 </body>
 </html>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Custom Glow Effect -->
+  <style>
+    .glow-hover:hover {
+      color: #1DB954; /* สีเขียว Spotify */
+      text-shadow: 0 0 8px #1DB954, 0 0 16px #1DB954;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-white">
+
+  <a href="choose.html" class="text-gray-800 text-1xl glow-hover transition duration-300">
+    <i class="fab fa-spotify"></i>
+  </a>
+
+</body>
+</html>
+               
+            </div>
+        </div>
+    </footer>
 
     <!-- Research Detail Modal -->
     <div id="researchDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden modal">
