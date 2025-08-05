@@ -285,7 +285,7 @@
                     <option value="ประดิษฐ์">ประดิษฐ์</option>
                 </select>
 <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" disabled selected>เลือกปีการศึกษา</option>
+            <option value="" enable selected>เลือกปีการศึกษา</option>
              <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
           </select>
                 <select id="levelSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
@@ -468,7 +468,45 @@
     </div>
 </div>
 
-  
+
+<script>
+  document.getElementById("searchButton").addEventListener("click", function () {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categorySelect").value;
+    const year = document.getElementById("academic-year").value;
+    const level = document.getElementById("levelSelect").value;
+
+    const cards = document.querySelectorAll("#featuredResearchContainer .research-card");
+    let found = false;
+
+    cards.forEach((card) => {
+      const title = card.getAttribute("data-title")?.toLowerCase() || "";
+      const description = card.getAttribute("data-description")?.toLowerCase() || "";
+      const cardCategory = card.getAttribute("data-category") || "";
+      const cardYear = card.getAttribute("data-year") || "";
+      const cardLevel = card.getAttribute("data-level") || "";
+
+      const matchesSearch =
+        searchInput === "" ||
+        title.includes(searchInput) ||
+        description.includes(searchInput);
+
+      const matchesCategory = category === "" || cardCategory === category;
+      const matchesYear = year === "" || cardYear === year;
+      const matchesLevel = level === "" || cardLevel === level;
+
+      const isMatch = matchesSearch && matchesCategory && matchesYear && matchesLevel;
+
+      card.style.display = isMatch ? "block" : "none";
+
+      if (isMatch) found = true;
+    });
+
+    const noResultMessage = document.getElementById("noFeaturedResearchMessage");
+    noResultMessage.classList.toggle("hidden", found); // ซ่อนหรือแสดงข้อความ "ไม่มีข้อมูล"
+  });
+</script>
+
 
     <script>
    // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
