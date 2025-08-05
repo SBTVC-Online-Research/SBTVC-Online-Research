@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์ส่วนตัว</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #ffffff 0%, #d4b07c 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 20px 40px rgba(255, 120, 73, 0.2);
+        }
+        .skill-bar {
+            background: linear-gradient(90deg, #ff7849, #ff9500);
+        }
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(255, 120, 73, 0.3);
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Main Profile Card -->
+        <div class="max-w-4xl mx-auto bg-white rounded-3xl card-shadow overflow-hidden">
+            <!-- Header Section -->
+            <div class="relative bg-gradient-to-r from-orange-400 to-orange-500 px-8 py-12">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <!-- Profile Image -->
+                    <div class="relative">
+                        <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center text-6xl shadow-lg">
+                            👨‍💻
+                        </div>
+                        <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-green-400 rounded-full border-4 border-white"></div>
+                    </div>
+                    
+                    <!-- Profile Info -->
+                    <div class="text-center md:text-left text-white">
+                        <h1 class="text-4xl font-bold mb-2">นายพัชราพงศ์ พนธ์พันธกุล</h1>
+                        <p class="text-xl opacity-90 mb-4">67219910009</p>
+                        <p class="text-xl opacity-90 mb-4">ปวช.2</p>
+                        <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Section -->
+            <div class="p-8">
+
+
+                <!-- Uploaded Works Section -->
+                <div>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                        <span class="text-orange-500">✅</span> ผลงานที่อัปโหลดแล้ว
+                    </h2>
+                                    <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+       data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
+       data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
+       data-category="สำรวจ"
+       data-year="2568"
+       data-level="ระดับวิลัย">
+    <a href="../Online/OnlineAAA.html">
+      <div class="h-40 overflow-hidden">
+        <img src="https://res.cloudinary.com/dksxdgzcv/image/upload/v1753709289/k1c6sxb7dhkw4nwa8gge.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+      </div>
+    </a>
+    <div class="p-6">
+      <div class="flex justify-between mb-2">
+        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">ทดลอง</span>
+        <span class="text-gray-500 text-sm">2568</span>
+      </div>
+      <h3 class="text-lg font-semibold mb-2">การสร้างหนังสือเสริมประสบการณ์การอ่านเรื่องสั้นวิชาภาษาอังกฤษ</h3>
+      <p class="text-gray-600 mb-4">การศึกษางานวิจัยในครั้งนี้ สำเร็จได้ด้วยความกรุณาจากครูกุหลาบ สอาด อาจารย์ที่ปรึกษา ที่ได้ให้ความช่วยเหลื</p>
+      <div class="flex justify-between items-center">
+        <div class="flex items-center">
+          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ส</div>
+          <span class="ml-2 text-gray-700">ครูวาสนา  กวางติ๊ด</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+                       
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scrolling and interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on load
+            const progressBars = document.querySelectorAll('.skill-bar');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.transition = 'width 2s ease-in-out';
+                    bar.style.width = width;
+                }, 500);
+            });
+
+            // Add click effects to research papers
+            const researchPapers = document.querySelectorAll('.hover-lift');
+            researchPapers.forEach(paper => {
+                paper.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+
+
+
+
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a442cf220a8945',t:'MTc1NDM3NTU4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
