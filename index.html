@@ -194,10 +194,9 @@
                     <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
                 </a>
             </div>
-            <div id="auth-buttons" class="flex items-center space-x-3">
-                <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
-                <button onclick="openModal('registerModal')" class="px-4 py-2 bg-orange-primary text-white rounded-md hover:bg-orange-secondary transition">สมัครสมาชิก</button>
-                <button class="md:hidden text-gray-700" id="menuButton">
+          <div id="auth-buttons" class="flex items-center space-x-3">
+    <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
+    <button class="md:hidden text-gray-700" id="menuButton">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -206,7 +205,7 @@
             <div id="user-profile" class="hidden items-center space-x-3">
                 <div class="dropdown">
                     <button class="flex items-center space-x-2 px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">
-                        <span id="username-display">ชื่อผู้ใช้</span>
+                        <span id="studentid-display">เลขประจำตัวนักศึกษา</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
@@ -253,7 +252,7 @@
                 <i class="fas fa-upload mr-1  text-black-800 "></i> อัปโหลดงานวิจัย
             </a>
             <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
-                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-username-display">ชื่อผู้ใช้</span></p>
+                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-studentid-display">ชื่อผู้ใช้</span></p>
                 <a href="profile.html" class="block py-2 text-gray-700 hover:text-orange-primary">
                     <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
                 </a>
@@ -439,462 +438,193 @@
         </div>
     </footer>
 
-    <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
-        <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
-            <form id="loginForm">
-                <div class="mb-4">
-                    <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
-                    <input type="email" id="loginEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-6">
-                    <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">รหัสผ่าน:</label>
-                    <input type="password" id="loginPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">เข้าสู่ระบบ</button>
-                </div>
-                <p class="text-center text-gray-600 text-sm mt-4">
-                    ยังไม่มีบัญชี? 
-                    <button type="button" onclick="closeModal('loginModal'); openModal('registerModal');" class="text-orange-primary hover:underline font-bold">สมัครสมาชิก</button>
-                </p>
-            </form>
-            <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-        </div>
+   <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
+    <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
+        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
+        <form id="loginForm">
+            <div class="mb-4">
+                <label for="studentId" class="block text-gray-700 text-sm font-bold mb-2">เลขประจำตัวนักศึกษา:</label>
+                <input type="text" id="studentId" name="studentId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="flex items-center justify-between">
+                <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">เข้าสู่ระบบ</button>
+            </div>
+        </form>
+        <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
     </div>
+</div>
 
-    <div id="registerModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
-        <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
-            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">สมัครสมาชิก</h2>
-            <form id="registerForm">
-                <div class="mb-4">
-                    <label for="regUsername" class="block text-gray-700 text-sm font-bold mb-2">ชื่อผู้ใช้:</label>
-                    <input type="text" id="regUsername" name="username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-4">
-                    <label for="regFullname" class="block text-gray-700 text-sm font-bold mb-2">ชื่อ-นามสกุล:</label>
-                    <input type="text" id="regFullname" name="fullname" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-4">
-                    <label for="regEmail" class="block text-gray-700 text-sm font-bold mb-2">อีเมล:</label>
-                    <input type="email" id="regEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-4">
-                    <label for="regPassword" class="block text-gray-700 text-sm font-bold mb-2">รหัสผ่าน:</label>
-                    <input type="password" id="regPassword" name="password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="mb-6">
-                    <label for="regConfirmPassword" class="block text-gray-700 text-sm font-bold mb-2">ยืนยันรหัสผ่าน:</label>
-                    <input type="password" id="regConfirmPassword" name="confirmPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" required>
-                </div>
-                <div class="flex items-center justify-between">
-                    <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">สมัครสมาชิก</button>
-                </div>
-                <p class="text-center text-gray-600 text-sm mt-4">
-                    มีบัญชีอยู่แล้ว? 
-                    <button type="button" onclick="closeModal('registerModal'); openModal('loginModal');" class="text-orange-primary hover:underline font-bold">เข้าสู่ระบบ</button>
-                </p>
-            </form>
-            <button onclick="closeModal('registerModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-        </div>
-    </div>
+  
 
     <script>
-        // *** START - Common JavaScript (previously common.js) ***
+   // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-        // *** IMPORTANT: Replace with your deployed Google Apps Script Web App URL ***
-            const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec'; 
-        // Example: https://script.google.com/macros/s/AKfyc.../exec
+// Toast Notification
+function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    toast.className = 'toast show ' + type;
+    toast.textContent = message;
+    setTimeout(() => {
+        toast.className = toast.className.replace('show', '');
+    }, 3000);
+}
 
-        // Function to show Toast Notifications
-        function showToast(message, type = 'info') {
-            const toast = document.getElementById('toast');
-            toast.className = 'toast show ' + type;
-            toast.textContent = message;
-            setTimeout(() => {
-                toast.className = toast.className.replace('show', '');
-            }, 3000); // 3 seconds
-        }
+// Modal Functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('opacity-100'), 10);
+    }
+}
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('opacity-100');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+}
 
-        // Modal Functions
-        function openModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('hidden');
-                setTimeout(() => modal.classList.add('opacity-100'), 10); // Add transition effect
-            }
-        }
+// Handle Login Form Submission
+async function handleLogin(event) {
+    event.preventDefault();
+    const form = event.target;
+    const studentId = form.studentId.value.trim();
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.classList.remove('opacity-100');
-                setTimeout(() => modal.classList.add('hidden'), 300); // Hide after transition
-            }
-        }
+    if (studentId === "") {
+        showToast('กรุณากรอกเลขประจำตัวนักศึกษา', 'error');
+        return;
+    }
 
-        // Handle Login Form Submission
-        async function handleLogin(event) {
-            event.preventDefault();
-            const form = event.target;
-            const email = form.loginEmail.value;
-            const password = form.loginPassword.value;
-
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'login',
-                        email: email,
-                        password: password
-                    }).toString()
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    localStorage.setItem('loggedInUser', JSON.stringify(result.user));
-                    closeModal('loginModal');
-                    checkLoginStatus(); // Update UI after login
-                    // Optionally redirect or refresh page
-                    // window.location.reload(); 
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                showToast('An error occurred during login. Please try again.', 'error');
-            }
-        }
-
-        // Handle Register Form Submission
-        async function handleRegister(event) {
-            event.preventDefault();
-            const form = event.target;
-            const username = form.regUsername.value;
-            const fullname = form.regFullname.value;
-            const email = form.regEmail.value;
-            const password = form.regPassword.value;
-            const confirmPassword = form.regConfirmPassword.value;
-
-            if (password !== confirmPassword) {
-                showToast('Passwords do not match!', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'register',
-                        username: username,
-                        fullname: fullname,
-                        email: email,
-                        password: password
-                    }).toString()
-                });
-                const result = await response.json();
-
-                if (result.success) {
-                    showToast(result.message, 'success');
-                    closeModal('registerModal');
-                    openModal('loginModal'); // Open login modal after successful registration
-                } else {
-                    showToast(result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Registration error:', error);
-                showToast('An error occurred during registration. Please try again.', 'error');
-            }
-        }
-
-        // Check Login Status and Update UI
-        function checkLoginStatus() {
-            const userProfileSection = document.getElementById('user-profile');
-            const authButtonsSection = document.getElementById('auth-buttons');
-            const usernameDisplay = document.getElementById('username-display');
-            const fullnameDisplay = document.getElementById('fullname-display');
-            const emailDisplay = document.getElementById('email-display');
-            const mobileUsernameDisplay = document.getElementById('mobile-username-display');
-            const mobileUserMenu = document.getElementById('mobile-user-menu');
-            const uploadLinkDesktop = document.getElementById('upload-link-desktop');
-            const uploadLinkMobile = document.getElementById('upload-link-mobile');
-
-            const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
-            if (user && userProfileSection && authButtonsSection) {
-                userProfileSection.classList.remove('hidden');
-                userProfileSection.classList.add('flex'); // Ensure it's a flex container
-                authButtonsSection.classList.add('hidden');
-
-                if (usernameDisplay) usernameDisplay.textContent = user.username || 'ผู้ใช้';
-                if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
-                if (emailDisplay) emailDisplay.textContent = user.email || 'ไม่ระบุอีเมล';
-                if (mobileUsernameDisplay) mobileUsernameDisplay.textContent = user.username || 'ผู้ใช้';
-                if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
-
-                // Show upload links if logged in
-                if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
-                if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
-
-                return user; // Return user object if logged in
-            } else if (userProfileSection && authButtonsSection) {
-                userProfileSection.classList.add('hidden');
-                userProfileSection.classList.remove('flex');
-                authButtonsSection.classList.remove('hidden');
-
-                // Hide upload links if not logged in
-                if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
-                if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
-
-                return null; // Return null if not logged in
-            }
-            return null; // Default return
-        }
-
-        // Logout Function
-        function logout() {
-            localStorage.removeItem('loggedInUser');
-            showToast('Logged out successfully!', 'info');
-            checkLoginStatus(); // Update UI after logout
-            // Hide mobile menu if open
-            const mobileMenu = document.getElementById('mobileMenu');
-            if (mobileMenu) mobileMenu.classList.add('hidden');
-            window.location.reload(); // Reload to clear any user-specific data
-        }
-
-        // Attach event listeners for auth forms
-        function attachAuthFormListeners() {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleLogin);
-            }
-            if (registerForm) {
-                registerForm.addEventListener('submit', handleRegister);
-            }
-
-            // Mobile menu toggle
-            const menuButton = document.getElementById('menuButton');
-            const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
-            const mobileMenu = document.getElementById('mobileMenu');
-
-            if (menuButton) {
-                menuButton.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-            if (menuButtonLoggedIn) {
-                menuButtonLoggedIn.addEventListener('click', () => {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function(event) {
-                const dropdowns = document.querySelectorAll('.dropdown');
-                dropdowns.forEach(dropdown => {
-                    if (!dropdown.contains(event.target)) {
-                        dropdown.classList.remove('active');
-                    }
-                });
-            });
-
-            // Toggle dropdown active class when dropdown button is clicked
-            const dropdownButtons = document.querySelectorAll('.dropdown > button');
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', function(event) {
-                    event.stopPropagation(); // Prevent immediate closing from document click
-                    this.closest('.dropdown').classList.toggle('active');
-                });
-            });
-
-            // Close modal when clicking outside (on the overlay)
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                modal.addEventListener('click', (event) => {
-                    if (event.target === modal) {
-                        closeModal(modal.id);
-                    }
-                });
-            });
-        }
-
-        // *** END - Common JavaScript ***
-
-        // *** START - Page-specific JavaScript (previously in index.html) ***
-
-        let allResearches = []; // Stores all research data loaded from Google Sheet
-        const researchCardsContainer = document.getElementById('researchCards');
-        const searchInput = document.getElementById('searchInput');
-        const categorySelect = document.getElementById('categorySelect');
-        const yearSelect = document.getElementById('yearSelect');
-        const levelSelect = document.getElementById('levelSelect');
-        const searchButton = document.getElementById('searchButton');
-        const noResearchMessage = document.getElementById('noResearchMessage');
-        const loadingMessage = document.getElementById('loadingMessage');
-        const featuredResearchContainer = document.getElementById('featuredResearchContainer');
-        const noFeaturedResearchMessage = document.getElementById('noFeaturedResearchMessage');
-
-        // Function to create HTML for a single research card
-        function createResearchCardHtml(research) {
-            const defaultImageUrl = 'https://via.placeholder.com/400x300?text=No+Image+Available';
-            const imageUrl = research.ImageUrl && research.ImageUrl !== '' ? research.ImageUrl : defaultImageUrl;
-
-            return `
-                <div class="research-card bg-white rounded-lg shadow-md overflow-hidden flex flex-col">
-                    <a href="research-detail.html?id=${research.Id || research.ID}" class="block">
-                        <div class="image-container">
-                            <img src="${imageUrl}" alt="${research.Title}" class="w-full h-full object-cover">
-                        </div>
-                    </a>
-                    <div class="research-card-content flex flex-col justify-between flex-grow">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">${research.Title}</h3>
-                            <p class="text-sm text-gray-600 mb-1"><span class="font-medium">หมวดหมู่:</span> ${research.Category}</p>
-                            <p class="text-sm text-gray-600 mb-1"><span class="font-medium">ปี:</span> ${research.Year}</p>
-                            <p class="text-sm text-gray-600 mb-4"><span class="font-medium">ผู้แต่ง:</span> ${research.Authors}</p>
-                        </div>
-                        <div class="flex-grow-1">
-                            <a href="research-detail.html?id=${research.Id || research.ID}" class="block w-full text-center bg-orange-primary text-white py-2 rounded-md hover:bg-orange-secondary transition">
-                                ดูรายละเอียด
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Function to create HTML for the featured research card (can be similar or slightly different style)
-        function createFeaturedResearchCardHtml(research) {
-            // Using the same card style for consistency, but you can customize if needed
-            return createResearchCardHtml(research);
-        }
-
-        // Function to populate the year dropdown dynamically
-        function populateYears() {
-            const years = new Set();
-            allResearches.forEach(research => {
-                if (research.Year) {
-                    years.add(String(research.Year));
-                }
-            });
-            const sortedYears = Array.from(years).sort((a, b) => parseInt(b) - parseInt(a)); // Sort descending
-
-            yearSelect.innerHTML = '<option value="">-- เลือกปี --</option>';
-            sortedYears.forEach(year => {
-                const option = document.createElement('option');
-                option.value = year;
-                option.textContent = year;
-                yearSelect.appendChild(option);
-            });
-        }
-
-        // Function to filter and display research cards
-        function filterResearches() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const selectedCategory = categorySelect.value;
-            const selectedYear = yearSelect.value;
-            const selectedLevel = levelSelect.value;
-
-            const filtered = allResearches.filter(research => {
-                const matchesSearch = searchTerm === '' ||
-                                      (research.Title && research.Title.toLowerCase().includes(searchTerm)) ||
-                                      (research.Authors && research.Authors.toLowerCase().includes(searchTerm)) ||
-                                      (research.Abstract && research.Abstract.toLowerCase().includes(searchTerm));
-                const matchesCategory = selectedCategory === '' || (research.Category && research.Category === selectedCategory);
-                const matchesYear = selectedYear === '' || (research.Year && String(research.Year) === selectedYear);
-                const matchesLevel = selectedLevel === '' || (research.Level && research.Level === selectedLevel);
-                
-                return matchesSearch && matchesCategory && matchesYear && matchesLevel;
-            });
-
-            researchCardsContainer.innerHTML = '';
-            if (filtered.length > 0) {
-                filtered.forEach(research => {
-                    researchCardsContainer.innerHTML += createResearchCardHtml(research);
-                });
-                noResearchMessage.classList.add('hidden');
-            } else {
-                noResearchMessage.classList.remove('hidden');
-            }
-        }
-
-        // Fetch research data from Google Apps Script
-        async function loadApprovedResearch() {
-            loadingMessage.classList.remove('hidden');
-            researchCardsContainer.innerHTML = ''; // Clear existing cards
-            noResearchMessage.classList.add('hidden'); // Hide "no research" message initially
-
-            try {
-                // GOOGLE_APPS_SCRIPT_URL is defined in the common JavaScript section above
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST', // Use POST as per our combined Apps Script
-                    mode: 'cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({
-                        action: 'getApprovedResearch' // Specific action for getting approved data
-                    }).toString()
-                });
-                const result = await response.json();
-
-                if (result.success && result.data) {
-                    allResearches = result.data;
-                    populateYears(); // Populate years after loading all data
-
-                    // Display all researches
-                    filterResearches(); // Call filter to display initially (with empty filters)
-
-                    // Display featured researches (e.g., first 3, or randomly selected)
-                    featuredResearchContainer.innerHTML = '';
-                    const featured = allResearches.slice(0, 3); // Example: show first 3
-                    if (featured.length > 0) {
-                        featured.forEach(research => {
-                            featuredResearchContainer.innerHTML += createFeaturedResearchCardHtml(research);
-                        });
-                        noFeaturedResearchMessage.classList.add('hidden');
-                    } else {
-                        noFeaturedResearchMessage.classList.remove('hidden');
-                    }
-
-                    if (allResearches.length === 0) {
-                        noResearchMessage.classList.remove('hidden');
-                    }
-
-                } else {
-                    showToast(result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้', 'error');
-                    noResearchMessage.classList.remove('hidden');
-                    noResearchMessage.textContent = result.message || 'ไม่สามารถโหลดข้อมูลงานวิจัยได้';
-                }
-            } catch (error) {
-                console.error('Error fetching research data:', error);
-                showToast('เกิดข้อผิดพลาดในการโหลดงานวิจัย', 'error');
-                noResearchMessage.classList.remove('hidden');
-                noResearchMessage.textContent = 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์';
-            } finally {
-                loadingMessage.classList.add('hidden');
-            }
-        }
-
-        // Event listeners for search and filter
-        searchButton.addEventListener('click', filterResearches);
-        searchInput.addEventListener('input', filterResearches); // Filter as user types
-        categorySelect.addEventListener('change', filterResearches);
-        yearSelect.addEventListener('change', filterResearches);
-        levelSelect.addEventListener('change', filterResearches);
-
-        // Initial load on DOMContentLoaded
-        document.addEventListener('DOMContentLoaded', () => {
-            checkLoginStatus(); // Call checkLoginStatus
-            attachAuthFormListeners(); // Call function to attach event listeners to auth forms and mobile menu
-            loadApprovedResearch(); // Load research data
+    try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'loginByStudentId',
+                studentId: studentId
+            }).toString()
         });
+        const result = await response.json();
 
+        if (result.success) {
+            showToast(result.message, 'success');
+            localStorage.setItem('loggedInUser', JSON.stringify(result.user));
+            closeModal('loginModal');
+            checkLoginStatus();
+        } else {
+            showToast(result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showToast('เกิดข้อผิดพลาดขณะเข้าสู่ระบบ', 'error');
+    }
+}
+
+// Update UI based on login status
+function checkLoginStatus() {
+    const userProfileSection = document.getElementById('user-profile');
+    const authButtonsSection = document.getElementById('auth-buttons');
+    const studentidDisplay = document.getElementById('studentid-display'); // ใช้ id เดิมสำหรับ studentId
+    const fullnameDisplay = document.getElementById('fullname-display');
+    const mobileUserMenu = document.getElementById('mobile-user-menu');
+    const uploadLinkDesktop = document.getElementById('upload-link-desktop');
+    const uploadLinkMobile = document.getElementById('upload-link-mobile');
+
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    if (user && userProfileSection && authButtonsSection) {
+        userProfileSection.classList.remove('hidden');
+        userProfileSection.classList.add('flex');
+        authButtonsSection.classList.add('hidden');
+
+        if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
+        if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
+        if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
+        if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
+        if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
+        return user;
+    } else if (userProfileSection && authButtonsSection) {
+        userProfileSection.classList.add('hidden');
+        userProfileSection.classList.remove('flex');
+        authButtonsSection.classList.remove('hidden');
+        if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
+        if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
+        if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
+        return null;
+    }
+    return null;
+}
+
+// Logout Function
+function logout() {
+    localStorage.removeItem('loggedInUser');
+    showToast('ออกจากระบบสำเร็จ', 'info');
+    checkLoginStatus();
+    const mobileMenu = document.getElementById('mobileMenu');
+    if (mobileMenu) mobileMenu.classList.add('hidden');
+    window.location.reload();
+}
+
+// Attach event listeners for auth forms and menu
+function attachAuthFormListeners() {
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+
+    const menuButton = document.getElementById('menuButton');
+    const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (menuButton) {
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+    if (menuButtonLoggedIn) {
+        menuButtonLoggedIn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('active');
+            }
+        });
+    });
+
+    // Toggle dropdown active class when dropdown button is clicked
+    const dropdownButtons = document.querySelectorAll('.dropdown > button');
+    dropdownButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();
+            this.closest('.dropdown').classList.toggle('active');
+        });
+    });
+
+    // Close modal when clicking outside (on the overlay)
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
+}
+
+// Initial load
+document.addEventListener('DOMContentLoaded', () => {
+    checkLoginStatus();
+    attachAuthFormListeners();
+});
         // *** END - Page-specific JavaScript ***
     </script>
 </body>
