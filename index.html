@@ -255,6 +255,19 @@
             <a href="upload.html" id="upload-link-mobile" class="hidden block py-2 text-gray-700 hover:text-orange-primary">
                 <i class="fas fa-upload mr-1  text-black-800 "></i> อัปโหลดงานวิจัย
             </a>
+            <!-- ฟอร์มกรอกรหัสนักศึกษา -->
+<div id="loginDiv">
+  <input type="text" id="studentIdInput" placeholder="กรอกรหัสนักศึกษา" required>
+  <button onclick="checkStudentId()">เข้าสู่ระบบ</button>
+</div>
+            <div id="menuDiv" style="display:none;">
+  <form id="myForm">
+    <input type="text" name="id" placeholder="รหัส" required>
+    <input type="text" name="name" placeholder="ชื่อ" required>
+    <button type="submit">ส่งข้อมูล</button>
+  </form>
+  <div id="message"></div>
+</div>
             <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
                 <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-studentid-display">ชื่อผู้ใช้</span></p>
                 <a href="profile.html" class="block py-2 text-gray-700 hover:text-orange-primary">
@@ -625,6 +638,34 @@ function attachAuthFormListeners() {
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
     attachAuthFormListeners();
+
+    function checkStudentId() {
+  const inputId = document.getElementById('studentIdInput').value;
+  if (inputId === '676721219') {
+    document.getElementById('loginDiv').style.display = 'none';
+    document.getElementById('menuDiv').style.display = 'block';
+  } else {
+    alert('คุณไม่มีสิทธิ์เข้าถึงเมนูนี้');
+  }
+}
+
+document.getElementById('myForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  var id = this.id.value;
+  var name = this.name.value;
+  fetch('YOUR_SCRIPT_URL', {
+    method: 'POST',
+    body: JSON.stringify({id: id, name: name}),
+    headers: {'Content-Type': 'application/json'}
+  })
+  .then(response => response.text())
+  .then(data => {
+    document.getElementById('message').innerText = "ส่งข้อมูลเรียบร้อยแล้ว!";
+    this.reset();
+  })
+  .catch(error => {
+    document.getElementById('message').innerText = "เกิดข้อผิดพลาด!";
+  });
 });
         // *** END - Page-specific JavaScript ***
     </script>
