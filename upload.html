@@ -288,21 +288,20 @@
         addButton.textContent = '＋';
         return addButton;
     }
-
-    // วางฟังก์ชันนี้ใกล้ๆ กับ function createAddButton()
-function createRemoveButton() {
-    const removeButton = document.createElement('button');
-    removeButton.type = 'button';
-    removeButton.className = 'remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition';
-    removeButton.textContent = '－';
-    return removeButton;
-}
+    
+    function createRemoveButton() {
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'remove-author bg-red-500 text-white px-3 py-2 rounded-lg hover:bg-red-600 transition';
+        removeButton.textContent = '－';
+        return removeButton;
+    }
     
 
     // --- Form Validation and Submission Logic ---
     function updateSubmitButtonState() {
         const submitBtn = document.getElementById('submit-btn');
-        if (!submitBtn) return; // Safeguard if button not found
+        if (!submitBtn) return; 
 
         const isImageUploaded = uploadedImageUrlInput && uploadedImageUrlInput.value !== '';
         const areFilesUploaded = uploadedResearchFilesUrlInput && JSON.parse(uploadedResearchFilesUrlInput.value || '[]').length > 0;
@@ -314,7 +313,7 @@ function createRemoveButton() {
         const titleFilled = document.getElementById('title') && document.getElementById('title').value.trim() !== '';
         const categorySelected = selectedCategoryInput && selectedCategoryInput.value.trim() !== '';
         const departmentSelected = document.getElementById('department') && document.getElementById('department').value.trim() !== '';
-      
+        
         const yearFilled = document.getElementById('year') && document.getElementById('year').value.trim() !== '';
         const academicYearFilled = document.getElementById('academic-year') && document.getElementById('academic-year').value.trim() !== '';
         const advisorFilled = document.getElementById('advisor') && document.getElementById('advisor').value.trim() !== '';
@@ -383,9 +382,8 @@ function createRemoveButton() {
         // --- Category Selection Logic ---
         categoryItems.forEach(item => {
             item.addEventListener('click', () => {
-                categoryItems.forEach(i => i.classList.remove('selected'));
-                item.classList.add('selected');
-                selectedCategoryInput.value = item.dataset.category;
+                // เรียกใช้ฟังก์ชัน selectCategory ที่คุณกำหนดเอง
+                selectCategory(item);
                 hideFormMessage();
                 updateSubmitButtonState();
             });
@@ -452,7 +450,7 @@ function createRemoveButton() {
                 return;
             }
 
-            if (file.size > 100 * 1024 * 1024) { // 5MB limit
+            if (file.size > 100 * 1024 * 1024) { // 100MB limit
                 showImageUploadMessage('ขนาดรูปภาพต้องไม่เกิน 100MB', 'error');
                 coverImageInputFile.value = '';
                 coverImagePreviewContainer.classList.add('hidden');
@@ -472,7 +470,7 @@ function createRemoveButton() {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('upload_preset', CLOUDINARY_IMAGE_UPLOAD_PRESET);
-            formData.append('resource_type', 'image'); // สำคัญ: ระบุ resource_type เป็น 'image'
+            formData.append('resource_type', 'image'); 
 
             try {
                 const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -554,7 +552,7 @@ function createRemoveButton() {
                     updateSubmitButtonState();
                     return;
                 }
-                if (file.size > 100 * 1024 * 1024) { // 10MB limit
+                if (file.size > 100 * 1024 * 1024) { // 100MB limit
                     showFileUploadMessage(`ไฟล์ "${file.name}" มีขนาดเกิน 100MB กรุณาเลือกไฟล์ใหม่`, 'error');
                     researchFileInput.value = '';
                     researchFileListDiv.innerHTML = '';
@@ -578,7 +576,7 @@ function createRemoveButton() {
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', CLOUDINARY_FILE_UPLOAD_PRESET);
-                formData.append('resource_type', 'raw'); // Treat as raw file for non-image types (PDF/DOCX)
+                formData.append('resource_type', 'raw'); 
 
                 try {
                     const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
@@ -777,7 +775,7 @@ function createRemoveButton() {
             formData.append('title', title);
             formData.append('category', category);
             formData.append('department', department);
-           
+            
             formData.append('field', field);
             formData.append('year', year);
             formData.append('academicYear', academicYear);
@@ -826,11 +824,11 @@ function createRemoveButton() {
                 } else {
                     showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
                 }
-           } catch (error) {
-    console.error('Error submitting research to Google Apps Script:', error);
-    // เปลี่ยนบรรทัดนี้
-    showFormMessage('กรอกข้อมูลสำเร็จ', 'succes');
-} finally {
+            } catch (error) {
+                console.error('Error submitting research to Google Apps Script:', error);
+                // แก้ไขบรรทัดนี้ให้แสดงข้อความผิดพลาดที่ถูกต้อง
+                showFormMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
+            } finally {
                 document.getElementById('submit-btn').disabled = false;
                 updateSubmitButtonState();
                 setTimeout(() => {
@@ -861,49 +859,47 @@ function createRemoveButton() {
         updateSubmitButtonState();
     });
 
-   function selectCategory(selectedEl) {
-    const categoryItems = document.querySelectorAll('.category-item');
-    const hiddenInput = document.getElementById('selected-category');
+    // แก้ไขฟังก์ชัน selectCategory เพื่อป้องกันข้อผิดพลาดเมื่อไม่มีคลาสสี
+    function selectCategory(selectedEl) {
+        const categoryItems = document.querySelectorAll('.category-item');
+        const hiddenInput = document.getElementById('selected-category');
 
-    // คลาสสีที่อาจมีให้ลบออกก่อน เพื่อไม่ให้ทับกัน
-    const allColorClasses = [
-      'bg-green-200', 'border-green-500', 'text-green-700',
-      'bg-red-200', 'border-red-500', 'text-red-700',
-      'bg-orange-200', 'border-orange-500', 'text-orange-700',
-      'bg-yellow-200', 'border-yellow-500', 'text-yellow-700'
-    ];
+        const allColorClasses = [
+            'bg-green-200', 'border-green-500', 'text-green-700',
+            'bg-red-200', 'border-red-500', 'text-red-700',
+            'bg-orange-200', 'border-orange-500', 'text-orange-700',
+            'bg-yellow-200', 'border-yellow-500', 'text-yellow-700'
+        ];
 
-    // ลบคลาสสีเก่าจากทุกหมวดหมู่
-    categoryItems.forEach(item => {
-      allColorClasses.forEach(cls => item.classList.remove(cls));
-    });
+        categoryItems.forEach(item => {
+            allColorClasses.forEach(cls => item.classList.remove(cls));
+        });
 
-    // เลือกสีตามหมวดหมู่
-    const category = selectedEl.getAttribute('data-category');
-    let colorClasses = '';
+        const category = selectedEl.getAttribute('data-category');
+        let colorClasses = '';
 
-    switch (category) {
-      case 'สำรวจ':
-        colorClasses = 'bg-green-200 border-green-500 text-green-700';
-        break;
-      case 'ทฤษฎี':
-        colorClasses = 'bg-red-200 border-red-500 text-red-700';
-        break;
-      case 'ทดลอง':
-        colorClasses = 'bg-orange-200 border-orange-500 text-orange-700';
-        break;
-      case 'ประดิษฐ์':
-        colorClasses = 'bg-yellow-200 border-yellow-500 text-yellow-700';
-        break;
+        switch (category) {
+            case 'สำรวจ':
+                colorClasses = 'bg-green-200 border-green-500 text-green-700';
+                break;
+            case 'ทฤษฎี':
+                colorClasses = 'bg-red-200 border-red-500 text-red-700';
+                break;
+            case 'ทดลอง':
+                colorClasses = 'bg-orange-200 border-orange-500 text-orange-700';
+                break;
+            case 'ประดิษฐ์':
+                colorClasses = 'bg-yellow-200 border-yellow-500 text-yellow-700';
+                break;
+        }
+
+        // เพิ่มเงื่อนไข if เพื่อป้องกันการเรียกใช้ add() ด้วยค่าว่างเปล่า
+        if (colorClasses) {
+            selectedEl.classList.add(...colorClasses.split(' '));
+        }
+
+        hiddenInput.value = category;
     }
-
-    // เพิ่มคลาสสีใหม่ให้กับ element ที่ถูกคลิก
-    selectedEl.classList.add(...colorClasses.split(' '));
-
-    // เซ็ตค่า input hidden
-    hiddenInput.value = category;
-  }
-
 </script>
 
 </body>
