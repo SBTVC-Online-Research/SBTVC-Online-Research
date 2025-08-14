@@ -16,19 +16,19 @@
             background-color: #f7f7f7;
         }
         .orange-primary {
-            color: #c73e14; /* สีส้มหลัก */
+            color: #c73e14;
         }
         .bg-orange-primary {
             background-color: #FF5722;
         }
         .hover\:bg-orange-secondary:hover {
-            background-color: #ee400c; /* สีส้มเข้มขึ้นเมื่อ hover */
+            background-color: #ee400c;
         }
         .border-orange-primary {
             border-color: #FF5722;
         }
         .hover\:bg-orange-light:hover {
-            background-color: #997367; /* สีส้มอ่อนเมื่อ hover */
+            background-color: #997367;
         }
         .dropdown {
             position: relative;
@@ -41,16 +41,16 @@
             min-width: 200px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
             z-index: 10;
-            right: 0; /* จัดให้ dropdown ชิดขวา */
-            border-radius: 0.375rem; /* rounded-md */
+            right: 0;
+            border-radius: 0.375rem;
             overflow: hidden;
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-            pointer-events: none; /* ไม่ให้คลิกได้ถ้ายังไม่แสดง */
+            pointer-events: none;
         }
         .dropdown:hover .dropdown-content,
-        .dropdown.active .dropdown-content { /* เพิ่ม .active สำหรับการควบคุมด้วย JS */
+        .dropdown.active .dropdown-content {
             display: block;
             opacity: 1;
             transform: translateY(0);
@@ -107,7 +107,6 @@
             to {bottom: 0; opacity: 0;}
         }
 
-        /* Modal Styles */
         .modal {
             transition: opacity 0.3s ease-out;
         }
@@ -123,11 +122,10 @@
             transform: translateY(0);
         }
         
-        /* Research Card styles for consistent height */
         .research-card {
             display: flex;
             flex-direction: column;
-            height: 100%; /* Ensure all cards in a row have same height */
+            height: 100%;
             transition: transform 0.2s ease-in-out;
         }
         .research-card:hover {
@@ -135,33 +133,32 @@
         }
         .research-card .image-container {
             width: 100%;
-            height: 200px; /* Fixed height for images */
+            height: 200px;
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f0f0f0; /* Placeholder background */
+            background-color: #f0f0f0;
         }
         .research-card .image-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cover the area, may crop */
+            object-fit: cover;
         }
         .research-card-content {
-            flex-grow: 1; /* Allow content area to expand */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; /* Push button to bottom */
+            justify-content: space-between;
             padding: 1rem;
         }
         .research-card-content h3 {
-            min-height: 3rem; /* Ensure title has enough space */
+            min-height: 3rem;
         }
         .research-card-content .flex-grow-1 {
-            flex-grow: 1; /* Ensures buttons align at bottom if needed */
+            flex-grow: 1;
         }
         
-        /* Adjust for smaller screens */
         @media (max-width: 768px) {
             .hero-content h2 {
                 font-size: 2rem;
@@ -170,8 +167,13 @@
                 font-size: 0.9rem;
             }
             .research-card .image-container {
-                height: 150px; /* Smaller image height on mobile */
+                height: 150px;
             }
+        }
+        
+        .glow-hover:hover {
+            color: #000000;
+            text-shadow: 0 0 8px #000000, 0 0 16px #000000;
         }
     </style>
 </head>
@@ -193,13 +195,10 @@
                 <a href="upload.html" id="upload-link-desktop" class="hidden text-gray-700 hover:text-orange-primary font-medium">
                     <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
                 </a>
-
-
-                
             </div>
             <div id="auth-buttons" class="flex items-center space-x-3">
-    <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
-    <button class="md:hidden text-gray-700" id="menuButton">
+                <button onclick="openModal('loginModal')" class="px-4 py-2 border border-orange-primary text-orange-primary rounded-md hover:bg-orange-light transition">เข้าสู่ระบบ</button>
+                <button class="md:hidden text-gray-700" id="menuButton">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
@@ -222,7 +221,6 @@
                         <a href="profile.html" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
                             <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
                         </a>
-                        
                         <button onclick="logout()" class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
                             <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
                         </button>
@@ -236,43 +234,15 @@
             </div>
         </div>
         <div class="w-full bg-white text-center overflow-hidden">
-    <img 
-        src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752736202/LINE_ALBUM_2023.12.18_231223_39_vvlcwd.jpg" 
-        alt="แบนเนอร์เว็บไซต์" 
-        class="w-full h-[300px] object-cover"
-    />
-</div>
-
-
-
-        </div>
-
-        <div id="mobileMenu" class="hidden md:hidden bg-white px-4 py-2 shadow-md">
-            <a href="index.html" class="block py-2 text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
-            <a href="Category/Category.html" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
-            <a href="upload.html" id="upload-link-mobile" class="hidden block py-2 text-gray-700 hover:text-orange-primary">
-                <i class="fas fa-upload mr-1  text-black-800 "></i> อัปโหลดงานวิจัย
-            </a>
-            <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
-                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-studentid-display">ชื่อผู้ใช้</span></p>
-                <a href="profile.html" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
-                </a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
-                </a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-cog mr-2"></i> ตั้งค่า
-                </a>
-                <button onclick="logout()" class="block w-full text-left py-2 text-red-600 hover:text-red-700">
-                    <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
-                </button>
-            </div>
+            <img 
+                src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752736202/LINE_ALBUM_2023.12.18_231223_39_vvlcwd.jpg" 
+                alt="แบนเนอร์เว็บไซต์" 
+                class="w-full h-[300px] object-cover"
+            />
         </div>
     </header>
 
-
-
+    <main class="container mx-auto px-4 py-8">
         <section class="bg-white p-6 rounded-lg shadow-md mb-8">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">ค้นหางานวิจัย</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -284,10 +254,10 @@
                     <option value="ทดลอง">ทดลอง</option>
                     <option value="ประดิษฐ์">ประดิษฐ์</option>
                 </select>
-<select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-            <option value="" enable selected>เลือกปีการศึกษา</option>
-             <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
-          </select>
+                <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                    <option value="" enable selected>เลือกปีการศึกษา</option>
+                    <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
+                </select>
                 <select id="levelSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
                     <option value="">เลือกระดับ</option>
                     <option value="ปวช.1">ปวช.1</option>
@@ -305,88 +275,10 @@
         </section>
 
         <section class="mb-12">
-    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
-    <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
-
-    <!-- START: Research Card -->
-    <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-            data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
-            data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
-            data-category="สำรวจ"
-            data-year="2568"
-            data-level="ระดับวิลัย">
-            <a href="OnlineAAA.html">
-        <div class="h-40 overflow-hidden">
-        <img src="https://res.cloudinary.com/dksxdgzcv/image/upload/v1753709289/k1c6sxb7dhkw4nwa8gge.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-        </div>
-    </a>
-    <div class="p-6">
-        <div class="flex justify-between mb-2">
-            <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">ทดลอง</span>
-            <span class="text-gray-500 text-sm">2546</span>
-        </div>
-        <h3 class="text-lg font-semibold mb-2">การสร้างหนังสือเสริมประสบการณ์การอ่านเรื่องสั้นวิชาภาษาอังกฤษ</h3>
-        <p class="text-gray-600 mb-4">การศึกษางานวิจัยในครั้งนี้ สำเร็จได้ด้วยความกรุณาจากครูกุหลาบ สอาด อาจารย์ที่ปรึกษา ที่ได้ให้ความช่วยเหลื</p>
-        <div class="flex justify-between items-center">
-        <div class="flex items-center">
-            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ว</div>
-            <span class="ml-2 text-gray-700">ครูวาสนา กวางติ๊ด</span>
-        </div>
-        </div>
-    </div>
-    </div>
-    <!-- END: Research Card --> <div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-       data-title="ระบบเว็บไซต์จัดเก็บผลงานวิจัย"
-       data-description="การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์"
-       data-category="สำรวจ"
-       data-year="2568"
-       data-level="ระดับวิลัย">
-    <a href="OnlineMMM.html">
-      <div class="h-40 overflow-hidden">
-        <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752544289/e28f254b-24e5-431b-8ab5-f3d3e092cef3.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-      </div>
-    </a>
-    <div class="p-6">
-      <div class="flex justify-between mb-2">
-        <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">สำรวจ</span>
-        <span class="text-gray-500 text-sm">2568</span>
-      </div>
-      <h3 class="text-lg font-semibold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h3>
-      <p class="text-gray-600 mb-4">การจัดเก็บผลงานวิจัย วิทยาลัยอาชีวะศึกษาเทคโนโลยีฐานวิทยาศาสตร์</p>
-      <div class="flex justify-between items-center">
-        <div class="flex items-center">
-          <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ส</div>
-          <span class="ml-2 text-gray-700">นายธนวิชญ์ จันทร์โชติ</span>
-        </div>     
-      </div>
-    </div>
-  </div>
-<div class="research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition">
-            
-            <a href="Category/OnlineKKK.html">
-        <div class="h-40 overflow-hidden">
-        <img src="https://res.cloudinary.com/dksxdgzcv/image/upload/v1753714483/ka2s1fpmclv3mgdw8ute.png" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-        </div>
-    </a>
-    <div class="p-6">
-        <div class="flex justify-between mb-2">
-            <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">ทฤษฎี</span>
-            <span class="text-gray-500 text-sm">2546</span>
-        </div>
-        <h3 class="text-lg font-semibold mb-2">ส่งเสริมทักษะการอ่านสะกดคำ ของเด็กชายมนู รัตนน้อยนักเรียนชั้น ป.3/3</h3>
-        <p class="text-gray-600 mb-4">การศึกษางานวิจัยในครั้งนี้ สำเร็จได้ด้วยความกรุณาจากครูกุหลาบ สอาด อาจารย์ที่ปรึกษา ที่ได้ให้ความช่วยเหลื</p>
-        <div class="flex justify-between items-center">
-        <div class="flex items-center">
-            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">ว</div>
-            <span class="ml-2 text-gray-700">ครูกาญจนา วนิชรัตน์</span>
-        </div>
-        </div>
-    </div>
-    </div>
-    </div>
-</section>
-
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
+            <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
+        </section>
 
         <section class="mb-12 bg-white p-6 rounded-lg shadow-md">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">สำรวจตามหมวดหมู่</h2>
@@ -407,8 +299,6 @@
                     <i class="fas fa-calculator text-2xl mb-2"></i>
                     <p class="font-medium">ประดิษฐ์</p>
                 </a>
-                
-                </a>
             </div>
         </section>
     </main>
@@ -419,267 +309,310 @@
             <div class="flex justify-center space-x-4 mt-4">
                 <a href="https://www.facebook.com/sbtvc?locale=th_TH" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
                 <a href="https://www.youtube.com/@CHANNEL-rk9kq" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
-                <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Spotify Glow Hover</title>
-
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Custom Glow Effect -->
-  <style>
-    .glow-hover:hover {
-      color: #000000; /* สีเขียว Spotify */
-      text-shadow: 0 0 8px #000000, 0 0 16px #000000;
-    }
-  </style>
-</head>
-<body class="flex justify-center items-center min-h-screen bg-white">
-
-  <a href="choose.html" class="text-gray-800 text-1xl glow-hover transition duration-300">
-    <i class="fab fa-spotify"></i>
-  </a>
-
-</body>
-</html>
-               
+                <a href="choose.html" class="text-gray-400 hover:text-white glow-hover transition duration-300">
+                    <i class="fab fa-spotify"></i>
+                </a>
             </div>
         </div>
     </footer>
 
-   <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
-    <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
-        <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
-        <form id="loginForm">
-            <div class="mb-4">
-                <label for="studentId" class="block text-gray-700 text-sm font-bold mb-2">เลขประจำตัวนักศึกษา:</label>
-                <input type="text" id="studentId" name="studentId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-            <div class="flex items-center justify-between">
-                <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">เข้าสู่ระบบ</button>
-            </div>
-        </form>
-        <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+    <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
+        <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
+            <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="studentId" class="block text-gray-700 text-sm font-bold mb-2">เลขประจำตัวนักศึกษา:</label>
+                    <input type="text" id="studentId" name="studentId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-orange-primary hover:bg-orange-secondary text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">เข้าสู่ระบบ</button>
+                </div>
+            </form>
+            <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
+        </div>
     </div>
-</div>
-
-
-<script>
-  document.getElementById("searchButton").addEventListener("click", function () {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categorySelect").value;
-    const year = document.getElementById("academic-year").value;
-    const level = document.getElementById("levelSelect").value;
-
-    const cards = document.querySelectorAll("#featuredResearchContainer .research-card");
-    let found = false;
-
-    cards.forEach((card) => {
-      const title = card.getAttribute("data-title")?.toLowerCase() || "";
-      const description = card.getAttribute("data-description")?.toLowerCase() || "";
-      const cardCategory = card.getAttribute("data-category") || "";
-      const cardYear = card.getAttribute("data-year") || "";
-      const cardLevel = card.getAttribute("data-level") || "";
-
-      const matchesSearch =
-        searchInput === "" ||
-        title.includes(searchInput) ||
-        description.includes(searchInput);
-
-      const matchesCategory = category === "" || cardCategory === category;
-      const matchesYear = year === "" || cardYear === year;
-      const matchesLevel = level === "" || cardLevel === level;
-
-      const isMatch = matchesSearch && matchesCategory && matchesYear && matchesLevel;
-
-      card.style.display = isMatch ? "block" : "none";
-
-      if (isMatch) found = true;
-    });
-
-    const noResultMessage = document.getElementById("noFeaturedResearchMessage");
-    noResultMessage.classList.toggle("hidden", found); // ซ่อนหรือแสดงข้อความ "ไม่มีข้อมูล"
-  });
-</script>
-
 
     <script>
-   // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+        // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
+        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-// Toast Notification
-function showToast(message, type = 'info') {
-    const toast = document.getElementById('toast');
-    toast.className = 'toast show ' + type;
-    toast.textContent = message;
-    setTimeout(() => {
-        toast.className = toast.className.replace('show', '');
-    }, 3000);
-}
-
-// Modal Functions
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('hidden');
-        setTimeout(() => modal.classList.add('opacity-100'), 10);
-    }
-}
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('opacity-100');
-        setTimeout(() => modal.classList.add('hidden'), 300);
-    }
-}
-
-// Handle Login Form Submission
-async function handleLogin(event) {
-    event.preventDefault();
-    const form = event.target;
-    const studentId = form.studentId.value.trim();
-
-    if (studentId === "") {
-        showToast('กรุณากรอกเลขประจำตัวนักศึกษา', 'error');
-        return;
-    }
-
-    try {
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'loginByStudentId',
-                studentId: studentId
-            }).toString()
-        });
-        const result = await response.json();
-
-        if (result.success) {
-            showToast(result.message, 'success');
-            localStorage.setItem('loggedInUser', JSON.stringify(result.user));
-            closeModal('loginModal');
-            checkLoginStatus();
-        } else {
-            showToast(result.message, 'error');
+        // Toast Notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.className = 'toast show ' + type;
+            toast.textContent = message;
+            setTimeout(() => {
+                toast.className = toast.className.replace('show', '');
+            }, 3000);
         }
-    } catch (error) {
-        console.error('Login error:', error);
-        showToast('เกิดข้อผิดพลาดขณะเข้าสู่ระบบ', 'error');
-    }
-}
 
-// Update UI based on login status
-function checkLoginStatus() {
-    const userProfileSection = document.getElementById('user-profile');
-    const authButtonsSection = document.getElementById('auth-buttons');
-    const studentidDisplay = document.getElementById('studentid-display'); // ใช้ id เดิมสำหรับ studentId
-    const fullnameDisplay = document.getElementById('fullname-display');
-    const mobileUserMenu = document.getElementById('mobile-user-menu');
-    const uploadLinkDesktop = document.getElementById('upload-link-desktop');
-    const uploadLinkMobile = document.getElementById('upload-link-mobile');
-
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
-    if (user && userProfileSection && authButtonsSection) {
-        userProfileSection.classList.remove('hidden');
-        userProfileSection.classList.add('flex');
-        authButtonsSection.classList.add('hidden');
-
-        if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
-        if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
-        if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
-        if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
-        return user;
-    } else if (userProfileSection && authButtonsSection) {
-        userProfileSection.classList.add('hidden');
-        userProfileSection.classList.remove('flex');
-        authButtonsSection.classList.remove('hidden');
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
-        if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
-        if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
-        return null;
-    }
-    return null;
-}
-
-// Logout Function
-function logout() {
-    localStorage.removeItem('loggedInUser');
-    showToast('ออกจากระบบสำเร็จ', 'info');
-    checkLoginStatus();
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenu) mobileMenu.classList.add('hidden');
-    window.location.reload();
-}
-
-// Attach event listeners for auth forms and menu
-function attachAuthFormListeners() {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-
-    const menuButton = document.getElementById('menuButton');
-    const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    if (menuButton) {
-        menuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-    if (menuButtonLoggedIn) {
-        menuButtonLoggedIn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            if (!dropdown.contains(event.target)) {
-                dropdown.classList.remove('active');
+        // Modal Functions
+        function openModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.add('opacity-100'), 10);
             }
-        });
-    });
-
-    // Toggle dropdown active class when dropdown button is clicked
-    const dropdownButtons = document.querySelectorAll('.dropdown > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();
-            this.closest('.dropdown').classList.toggle('active');
-        });
-    });
-
-    // Close modal when clicking outside (on the overlay)
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal(modal.id);
+        }
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('opacity-100');
+                setTimeout(() => modal.classList.add('hidden'), 300);
             }
-        });
-    });
+        }
+
+        // Handle Login Form Submission
+        async function handleLogin(event) {
+            event.preventDefault();
+            const form = event.target;
+            const studentId = form.studentId.value.trim();
+
+            if (studentId === "") {
+                showToast('กรุณากรอกเลขประจำตัวนักศึกษา', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'loginByStudentId',
+                        studentId: studentId
+                    }).toString()
+                });
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    localStorage.setItem('loggedInUser', JSON.stringify(result.user));
+                    closeModal('loginModal');
+                    checkLoginStatus();
+                } else {
+                    showToast(result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast('เกิดข้อผิดพลาดขณะเข้าสู่ระบบ', 'error');
+            }
+        }
+
+        // Update UI based on login status
+        function checkLoginStatus() {
+            const userProfileSection = document.getElementById('user-profile');
+            const authButtonsSection = document.getElementById('auth-buttons');
+            const studentidDisplay = document.getElementById('studentid-display');
+            const fullnameDisplay = document.getElementById('fullname-display');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            const uploadLinkDesktop = document.getElementById('upload-link-desktop');
+            const uploadLinkMobile = document.getElementById('upload-link-mobile');
+
+            const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+            if (user && userProfileSection && authButtonsSection) {
+                userProfileSection.classList.remove('hidden');
+                userProfileSection.classList.add('flex');
+                authButtonsSection.classList.add('hidden');
+
+                if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
+                if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
+                if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
+                return user;
+            } else if (userProfileSection && authButtonsSection) {
+                userProfileSection.classList.add('hidden');
+                userProfileSection.classList.remove('flex');
+                authButtonsSection.classList.remove('hidden');
+                if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
+                if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
+                if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
+                return null;
+            }
+            return null;
+        }
+
+        // Logout Function
+        function logout() {
+            localStorage.removeItem('loggedInUser');
+            showToast('ออกจากระบบสำเร็จ', 'info');
+            checkLoginStatus();
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+            window.location.reload();
+        }
+
+        // Attach event listeners for auth forms and menu
+        function attachAuthFormListeners() {
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', handleLogin);
+            }
+
+            const menuButton = document.getElementById('menuButton');
+            const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
+            const mobileMenu = document.getElementById('mobileMenu');
+
+            if (menuButton) {
+                menuButton.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            if (menuButtonLoggedIn) {
+                menuButtonLoggedIn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdowns = document.querySelectorAll('.dropdown');
+                dropdowns.forEach(dropdown => {
+                    if (!dropdown.contains(event.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+            });
+
+            // Toggle dropdown active class when dropdown button is clicked
+            const dropdownButtons = document.querySelectorAll('.dropdown > button');
+            dropdownButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    this.closest('.dropdown').classList.toggle('active');
+                });
+            });
+
+            // Close modal when clicking outside (on the overlay)
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+        }
+
+        // โค้ดสำหรับดึงข้อมูลและสร้างการ์ดงานวิจัย
+        //-----------------------------------------------------
+
+        // ตัวแปรสำหรับเก็บข้อมูลงานวิจัยที่โหลดมา
+        let researchData = []; 
+
+        async function fetchAndDisplayResearch() {
+            const container = document.getElementById('featuredResearchContainer');
+            const noResultMessage = document.getElementById('noFeaturedResearchMessage');
+            if (!container || !noResultMessage) {
+                console.error("Error: featuredResearchContainer or noFeaturedResearchMessage not found in the DOM.");
+                return;
+            }
+            container.innerHTML = '';
+            noResultMessage.classList.add('hidden');
+
+            try {
+                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({
+                        action: 'getResearchData'
+                    }).toString()
+                });
+                const result = await response.json();
+
+                if (result.success && result.data.length > 0) {
+                    researchData = result.data;
+                    displayResearchCards(researchData);
+                } else {
+                    noResultMessage.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Error fetching research data:', error);
+                showToast('เกิดข้อผิดพลาดในการดึงข้อมูลงานวิจัย', 'error');
+            }
+        }
+
+        function displayResearchCards(researchArray) {
+            const container = document.getElementById('featuredResearchContainer');
+            const noResultMessage = document.getElementById('noFeaturedResearchMessage');
+            container.innerHTML = '';
+            if (researchArray.length > 0) {
+                researchArray.forEach(research => {
+                    const card = createResearchCard(research);
+                    container.appendChild(card);
+                });
+                noResultMessage.classList.add('hidden');
+            } else {
+                noResultMessage.classList.remove('hidden');
+            }
+        }
+
+       function createResearchCard(research) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
+
+    // ใช้ชื่อคอลัมน์จากชีตของคุณโดยตรงเพื่อกำหนด data attributes
+    cardDiv.setAttribute('data-title', research['Title'] || '');
+    cardDiv.setAttribute('data-category', research['Category'] || '');
+    cardDiv.setAttribute('data-year', research['Academic Year'] || '');
+    cardDiv.setAttribute('data-level', research['Level'] || '');
+
+    cardDiv.innerHTML = `
+        <a href="${research['Research File URLs'] || '#'}">
+            <div class="h-40 overflow-hidden">
+                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+            </div>
+        </a>
+        <div class="p-6">
+            <div class="flex justify-between mb-2">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['Category'] || 'ไม่ระบุ'}</span>
+                <span class="text-gray-500 text-sm">${research['Academic Year'] || 'ไม่ระบุ'}</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">${research['Title'] || 'ไม่มีชื่อเรื่อง'}</h3>
+            <p class="text-gray-600 mb-4">${research['Abstract'] || 'ไม่มีคำอธิบาย'}</p>
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['Authors'] && research['Authors'].charAt(0)) || '?'}</div>
+                    <span class="ml-2 text-gray-700">${research['Authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
+                </div>
+            </div>
+        </div>
+    `;
+    return cardDiv;
 }
 
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus();
-    attachAuthFormListeners();
+        // โค้ดที่แก้ไขแล้วสำหรับปุ่มค้นหา
+        document.getElementById("searchButton").addEventListener("click", function () {
+            const searchInput = document.getElementById("searchInput").value.toLowerCase();
+            const category = document.getElementById("categorySelect").value;
+            const year = document.getElementById("academic-year").value;
+            const level = document.getElementById("levelSelect").value;
+        
+            const filteredResearch = researchData.filter(card => {
+                const matchesSearch =
+                    searchInput === "" ||
+                    (card.title && card.title.toLowerCase().includes(searchInput)) ||
+                    (card.author && card.author.toLowerCase().includes(searchInput)) ||
+                    (card.description && card.description.toLowerCase().includes(searchInput));
+        
+                const matchesCategory = category === "" || card.category === category;
+                const matchesYear = year === "" || card.year === year;
+                const matchesLevel = level === "" || card.level === level;
+        
+                return matchesSearch && matchesCategory && matchesYear && matchesLevel;
+            });
+        
+            displayResearchCards(filteredResearch);
+        });
 
- 
-});
-        // *** END - Page-specific JavaScript ***
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkLoginStatus();
+            attachAuthFormListeners();
+            fetchAndDisplayResearch();
+        });
     </script>
 </body>
 </html>
