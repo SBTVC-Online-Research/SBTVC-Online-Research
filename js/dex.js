@@ -212,7 +212,7 @@ function setupCategoryButtons(data) {
     // สร้างปุ่ม 'ทั้งหมด'
     const allBtn = document.createElement('button');
     allBtn.textContent = 'ทั้งหมด';
-    allBtn.className = 'px-4 py-2 mr-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
+    allBtn.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
     allBtn.addEventListener('click', () => displayResearchCards(researchData));
     container.appendChild(allBtn);
 
@@ -220,7 +220,7 @@ function setupCategoryButtons(data) {
     categories.forEach(category => {
         const button = document.createElement('button');
         button.textContent = category;
-        button.className = 'px-4 py-2 mr-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
+        button.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
         button.addEventListener('click', () => {
             const filteredData = researchData.filter(item => (item['Category'] || 'ไม่ระบุ') === category);
             displayResearchCards(filteredData);
