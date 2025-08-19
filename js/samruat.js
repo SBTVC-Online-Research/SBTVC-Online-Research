@@ -1,17 +1,7 @@
 // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
 const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-// Toast Notification
-function showToast(message, type = 'info') {
-    const toast = document.getElementById('toast');
-    if (toast) {
-        toast.className = 'toast show ' + type;
-        toast.textContent = message;
-        setTimeout(() => {
-            toast.className = toast.className.replace('show', '');
-        }, 3000);
-    }
-}
+let allResearch = [];
 
 // Modal Functions
 function openModal(modalId) {
@@ -29,82 +19,7 @@ function closeModal(modalId) {
     }
 }
 
-
-
-
-// โค้ดสำหรับดึงข้อมูลและสร้างการ์ดงานวิจัย
-//-----------------------------------------------------
-
-let researchData = [];
-
-async function fetchAndDisplayResearch() {
-    const container = document.getElementById('featuredResearchContainer');
-    const noResultMessage = document.getElementById('noFeaturedResearchMessage');
-    if (!container || !noResultMessage) {
-        console.error("Error: featuredResearchContainer or noFeaturedResearchMessage not found in the DOM.");
-        return;
-    }
-    container.innerHTML = '';
-    noResultMessage.classList.add('hidden');
-
-    try {
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'getResearchData'
-            }).toString()
-        });
-        const result = await response.json();
-
-        if (result.success && result.data.length > 0) {
-            researchData = result.data;
-            setupCategoryButtons(researchData); // เพิ่มการสร้างปุ่มหมวดหมู่
-            displayResearchCards(researchData); // แสดงข้อมูลทั้งหมดในตอนแรก
-        } else {
-            noResultMessage.classList.remove('hidden');
-        }
-    } catch (error) {
-        console.error('Error fetching research data:', error);
-        showToast('เกิดข้อผิดพลาดในการดึงข้อมูลงานวิจัย', 'error');
-    }
-}
-
-
-
-    // ตัดทอนบทคัดย่อ
-    const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
-    const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
-
-    cardDiv.innerHTML = `
-        <a href="${research['Research File URLs'] || '#'}">
-            <div class="h-40 overflow-hidden">
-                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-            </div>
-        </a>
-        <div class="p-6">
-            <div class="flex justify-between mb-2">
-                <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['Category'] || 'ไม่ระบุ'}</span>
-                <span class="text-gray-500 text-sm">${research['Academic Year'] || 'ไม่ระบุ'}</span>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">${research['Title'] || 'ไม่มีชื่อเรื่อง'}</h3>
-            <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
-            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
-                    data-title="${research['Title']}" 
-                    data-abstract="${abstractText}"
-                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
-            <div class="flex justify-between items-center mt-4">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['Authors'] && research['Authors'].charAt(0)) || '?'}</div>
-                    <span class="ml-2 text-gray-700">${research['Authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
-                </div>
-            </div>
-        </div>
-    `;
-    return cardDiv;
-}
-
-// ฟังก์ชันสำหรับเปิด Modal แสดงบทคัดย่อฉบับเต็ม
+// Function to open the full abstract modal
 function openFullAbstractModal(button) {
     const title = button.getAttribute('data-title');
     const abstract = button.getAttribute('data-abstract');
@@ -119,33 +34,146 @@ function openFullAbstractModal(button) {
     }
 }
 
-// แก้ไขโค้ดสำหรับปุ่มค้นหาให้ใช้ชื่อ key ที่ถูกต้อง
-document.getElementById("searchButton").addEventListener("click", function () {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categorySelect").value;
-    const year = document.getElementById("academic-year").value;
-    const level = document.getElementById("levelSelect").value;
+// Function to create a single research card
+function createResearchCard(research) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
 
-    const filteredResearch = researchData.filter(card => {
-        const matchesSearch =
-            searchInput === "" ||
-            (card['Title'] && card['Title'].toLowerCase().includes(searchInput)) ||
-            (card['Authors'] && card['Authors'].toLowerCase().includes(searchInput)) ||
-            (card['Abstract'] && card['Abstract'].toLowerCase().includes(searchInput));
+    const abstractText = research['abstract'] || 'ไม่มีคำอธิบาย';
+    const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
 
-        const matchesCategory = category === "" || (card['Category'] || '') === category;
-        const matchesYear = year === "" || (card['Academic Year'] || '') === year;
-        const matchesLevel = level === "" || (card['Level'] || '') === level;
+    cardDiv.innerHTML = `
+        <a href="${research['researchFileUrls'] || '#'}">
+            <div class="h-40 overflow-hidden">
+                <img src="${research['coverImageUrl'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+            </div>
+        </a>
+        <div class="p-6">
+            <div class="flex justify-between mb-2">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['category'] || 'ไม่ระบุ'}</span>
+                <span class="text-gray-500 text-sm">${research['academicYear'] || 'ไม่ระบุ'}</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">${research['title'] || 'ไม่มีชื่อเรื่อง'}</h3>
+            <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
+            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
+                    data-title="${research['title']}" 
+                    data-abstract="${abstractText}"
+                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['authors'] && research['authors'].charAt(0)) || '?'}</div>
+                    <span class="ml-2 text-gray-700">${research['authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
+                </div>
+            </div>
+        </div>
+    `;
+    return cardDiv;
+}
 
-        return matchesSearch && matchesCategory && matchesYear && matchesLevel;
+// Function to render research cards based on a filtered list
+function renderResearchCards(researchList) {
+    const container = document.getElementById('gridView');
+    const noResultMessage = document.getElementById('noResultMessage');
+    const resultCount = document.getElementById('resultCount');
+
+    if (!container || !noResultMessage || !resultCount) {
+        console.error("Error: gridView, noResultMessage or resultCount not found.");
+        return;
+    }
+
+    container.innerHTML = '';
+    
+    if (researchList.length > 0) {
+        researchList.forEach(research => {
+            const card = createResearchCard(research);
+            container.appendChild(card);
+        });
+        noResultMessage.classList.add('hidden');
+        resultCount.textContent = `พบ ${researchList.length} รายการ`;
+    } else {
+        noResultMessage.classList.remove('hidden');
+        resultCount.textContent = `ไม่พบ 0 รายการ`;
+    }
+}
+
+// Function to fetch and display research for a specific category
+async function fetchAndDisplayCategoryResearch() {
+    const category = document.body.getAttribute('data-category');
+    if (!category) {
+        console.error('Data category not found on the body element.');
+        return;
+    }
+
+    const container = document.getElementById('gridView');
+    if (!container) {
+        console.error("Error: gridView not found.");
+        return;
+    }
+
+    container.innerHTML = '<p class="text-center col-span-full text-gray-500">กำลังโหลด...</p>';
+    
+    try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'getResearchData',
+                category: category
+            }).toString()
+        });
+        const result = await response.json();
+
+        if (result.success && result.data.length > 0) {
+            allResearch = result.data;
+            renderResearchCards(allResearch);
+        } else {
+            allResearch = [];
+            renderResearchCards([]);
+        }
+    } catch (error) {
+        console.error('Error fetching research data:', error);
+        allResearch = [];
+        renderResearchCards([]);
+    }
+}
+
+// Function to filter research
+function filterResearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const level = document.getElementById('levelFilter').value;
+    const academicYear = document.getElementById('academicYearFilter').value;
+    const department = document.getElementById('departmentFilter').value;
+
+    const filteredResearch = allResearch.filter(research => {
+        const matchesSearch = searchTerm === '' || 
+                              (research['title'] && research['title'].toLowerCase().includes(searchTerm)) ||
+                              (research['abstract'] && research['abstract'].toLowerCase().includes(searchTerm)) ||
+                              (research['authors'] && research['authors'].toLowerCase().includes(searchTerm));
+        const matchesLevel = level === '' || (research['level'] && research['level'].includes(level));
+        const matchesAcademicYear = academicYear === '' || (research['academicYear'] && research['academicYear'].toString() === academicYear);
+        const matchesDepartment = department === '' || (research['department'] && research['department'] === department);
+
+        return matchesSearch && matchesLevel && matchesAcademicYear && matchesDepartment;
     });
 
-    displayResearchCards(filteredResearch);
-});
+    renderResearchCards(filteredResearch);
+}
 
-// Initial load
+// Initial load and event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus();
-    attachAuthFormListeners();
-    fetchAndDisplayResearch(); // โหลดข้อมูลและสร้างการแสดงผลทั้งหมด
+    fetchAndDisplayCategoryResearch();
+    
+    document.getElementById('searchButton').addEventListener('click', filterResearch);
+    document.getElementById('searchInput').addEventListener('input', filterResearch);
+    document.getElementById('levelFilter').addEventListener('change', filterResearch);
+    document.getElementById('academicYearFilter').addEventListener('change', filterResearch);
+    document.getElementById('departmentFilter').addEventListener('change', filterResearch);
+    
+    // Set up modal close functionality
+    document.querySelectorAll('[data-close-modal]').forEach(button => {
+        button.addEventListener('click', () => {
+            const modalId = button.getAttribute('data-close-modal');
+            closeModal(modalId);
+        });
+    });
 });
