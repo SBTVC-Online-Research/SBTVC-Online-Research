@@ -1,4 +1,4 @@
-<script>
+
     // **Cloudinary Configuration** (เปลี่ยนเป็น Cloud name และ Upload preset ของคุณ)
     const CLOUDINARY_CLOUD_NAME = 'davuwvefc'; // <-- เปลี่ยนตรงนี้เป็น Cloud name ของคุณ
     const CLOUDINARY_IMAGE_UPLOAD_PRESET = 'STVC_preset'; // <-- เปลี่ยนตรงนี้ (ตั้งชื่อใหม่ เช่น research_photo_preset)
@@ -703,4 +703,4 @@
 
         hiddenInput.value = category;
     }
-</script>
+
