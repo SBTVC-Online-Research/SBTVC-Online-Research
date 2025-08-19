@@ -276,6 +276,9 @@
 
         <section class="mb-12">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
+            
+            <div id="categoryButtons" class="flex flex-wrap my-4 justify-center"></div>
+
             <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
         </section>
@@ -331,7 +334,17 @@
             <button onclick="closeModal('loginModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
         </div>
     </div>
+    
+    <div id="fullAbstractModal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50 transition-all duration-300 hidden opacity-0">
+      <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative transform transition-all duration-300">
+        <h3 id="fullAbstractModalTitle" class="text-xl font-bold mb-4">หัวข้อ</h3>
+        <p id="fullAbstractModalContent" class="text-gray-700 whitespace-pre-wrap"></p>
+        <button onclick="closeModal('fullAbstractModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+    </div>
 
-      <script src="js/dex.js"></script>
+    <script src="js/dex.js"></script>
 </body>
 </html>
