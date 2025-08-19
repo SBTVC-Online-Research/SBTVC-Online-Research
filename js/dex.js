@@ -1,4 +1,4 @@
- <script>
+
         // IMPORTANT: Replace with your deployed Google Apps Script Web App URL
         const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
@@ -279,5 +279,5 @@
             attachAuthFormListeners();
             fetchAndDisplayResearch();
         });
-    </script>
+   
 
