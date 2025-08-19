@@ -1,199 +1,179 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>งานวิจัย - SBTVC Online Research</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    <style>
-        * {
-            font-family: 'Prompt', sans-serif;
-        }
-        
-        .bg-orange-primary {
-            background-color: #FF7A00;
-        }
-        
-        .bg-orange-secondary {
-            background-color: #FFA149;
-        }
-        
-        .bg-orange-light {
-            background-color: #FFE0C2;
-        }
-        
-        .text-orange-primary {
-            color: #FF7A00;
-        }
-        
-        .border-orange-primary {
-            border-color: #FF7A00;
-        }
-        
-        .hover-bg-orange-dark:hover {
-            background-color: #E56E00;
-        }
-        
-        .active-tab {
-            border-bottom: 3px solid #FF7A00;
-            color: #FF7A00;
-            font-weight: 600;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .modal {
-            transition: opacity 0.3s ease;
-        }
-        
-        .research-card:hover .research-card-overlay {
-            opacity: 1;
-        }
-        .research-card {
-             cursor: pointer;
-        }
-    </style>
-</head>
-<body class="bg-gray-50" data-category="สำรวจ">
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center">
-                <img src="https://res.cloudinary.com/djbbchijx/image/upload/v1750912014/sbtvc-logo_om98ni.png" alt="โลโก้ SBTVC" class="h-12 w-12 object-contain mr-3" />
-                <h1 class="text-2xl font-bold text-gray-800">SBTVC <span class="text-orange-primary">Online Research</span></h1>
-            </div>
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#" onclick="window.location.href='../index.html'" class="text-gray-700 hover:text-[#FF7A00] hover:underline font-medium transition duration-200">หน้าหลัก</a>
-                <a href="#" class="text-orange-primary font-semibold">งานวิจัย</a>
-                <a href="Category.html" class="text-gray-700 hover:text-[#FF7A00] hover:underline font-medium transition duration-200">หมวดหมู่</a>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button class="md:hidden text-gray-700" id="menuButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobileMenu" class="hidden md:hidden bg-white px-4 py-2 shadow-md">
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หน้าหลัก</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">หมวดหมู่</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">เกี่ยวกับเรา</a>
-            <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">ติดต่อ</a>
-            <div id="mobile-user-menu" class="hidden border-t border-gray-200 mt-2 pt-2">
-                <p class="py-2 font-medium text-gray-800">ยินดีต้อนรับ <span id="mobile-username-display">ชื่อผู้ใช้</span></p>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-user-circle mr-2"></i> โปรไฟล์ของฉัน
-                </a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-bookmark mr-2"></i> งานวิจัยที่บันทึกไว้
-                </a>
-                <a href="#" class="block py-2 text-gray-700 hover:text-orange-primary">
-                    <i class="fas fa-cog mr-2"></i> ตั้งค่า
-                </a>
-                <button onclick="logout()" class="block w-full text-left py-2 text-red-600 hover:text-red-700">
-                    <i class="fas fa-sign-out-alt mr-2"></i> ออกจากระบบ
-                </button>
-            </div>
-        </div>
-    </header>
+// IMPORTANT: Replace with your deployed Google Apps Script Web App URL
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
-    <section class="bg-gradient-to-r from-orange-primary to-orange-secondary text-white py-12">
-        <div class="container mx-auto px-4">
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 text-black">สำรวจ</h1>
-            <div class="flex flex-wrap items-center text-sm md:text-base">
-            </div>
-        </div>
-    </section>
+let allResearch = [];
 
-    <section class="py-8 bg-white shadow-md">
-        <div class="container mx-auto px-4">
-            <div class="bg-white rounded-lg p-6">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">ค้นหางานวิจัย</h3>
-                <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
-                    <div class="flex-grow">
-                        <input type="text" id="searchInput" placeholder="คำค้นหา..." class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    </div>
-                    <div class="md:w-1/5">
-                        <select id="levelFilter" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">ระดับการศึกษา</option>
-                            <option value="ปวช.1">ปวช.1</option>
-                            <option value="ปวช.2">ปวช.2</option>
-                            <option value="ปวช.3">ปวช.3</option>
-                            <option value="ปวส.1">ปวส.1</option>
-                            <option value="ปวส.2">ปวส.2</option>
-                        </select>
-                    </div>
-                    <div class="md:w-1/5">
-                        <select id="academicYearFilter" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
-                            <option value="" disabled selected>เลือกปีการศึกษา</option>
-                            <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
-                        </select>
-                    </div>
-                    <div class="md:w-1/5">
-                        <select id="departmentFilter" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                            <option value="">แผนกวิชา</option>
-                            <option value="เทคโนโลยีคอมพิวเตอร์">เทคโนโลยีคอมพิวเตอร์</option>
-                            <option value="เมคคาทรอนิค">เมคคาทรอนิค</option>
-                            <option value="ไฟฟ้ากำลัง">ไฟฟ้ากำลัง</option>
-                            <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
-                        </select>
-                    </div>
-                    <button id="searchButton" class="px-6 py-2 bg-orange-primary text-white rounded-md hover-bg-orange-dark transition">ค้นหา</button>
+// Modal Functions
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('hidden');
+        setTimeout(() => modal.classList.add('opacity-100'), 10);
+    }
+}
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('opacity-100');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    }
+}
+
+// Function to open the full abstract modal
+function openFullAbstractModal(button) {
+    const title = button.getAttribute('data-title');
+    const abstract = button.getAttribute('data-abstract');
+
+    const modalTitle = document.getElementById('fullAbstractModalTitle');
+    const modalContent = document.getElementById('fullAbstractModalContent');
+
+    if (modalTitle && modalContent) {
+        modalTitle.textContent = title;
+        modalContent.textContent = abstract;
+        openModal('fullAbstractModal');
+    }
+}
+
+// Function to create a single research card
+function createResearchCard(research) {
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
+
+    const abstractText = research['abstract'] || 'ไม่มีคำอธิบาย';
+    const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
+
+    cardDiv.innerHTML = `
+        <a href="${research['researchFileUrls'] || '#'}">
+            <div class="h-40 overflow-hidden">
+                <img src="${research['coverImageUrl'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+            </div>
+        </a>
+        <div class="p-6">
+            <div class="flex justify-between mb-2">
+                <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['category'] || 'ไม่ระบุ'}</span>
+                <span class="text-gray-500 text-sm">${research['academicYear'] || 'ไม่ระบุ'}</span>
+            </div>
+            <h3 class="text-lg font-semibold mb-2">${research['title'] || 'ไม่มีชื่อเรื่อง'}</h3>
+            <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
+            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
+                    data-title="${research['title']}" 
+                    data-abstract="${abstractText}"
+                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['authors'] && research['authors'].charAt(0)) || '?'}</div>
+                    <span class="ml-2 text-gray-700">${research['authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
                 </div>
             </div>
         </div>
-    </section>
+    `;
+    return cardDiv;
+}
 
-    <section class="py-8">
-        <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6">
-                <div class="mb-4 md:mb-0">
-                    <h2 class="text-2xl font-bold text-gray-800">ผลการค้นหา</h2>
-                    <p id="resultCount" class="text-gray-600">กำลังโหลด...</p>
-                </div>
-            </div>
-            
-            <div id="gridView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
-            
-            <p id="noResultMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่พบงานวิจัยที่ตรงกับเงื่อนไข</p>
+// Function to render research cards based on a filtered list
+function renderResearchCards(researchList) {
+    const container = document.getElementById('gridView');
+    const noResultMessage = document.getElementById('noResultMessage');
+    const resultCount = document.getElementById('resultCount');
 
-        </div>
-    </section>
+    if (!container || !noResultMessage || !resultCount) {
+        console.error("Error: gridView, noResultMessage or resultCount not found.");
+        return;
+    }
+
+    container.innerHTML = '';
     
-    <div id="fullAbstractModal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50 transition-all duration-300 hidden opacity-0">
-      <div class="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative transform transition-all duration-300">
-        <h3 id="fullAbstractModalTitle" class="text-xl font-bold mb-4">หัวข้อ</h3>
-        <p id="fullAbstractModalContent" class="text-gray-700 whitespace-pre-wrap"></p>
-        <button onclick="closeModal('fullAbstractModal')" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-      </div>
-    </div>
+    if (researchList.length > 0) {
+        researchList.forEach(research => {
+            const card = createResearchCard(research);
+            container.appendChild(card);
+        });
+        noResultMessage.classList.add('hidden');
+        resultCount.textContent = `พบ ${researchList.length} รายการ`;
+    } else {
+        noResultMessage.classList.remove('hidden');
+        resultCount.textContent = `ไม่พบ 0 รายการ`;
+    }
+}
+
+// Function to fetch and display research for a specific category
+async function fetchAndDisplayCategoryResearch() {
+    const category = document.body.getAttribute('data-category');
+    if (!category) {
+        console.error('Data category not found on the body element.');
+        return;
+    }
+
+    const container = document.getElementById('gridView');
+    if (!container) {
+        console.error("Error: gridView not found.");
+        return;
+    }
+
+    container.innerHTML = '<p class="text-center col-span-full text-gray-500">กำลังโหลด...</p>';
     
-    <div id="researchDetailModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden modal">
-        </div>
+    try {
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                action: 'getResearchData',
+                category: category
+            }).toString()
+        });
+        const result = await response.json();
 
-    <footer class="bg-gray-800 text-white py-8">
-        <div class="container mx-auto px-4 text-center">
-            <p>&copy; 2025 SBTVC Online Research. All rights reserved.</p>
-            <div class="flex justify-center space-x-4 mt-4">
-                <a href="https://www.facebook.com/sbtvc?locale=th_TH" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                <a href="https://www.youtube.com/@CHANNEL-rk9kq" class="text-gray-400 hover:text-white"><i class="fab fa-youtube"></i></a>
-                <a href="Admin/R_R_S.html" class="text-gray-400 hover:text-white"><i class="fab fa-spotify"></i></a>
-            </div>
-        </div>
-    </footer>
+        if (result.success && result.data.length > 0) {
+            allResearch = result.data;
+            renderResearchCards(allResearch);
+        } else {
+            allResearch = [];
+            renderResearchCards([]);
+        }
+    } catch (error) {
+        console.error('Error fetching research data:', error);
+        allResearch = [];
+        renderResearchCards([]);
+    }
+}
 
-    <script src="/js/samruat.js"></script>
+// Function to filter research
+function filterResearch() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const level = document.getElementById('levelFilter').value;
+    const academicYear = document.getElementById('academicYearFilter').value;
+    const department = document.getElementById('departmentFilter').value;
 
-</body>
-</html>
+    const filteredResearch = allResearch.filter(research => {
+        const matchesSearch = searchTerm === '' || 
+                              (research['title'] && research['title'].toLowerCase().includes(searchTerm)) ||
+                              (research['abstract'] && research['abstract'].toLowerCase().includes(searchTerm)) ||
+                              (research['authors'] && research['authors'].toLowerCase().includes(searchTerm));
+        const matchesLevel = level === '' || (research['level'] && research['level'].includes(level));
+        const matchesAcademicYear = academicYear === '' || (research['academicYear'] && research['academicYear'].toString() === academicYear);
+        const matchesDepartment = department === '' || (research['department'] && research['department'] === department);
+
+        return matchesSearch && matchesLevel && matchesAcademicYear && matchesDepartment;
+    });
+
+    renderResearchCards(filteredResearch);
+}
+
+// Initial load and event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    fetchAndDisplayCategoryResearch();
+    
+    document.getElementById('searchButton').addEventListener('click', filterResearch);
+    document.getElementById('searchInput').addEventListener('input', filterResearch);
+    document.getElementById('levelFilter').addEventListener('change', filterResearch);
+    document.getElementById('academicYearFilter').addEventListener('change', filterResearch);
+    document.getElementById('departmentFilter').addEventListener('change', filterResearch);
+    
+    // Set up modal close functionality
+    document.querySelectorAll('[data-close-modal]').forEach(button => {
+        button.addEventListener('click', () => {
+            const modalId = button.getAttribute('data-close-modal');
+            closeModal(modalId);
+        });
+    });
+});
