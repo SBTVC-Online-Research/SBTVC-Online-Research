@@ -242,8 +242,8 @@
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
-        <section class="bg-white p-6 rounded-lg shadow-md mb-8">
+    <main class="container mx-auto px-6 py-12">
+        <section class="bg-white p-10 rounded-lg shadow-md mb-8">
             <h3 class="text-xl font-semibold text-gray-800 mb-4">ค้นหางานวิจัย</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <input type="text" id="searchInput" placeholder="ค้นหาด้วยชื่อเรื่อง, ผู้แต่ง, คำสำคัญ..." class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
@@ -254,20 +254,13 @@
                     <option value="ทดลอง">ทดลอง</option>
                     <option value="ประดิษฐ์">ประดิษฐ์</option>
                 </select>
-                <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-4 py-2 focus:ring-blue-500" required>
+                <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-3 py-2 focus:ring-blue-500" required>
                     <option value="" enable selected>เลือกปีการศึกษา</option>
                     <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
                 </select>
-                <select id="levelSelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    <option value="">เลือกระดับ</option>
-                    <option value="ปวช.1">ปวช.1</option>
-                    <option value="ปวช.2">ปวช.2</option>
-                    <option value="ปวช.3">ปวช.3</option>
-                    <option value="ปวส.1">ปวส.1</option>
-                    <option value="ปวส.2">ปวส.2</option>
-                </select>
+            
             </div>
-            <div class="text-center mt-6">
+            <div class="text-center mt-5">
                 <button id="searchButton" class="bg-orange-primary text-white px-6 py-3 rounded-md hover:bg-orange-secondary transition">
                     <i class="fas fa-search mr-2"></i> ค้นหา
                 </button>
