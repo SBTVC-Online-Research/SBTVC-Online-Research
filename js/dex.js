@@ -363,3 +363,51 @@ document.addEventListener('DOMContentLoaded', () => {
     attachAuthFormListeners();
     fetchAndDisplayResearch();
 });
+// ===========================
+// Live Search (พิมพ์แล้วค้นหาอัตโนมัติ)
+// ===========================
+
+// debounce เพื่อป้องกันโหลดหนักเกินไป
+function debounce(func, delay = 300) {
+    let timeout;
+    return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+// ฟังก์ชันหลักที่ใช้กับทั้ง Live Search และปุ่มค้นหา
+function applySearchFilters() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const category = document.getElementById("categorySelect").value;
+    const year = document.getElementById("academic-year").value;
+
+    filteredResearch = researchData.filter(card => {
+        const matchesSearch =
+            searchInput === "" ||
+            (card['Title'] && card['Title'].toLowerCase().includes(searchInput)) ||
+            (card['Authors'] && card['Authors'].toLowerCase().includes(searchInput)) ||
+            (card['Abstract'] && card['Abstract'].toLowerCase().includes(searchInput));
+
+        const matchesCategory = category === "" || (card['Category'] || '') === category;
+        const matchesYear = year === "" || (card['Academic Year'] || '') === year;
+
+        return matchesSearch && matchesCategory && matchesYear;
+    });
+
+    currentPage = 1;
+    displayResearchCards(filteredResearch, currentPage);
+    renderPagination(filteredResearch);
+}
+
+// ผูก event แบบ Live Search (input)
+const searchInputElement = document.getElementById("searchInput");
+if (searchInputElement) {
+    searchInputElement.addEventListener("input", debounce(applySearchFilters, 300));
+}
+
+// เมื่อเปลี่ยนหมวดหมู่/ปีการศึกษา
+["categorySelect", "academic-year"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("change", applySearchFilters);
+});
