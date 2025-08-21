@@ -163,10 +163,11 @@ function attachAuthFormListeners() {
     });
 }
 
-// โค้ดสำหรับดึงข้อมูลและสร้างการ์ดงานวิจัย
-//-----------------------------------------------------
-
+// โค้ดสำหรับดึงข้อมูลและสร้างการ์ดงานวิจัย พร้อม Pagination
 let researchData = [];
+let filteredResearch = [];
+let currentPage = 1;
+const itemsPerPage = 6;
 
 async function fetchAndDisplayResearch() {
     const container = document.getElementById('featuredResearchContainer');
@@ -190,8 +191,10 @@ async function fetchAndDisplayResearch() {
 
         if (result.success && result.data.length > 0) {
             researchData = result.data;
-            setupCategoryButtons(researchData); // เพิ่มการสร้างปุ่มหมวดหมู่
-            displayResearchCards(researchData); // แสดงข้อมูลทั้งหมดในตอนแรก
+            filteredResearch = researchData;
+            setupCategoryButtons(researchData);
+            displayResearchCards(filteredResearch, currentPage);
+            renderPagination(filteredResearch);
         } else {
             noResultMessage.classList.remove('hidden');
         }
@@ -208,34 +211,44 @@ function setupCategoryButtons(data) {
     container.innerHTML = '';
 
     const categories = [...new Set(data.map(item => item['Category'] || 'ไม่ระบุ'))];
-    
-    // สร้างปุ่ม 'ทั้งหมด'
+
     const allBtn = document.createElement('button');
     allBtn.textContent = 'ทั้งหมด';
     allBtn.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
-    allBtn.addEventListener('click', () => displayResearchCards(researchData));
+    allBtn.addEventListener('click', () => {
+        filteredResearch = researchData;
+        currentPage = 1;
+        displayResearchCards(filteredResearch, currentPage);
+        renderPagination(filteredResearch);
+    });
     container.appendChild(allBtn);
 
-    // สร้างปุ่มสำหรับแต่ละหมวดหมู่
     categories.forEach(category => {
         const button = document.createElement('button');
         button.textContent = category;
         button.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
         button.addEventListener('click', () => {
-            const filteredData = researchData.filter(item => (item['Category'] || 'ไม่ระบุ') === category);
-            displayResearchCards(filteredData);
+            filteredResearch = researchData.filter(item => (item['Category'] || 'ไม่ระบุ') === category);
+            currentPage = 1;
+            displayResearchCards(filteredResearch, currentPage);
+            renderPagination(filteredResearch);
         });
         container.appendChild(button);
     });
 }
 
-function displayResearchCards(researchArray) {
+// แสดงการ์ดงานวิจัยในแต่ละหน้า
+function displayResearchCards(researchArray, page = 1) {
     const container = document.getElementById('featuredResearchContainer');
     const noResultMessage = document.getElementById('noFeaturedResearchMessage');
     container.innerHTML = '';
-    
-    if (researchArray.length > 0) {
-        researchArray.forEach(research => {
+
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const pageData = researchArray.slice(startIndex, endIndex);
+
+    if (pageData.length > 0) {
+        pageData.forEach(research => {
             const card = createResearchCard(research);
             container.appendChild(card);
         });
@@ -245,11 +258,33 @@ function displayResearchCards(researchArray) {
     }
 }
 
+// สร้างปุ่ม Pagination
+function renderPagination(dataArray) {
+    const paginationContainer = document.getElementById('pagination');
+    if (!paginationContainer) return;
+
+    paginationContainer.innerHTML = '';
+    const totalPages = Math.ceil(dataArray.length / itemsPerPage);
+    if (totalPages <= 1) return;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = `px-3 py-1 rounded-md border ${i === currentPage ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} mx-1`;
+        button.addEventListener('click', () => {
+            currentPage = i;
+            displayResearchCards(filteredResearch, currentPage);
+            renderPagination(filteredResearch);
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
+// สร้างการ์ดงานวิจัย
 function createResearchCard(research) {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
 
-    // ตัดทอนบทคัดย่อ
     const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
     const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
 
@@ -281,7 +316,7 @@ function createResearchCard(research) {
     return cardDiv;
 }
 
-// ฟังก์ชันสำหรับเปิด Modal แสดงบทคัดย่อฉบับเต็ม
+// แสดง Modal บทคัดย่อเต็ม
 function openFullAbstractModal(button) {
     const title = button.getAttribute('data-title');
     const abstract = button.getAttribute('data-abstract');
@@ -296,14 +331,14 @@ function openFullAbstractModal(button) {
     }
 }
 
-// แก้ไขโค้ดสำหรับปุ่มค้นหาให้ใช้ชื่อ key ที่ถูกต้อง
+// ปุ่มค้นหา
 document.getElementById("searchButton").addEventListener("click", function () {
     const searchInput = document.getElementById("searchInput").value.toLowerCase();
     const category = document.getElementById("categorySelect").value;
     const year = document.getElementById("academic-year").value;
     const level = document.getElementById("levelSelect").value;
 
-    const filteredResearch = researchData.filter(card => {
+    filteredResearch = researchData.filter(card => {
         const matchesSearch =
             searchInput === "" ||
             (card['Title'] && card['Title'].toLowerCase().includes(searchInput)) ||
@@ -317,12 +352,14 @@ document.getElementById("searchButton").addEventListener("click", function () {
         return matchesSearch && matchesCategory && matchesYear && matchesLevel;
     });
 
-    displayResearchCards(filteredResearch);
+    currentPage = 1;
+    displayResearchCards(filteredResearch, currentPage);
+    renderPagination(filteredResearch);
 });
 
 // Initial load
 document.addEventListener('DOMContentLoaded', () => {
     checkLoginStatus();
     attachAuthFormListeners();
-    fetchAndDisplayResearch(); // โหลดข้อมูลและสร้างการแสดงผลทั้งหมด
+    fetchAndDisplayResearch();
 });
