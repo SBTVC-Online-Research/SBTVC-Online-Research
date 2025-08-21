@@ -19,10 +19,11 @@ function closeModal(modalId) {
     }
 }
 
-// Function to open the full abstract modal (used for previous abstract-only modal)
+// Function to open the full abstract modal
 function openFullAbstractModal(button) {
     const title = button.getAttribute('data-title');
     const abstract = button.getAttribute('data-abstract');
+
     const modalTitle = document.getElementById('fullAbstractModalTitle');
     const modalContent = document.getElementById('fullAbstractModalContent');
 
@@ -33,43 +34,21 @@ function openFullAbstractModal(button) {
     }
 }
 
-// NEW FUNCTION: Open the full research detail modal
-function openResearchDetailModal(researchId) {
-    const research = allResearch.find(item => item['ID'] === researchId);
-    if (!research) {
-        console.error('Research not found for ID:', researchId);
-        return;
-    }
-
-    // Populate modal content with research data
-    document.getElementById('detailCoverImage').src = research['Cover Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image';
-    document.getElementById('detailTitle').textContent = research['Title'] || 'ไม่มีชื่อเรื่อง';
-    document.getElementById('detailAuthors').textContent = research['Authors'] || 'ไม่ระบุ';
-    document.getElementById('detailAdvisor').textContent = research['Advisor'] || 'ไม่ระบุ';
-    document.getElementById('detailAcademicYear').textContent = research['Academic Year'] || 'ไม่ระบุ';
-    document.getElementById('detailDepartment').textContent = research['Department'] || 'ไม่ระบุ';
-    document.getElementById('detailField').textContent = research['Field'] || 'ไม่ระบุ';
-    document.getElementById('detailAbstract').textContent = research['Abstract'] || 'ไม่มีบทคัดย่อ';
-    document.getElementById('researchFileLink').href = research['Research File URL'] || '#';
-
-    openModal('researchDetailModal');
-}
-
 // Function to create a single research card
 function createResearchCard(research) {
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer';
+    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
 
+    // FIX: Use capitalized keys to match Google Sheet headers
     const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
     const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
-    
-    // Add an event listener to the card to open the detail modal
-    cardDiv.onclick = () => openResearchDetailModal(research['ID']);
 
     cardDiv.innerHTML = `
-        <div class="h-40 overflow-hidden">
-            <img src="${research['Cover Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-        </div>
+        <a href="${research['Research File URL'] || '#'}">
+            <div class="h-40 overflow-hidden">
+                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+            </div>
+        </a>
         <div class="p-6">
             <div class="flex justify-between mb-2">
                 <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['Category'] || 'ไม่ระบุ'}</span>
@@ -77,6 +56,10 @@ function createResearchCard(research) {
             </div>
             <h3 class="text-lg font-semibold mb-2">${research['Title'] || 'ไม่มีชื่อเรื่อง'}</h3>
             <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
+            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
+                    data-title="${research['Title']}" 
+                    data-abstract="${abstractText}"
+                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
             <div class="flex justify-between items-center mt-4">
                 <div class="flex items-center">
                     <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['Authors'] && research['Authors'].charAt(0)) || '?'}</div>
@@ -163,6 +146,7 @@ function filterResearch() {
     const department = document.getElementById('departmentFilter').value;
 
     const filteredResearch = allResearch.filter(research => {
+        // FIX: Use capitalized keys for filtering and ensure robust comparison
         const matchesSearch = searchTerm === '' || 
                                      (research['Title'] && String(research['Title']).toLowerCase().includes(searchTerm)) ||
                                      (research['Abstract'] && String(research['Abstract']).toLowerCase().includes(searchTerm)) ||
