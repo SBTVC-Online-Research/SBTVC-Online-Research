@@ -46,7 +46,7 @@ function createResearchCard(research) {
     cardDiv.innerHTML = `
         <a href="${research['Research File URL'] || '#'}">
             <div class="h-40 overflow-hidden">
-                <img src="${research['Cover Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
             </div>
         </a>
         <div class="p-6">
