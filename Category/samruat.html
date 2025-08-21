@@ -191,6 +191,29 @@
                 <a href="Admin/R_R_S.html" cls="text-gray-400 hover:text-white"><i cls="fab fa-spotify"></i></a>
             </div>
         </div>
+
+<div id="researchDetailModal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 bg-black bg-opacity-50 transition-all duration-300 hidden opacity-0">
+    <div class="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 relative transform transition-all duration-300">
+        <button data-close-modal="researchDetailModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <div id="modalContent">
+            <img id="detailCoverImage" src="" alt="ภาพหน้าปก" class="w-full h-auto rounded-lg mb-4">
+            <h3 id="detailTitle" class="text-2xl font-bold mb-2 text-gray-800"></h3>
+            <p class="text-gray-600 mb-2"><strong>ผู้จัดทำ:</strong> <span id="detailAuthors"></span></p>
+            <p class="text-gray-600 mb-2"><strong>อาจารย์ที่ปรึกษา:</strong> <span id="detailAdvisor"></span></p>
+            <p class="text-gray-600 mb-2"><strong>ปีการศึกษา:</strong> <span id="detailAcademicYear"></span></p>
+            <p class="text-gray-600 mb-2"><strong>แผนกวิชา:</strong> <span id="detailDepartment"></span></p>
+            <p class="text-gray-600 mb-2"><strong>สาขาวิชา:</strong> <span id="detailField"></span></p>
+            <h4 class="text-xl font-bold mt-4 mb-2">บทคัดย่อ</h4>
+            <p id="detailAbstract" class="text-gray-700 whitespace-pre-wrap"></p>
+            <a id="researchFileLink" href="#" target="_blank" class="block w-full text-center px-4 py-2 mt-6 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition">
+                <i class="fas fa-file-pdf mr-2"></i> เปิดไฟล์งานวิจัยฉบับเต็ม
+            </a>
+        </div>
+    </div>
+</div>
+        
     </footer>
 
   <script src="../js/samruat.js"></script>
