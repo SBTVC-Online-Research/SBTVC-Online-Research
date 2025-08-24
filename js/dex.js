@@ -1,413 +1,75 @@
-// IMPORTANT: Replace with your deployed Google Apps Script Web App URL
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+// dex.js
 
-// Toast Notification
-function showToast(message, type = 'info') {
-    const toast = document.getElementById('toast');
-    if (toast) {
-        toast.className = 'toast show ' + type;
-        toast.textContent = message;
-        setTimeout(() => {
-            toast.className = toast.className.replace('show', '');
-        }, 3000);
-    }
-}
+// URL ของ Google Apps Script Web App
+const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyvQHoEuzS17lbKWBEZgMzp3u8Yc34HFG7NmLozO2_v10MEF6M4eMvRmSp06PjybwbK/exec";
 
-// Modal Functions
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('hidden');
-        setTimeout(() => modal.classList.add('opacity-100'), 10);
-    }
-}
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.classList.remove('opacity-100');
-        setTimeout(() => modal.classList.add('hidden'), 300);
-    }
-}
+// container ที่อยู่ใน index.html
+const cardContainer = document.getElementById("featuredResearchContainer");
 
-// Handle Login Form Submission
-async function handleLogin(event) {
-    event.preventDefault();
-    const form = event.target;
-    const studentId = form.studentId.value.trim();
-
-    if (studentId === "") {
-        showToast('กรุณากรอกเลขประจำตัวนักศึกษา', 'error');
-        return;
-    }
-
+// ฟังก์ชันโหลดข้อมูลจาก Google Sheet
+async function fetchResearchData() {
     try {
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'loginByStudentId',
-                studentId: studentId
-            }).toString()
+        const response = await fetch(SHEET_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "action=getResearchData"
         });
+
         const result = await response.json();
 
-        if (result.success) {
-            showToast(result.message, 'success');
-            localStorage.setItem('loggedInUser', JSON.stringify(result.user));
-            closeModal('loginModal');
-            checkLoginStatus();
-        } else {
-            showToast(result.message, 'error');
+        if (!result.success) {
+            throw new Error(result.message || "ไม่สามารถดึงข้อมูลได้");
         }
-    } catch (error) {
-        console.error('Login error:', error);
-        showToast('เกิดข้อผิดพลาดขณะเข้าสู่ระบบ', 'error');
-    }
-}
 
-// Update UI based on login status
-function checkLoginStatus() {
-    const userProfileSection = document.getElementById('user-profile');
-    const authButtonsSection = document.getElementById('auth-buttons');
-    const studentidDisplay = document.getElementById('studentid-display');
-    const fullnameDisplay = document.getElementById('fullname-display');
-    const mobileUserMenu = document.getElementById('mobile-user-menu');
-    const uploadLinkDesktop = document.getElementById('upload-link-desktop');
-    const uploadLinkMobile = document.getElementById('upload-link-mobile');
+        const data = result.data;
 
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+        // ล้าง card เดิมก่อน
+        cardContainer.innerHTML = "";
 
-    if (user && userProfileSection && authButtonsSection) {
-        userProfileSection.classList.remove('hidden');
-        userProfileSection.classList.add('flex');
-        authButtonsSection.classList.add('hidden');
+        data.forEach(research => {
+            // สร้างการ์ด
+            const card = document.createElement("div");
+            card.className = "bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition p-4";
 
-        if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
-        if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
-        if (mobileUserMenu) mobileUserMenu.classList.remove('hidden');
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
-        if (uploadLinkMobile) uploadLinkMobile.classList.remove('hidden');
-        return user;
-    } else if (userProfileSection && authButtonsSection) {
-        userProfileSection.classList.add('hidden');
-        userProfileSection.classList.remove('flex');
-        authButtonsSection.classList.remove('hidden');
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
-        if (uploadLinkMobile) uploadLinkMobile.classList.add('hidden');
-        if (mobileUserMenu) mobileUserMenu.classList.add('hidden');
-        return null;
-    }
-    return null;
-}
+            // ลิงก์ไป OnlineMMM.html?id=...
+            const cardLink = document.createElement("a");
+            cardLink.href = `OnlineMMM.html?id=${research.Id}`;
+            cardLink.className = "block h-full";
 
-// Logout Function
-function logout() {
-    localStorage.removeItem('loggedInUser');
-    showToast('ออกจากระบบสำเร็จ', 'info');
-    checkLoginStatus();
-    const mobileMenu = document.getElementById('mobileMenu');
-    if (mobileMenu) mobileMenu.classList.add('hidden');
-    window.location.reload();
-}
-
-// Attach event listeners for auth forms and menu
-function attachAuthFormListeners() {
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-
-    const menuButton = document.getElementById('menuButton');
-    const menuButtonLoggedIn = document.getElementById('menuButtonLoggedIn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    if (menuButton) {
-        menuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-    if (menuButtonLoggedIn) {
-        menuButtonLoggedIn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
-
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.dropdown');
-        dropdowns.forEach(dropdown => {
-            if (!dropdown.contains(event.target)) {
-                dropdown.classList.remove('active');
-            }
-        });
-    });
-
-    // Toggle dropdown active class when dropdown button is clicked
-    const dropdownButtons = document.querySelectorAll('.dropdown > button');
-    dropdownButtons.forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.stopPropagation();
-            this.closest('.dropdown').classList.toggle('active');
-        });
-    });
-
-    // Close modal when clicking outside (on the overlay)
-    const modals = document.querySelectorAll('.modal');
-    modals.forEach(modal => {
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal(modal.id);
-            }
-        });
-    });
-}
-
-// โค้ดสำหรับดึงข้อมูลและสร้างการ์ดงานวิจัย พร้อม Pagination
-let researchData = [];
-let filteredResearch = [];
-let currentPage = 1;
-const itemsPerPage = 6;
-
-async function fetchAndDisplayResearch() {
-    const container = document.getElementById('featuredResearchContainer');
-    const noResultMessage = document.getElementById('noFeaturedResearchMessage');
-    if (!container || !noResultMessage) {
-        console.error("Error: featuredResearchContainer or noFeaturedResearchMessage not found in the DOM.");
-        return;
-    }
-    container.innerHTML = '';
-    noResultMessage.classList.add('hidden');
-
-    try {
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                action: 'getResearchData'
-            }).toString()
-        });
-        const result = await response.json();
-
-        if (result.success && result.data.length > 0) {
-            researchData = result.data;
-            filteredResearch = researchData;
-            setupCategoryButtons(researchData);
-            displayResearchCards(filteredResearch, currentPage);
-            renderPagination(filteredResearch);
-        } else {
-            noResultMessage.classList.remove('hidden');
-        }
-    } catch (error) {
-        console.error('Error fetching research data:', error);
-        showToast('เกิดข้อผิดพลาดในการดึงข้อมูลงานวิจัย', 'error');
-    }
-}
-
-// ฟังก์ชันสำหรับสร้างปุ่มหมวดหมู่
-function setupCategoryButtons(data) {
-    const container = document.getElementById('categoryButtons');
-    if (!container) return;
-    container.innerHTML = '';
-
-    const categories = [...new Set(data.map(item => item['Category'] || 'ไม่ระบุ'))];
-
-    const allBtn = document.createElement('button');
-    allBtn.textContent = 'ทั้งหมด';
-    allBtn.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
-    allBtn.addEventListener('click', () => {
-        filteredResearch = researchData;
-        currentPage = 1;
-        displayResearchCards(filteredResearch, currentPage);
-        renderPagination(filteredResearch);
-    });
-    container.appendChild(allBtn);
-
-    categories.forEach(category => {
-        const button = document.createElement('button');
-        button.textContent = category;
-        button.className = 'px-4 py-2 mr-2 mb-2 text-sm font-semibold rounded-md border border-gray-300 hover:bg-gray-100';
-        button.addEventListener('click', () => {
-            filteredResearch = researchData.filter(item => (item['Category'] || 'ไม่ระบุ') === category);
-            currentPage = 1;
-            displayResearchCards(filteredResearch, currentPage);
-            renderPagination(filteredResearch);
-        });
-        container.appendChild(button);
-    });
-}
-
-// แสดงการ์ดงานวิจัยในแต่ละหน้า
-function displayResearchCards(researchArray, page = 1) {
-    const container = document.getElementById('featuredResearchContainer');
-    const noResultMessage = document.getElementById('noFeaturedResearchMessage');
-    container.innerHTML = '';
-
-    const startIndex = (page - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const pageData = researchArray.slice(startIndex, endIndex);
-
-    if (pageData.length > 0) {
-        pageData.forEach(research => {
-            const card = createResearchCard(research);
-            container.appendChild(card);
-        });
-        noResultMessage.classList.add('hidden');
-    } else {
-        noResultMessage.classList.remove('hidden');
-    }
-}
-
-// สร้างปุ่ม Pagination
-function renderPagination(dataArray) {
-    const paginationContainer = document.getElementById('pagination');
-    if (!paginationContainer) return;
-
-    paginationContainer.innerHTML = '';
-    const totalPages = Math.ceil(dataArray.length / itemsPerPage);
-    if (totalPages <= 1) return;
-
-    for (let i = 1; i <= totalPages; i++) {
-        const button = document.createElement('button');
-        button.textContent = i;
-        button.className = `px-3 py-1 rounded-md border ${i === currentPage ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-100'} mx-1`;
-        button.addEventListener('click', () => {
-            currentPage = i;
-            displayResearchCards(filteredResearch, currentPage);
-            renderPagination(filteredResearch);
-        });
-        paginationContainer.appendChild(button);
-    }
-}
-
-// สร้างการ์ดงานวิจัย
-function createResearchCard(research) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
-
-    const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
-    const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
-
-    cardDiv.innerHTML = `
-        <a href="${research['Research File URLs'] || '#'}">
-            <div class="h-40 overflow-hidden">
-                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-            </div>
-        </a>
-        <div class="p-6">
-            <div class="flex justify-between mb-2">
-                <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['Category'] || 'ไม่ระบุ'}</span>
-                <span class="text-gray-500 text-sm">${research['Academic Year'] || 'ไม่ระบุ'}</span>
-            </div>
-            <h3 class="text-lg font-semibold mb-2">${research['Title'] || 'ไม่มีชื่อเรื่อง'}</h3>
-            <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
-            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
-                    data-title="${research['Title']}" 
-                    data-abstract="${abstractText}"
-                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
-            <div class="flex justify-between items-center mt-4">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['Authors'] && research['Authors'].charAt(0)) || '?'}</div>
-                    <span class="ml-2 text-gray-700">${research['Authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
+            // เนื้อหาใน card
+            cardLink.innerHTML = `
+                <img src="${research["Image URL"] || 'https://via.placeholder.com/400'}" 
+                     alt="Research Image" 
+                     class="w-full h-48 object-cover rounded-lg">
+                <div class="mt-4">
+                    <h2 class="text-xl font-bold mb-2">${research.Title}</h2>
+                    <p class="text-gray-600 text-sm mb-3">
+                        ${research.Abstract ? research.Abstract.substring(0, 150) + "..." : "No Abstract"}
+                    </p>
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
+                        ${research.Category || "Uncategorized"}
+                    </span>
+                    <div class="mt-3">
+                        <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                            อ่านต่อ →
+                        </button>
+                    </div>
                 </div>
+            `;
+
+            card.appendChild(cardLink);
+            cardContainer.appendChild(card);
+        });
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        cardContainer.innerHTML = `
+            <div class="p-6 bg-white rounded-lg shadow text-red-600">
+                เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}
             </div>
-        </div>
-    `;
-    return cardDiv;
-}
-
-// แสดง Modal บทคัดย่อเต็ม
-function openFullAbstractModal(button) {
-    const title = button.getAttribute('data-title');
-    const abstract = button.getAttribute('data-abstract');
-
-    const modalTitle = document.getElementById('fullAbstractModalTitle');
-    const modalContent = document.getElementById('fullAbstractModalContent');
-
-    if (modalTitle && modalContent) {
-        modalTitle.textContent = title;
-        modalContent.textContent = abstract;
-        openModal('fullAbstractModal');
+        `;
     }
 }
 
-// ปุ่มค้นหา
-document.getElementById("searchButton").addEventListener("click", function () {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categorySelect").value;
-    const year = document.getElementById("academic-year").value;
-    const level = document.getElementById("levelSelect").value;
-
-    filteredResearch = researchData.filter(card => {
-        const matchesSearch =
-            searchInput === "" ||
-            (card['Title'] && card['Title'].toLowerCase().includes(searchInput)) ||
-            (card['Authors'] && card['Authors'].toLowerCase().includes(searchInput)) ||
-            (card['Abstract'] && card['Abstract'].toLowerCase().includes(searchInput));
-
-        const matchesCategory = category === "" || (card['Category'] || '') === category;
-        const matchesYear = year === "" || (card['Academic Year'] || '') === year;
-        const matchesLevel = level === "" || (card['Level'] || '') === level;
-
-        return matchesSearch && matchesCategory && matchesYear && matchesLevel;
-    });
-
-    currentPage = 1;
-    displayResearchCards(filteredResearch, currentPage);
-    renderPagination(filteredResearch);
-});
-
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    checkLoginStatus();
-    attachAuthFormListeners();
-    fetchAndDisplayResearch();
-});
-// ===========================
-// Live Search (พิมพ์แล้วค้นหาอัตโนมัติ)
-// ===========================
-
-// debounce เพื่อป้องกันโหลดหนักเกินไป
-function debounce(func, delay = 300) {
-    let timeout;
-    return function (...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-}
-
-// ฟังก์ชันหลักที่ใช้กับทั้ง Live Search และปุ่มค้นหา
-function applySearchFilters() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const category = document.getElementById("categorySelect").value;
-    const year = document.getElementById("academic-year").value;
-
-    filteredResearch = researchData.filter(card => {
-        const matchesSearch =
-            searchInput === "" ||
-            (card['Title'] && card['Title'].toLowerCase().includes(searchInput)) ||
-            (card['Authors'] && card['Authors'].toLowerCase().includes(searchInput)) ||
-            (card['Abstract'] && card['Abstract'].toLowerCase().includes(searchInput));
-
-        const matchesCategory = category === "" || (card['Category'] || '') === category;
-        const matchesYear = year === "" || (card['Academic Year'] || '') === year;
-
-        return matchesSearch && matchesCategory && matchesYear;
-    });
-
-    currentPage = 1;
-    displayResearchCards(filteredResearch, currentPage);
-    renderPagination(filteredResearch);
-}
-
-// ผูก event แบบ Live Search (input)
-const searchInputElement = document.getElementById("searchInput");
-if (searchInputElement) {
-    searchInputElement.addEventListener("input", debounce(applySearchFilters, 300));
-}
-
-// เมื่อเปลี่ยนหมวดหมู่/ปีการศึกษา
-["categorySelect", "academic-year"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener("change", applySearchFilters);
-});
+// เรียกใช้งาน
+fetchResearchData();
