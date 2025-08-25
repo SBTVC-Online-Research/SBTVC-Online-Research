@@ -4,143 +4,180 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>แสดงข้อมูลงานวิจัย</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Qf9pC/T+/0D3q2bG+8Hk/4h7Z6FJ4J9JfVxw9HjQ8YyXxIFkG/rP3u1q4ZqZK9H2xI6D3rhzs2R3X3ZgG+uL4w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 <style>
   body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #f4f6f8;
-    padding: 20px;
+    background-color: #f9fafc;
     margin: 0;
+    padding: 0;
+    color: #222;
+  }
+
+  /* ปุ่มกลับหน้าหลัก */
+  .back-button {
+    position: sticky;
+    top: 0;
+    background: #ff7b54;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+  }
+  .back-button:hover {
+    background: #e76f51;
+    transform: translateY(-2px);
+  }
+
+  .container {
+    max-width: 1300px;
+    margin: auto;
+    padding: 20px;
   }
 
   .research-card {
     background-color: #fff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    max-width: 1200px;
-    margin: auto;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
   }
 
   .flex-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: 30px;
   }
 
-  #cover-image {
-    max-width: 350px;
-    flex-shrink: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s, box-shadow 0.3s;
-    text-align: center;
-    line-height: 1.2em;
-    color: #999;
-    font-weight: 500;
-  }
-
+  /* รูปภาพ */
   #cover-image img {
-    width: 100%;
-    display: block;
+    width: 350px;
+    max-width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    object-fit: cover;
   }
 
-  #cover-image:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  /* หัวข้อ */
+  h1 {
+    font-size: 2.2rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #4f9cf9;
+    display: inline-block;
+    padding-bottom: 6px;
+  }
+  h3 {
+    font-size: 1.6rem;
+    margin-top: 25px;
+    color: #34495e;
+    border-left: 5px solid #4f9cf9;
+    padding-left: 10px;
   }
 
-  .research-details {
-    flex: 1;
-    min-width: 300px;
-  }
-
+  /* รายละเอียด */
   .info-row {
-    margin-bottom: 8px;
-    font-weight: 500;
+    margin-bottom: 14px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #444;
+  }
+  .info-row span {
+    font-size: 1.1rem;
+    font-weight: normal;
+    color: #222;
   }
 
   .badge {
     background-color: #4f9cf9;
     color: #fff;
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 0.85em;
-  }
-
-  h1, h3 {
-    margin-top: 15px;
-    margin-bottom: 10px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 1rem;
   }
 
   p {
-    line-height: 1.6;
-  }
-
-  .file-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
+    font-size: 1.1rem;
+    line-height: 1.7;
     margin-top: 10px;
   }
 
+  /* ไฟล์งาน */
+  .file-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+  }
   .file-grid a {
-    flex: 1 1 120px;
+    flex: 1 1 160px;
     background-color: #f0f4f8;
-    padding: 10px 12px;
-    border-radius: 8px;
+    padding: 14px;
+    border-radius: 10px;
     text-decoration: none;
     color: #333;
+    font-size: 1rem;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     transition: transform 0.2s, background-color 0.2s;
   }
-
   .file-grid a:hover {
     background-color: #4f9cf9;
     color: #fff;
     transform: translateY(-3px);
   }
-
   .file-grid i {
     color: #ff5252;
+    font-size: 1.2rem;
   }
-
-  #content {
-    margin-top: 15px;
-    font-weight: bold;
-    color: #ff3b3b;
-  }
-  
 </style>
 </head>
 <body>
 
-<div class="research-card">
-  <h1 id="title-h1">กำลังโหลด...</h1>
-  <div class="flex-container">
-    <!-- รูปหน้าปก -->
-    <div id="cover-image">กำลังโหลดรูปหน้าปก...</div>
+<!-- ปุ่มกลับ -->
+<button class="back-button" onclick="window.location.href='index.html'">
+  <i class="fa-solid fa-house"></i> หน้าหลัก
+</button>
 
-    <!-- ข้อมูลงานวิจัย -->
-    <div class="research-details">
-      <div class="info-row">หมวดหมู่: <span id="category-badge" class="badge">-</span> | ปีการศึกษา: <span id="year-span">-</span></div>
-      <div class="info-row">แผนก/สาขา: <span id="department-field">-</span></div>
-      <div class="info-row">ผู้วิจัย: <span id="authors-name">-</span></div>
-      <div class="info-row">อาจารย์ที่ปรึกษา: <span id="advisor-span">-</span></div>
+<div class="container">
+  <div class="research-card">
+    <h1 id="title-h1">กำลังโหลด...</h1>
 
-      <h3>บทคัดย่อ</h3>
-      <p id="abstract-div">-</p>
+    <div class="flex-container">
+      <!-- รูปหน้าปก -->
+      <div id="cover-image">
+        <img src="https://via.placeholder.com/350x450?text=No+Image" alt="รูปหน้าปก">
+      </div>
 
-      <h3>ไฟล์งานวิจัย</h3>
-      <div id="research-files" class="file-grid">-</div>
+      <!-- ข้อมูลงานวิจัย -->
+      <div class="research-details">
+        <div class="info-row">
+          หมวดหมู่: <span id="category-badge" class="badge">-</span> | 
+          ปีการศึกษา: <span id="year-span">-</span>
+        </div>
+        <div class="info-row">แผนก/สาขา: <span id="department-field">-</span></div>
+        <div class="info-row">ผู้วิจัย: <span id="authors-name">-</span></div>
+        <div class="info-row">อาจารย์ที่ปรึกษา: <span id="advisor-span">-</span></div>
+
+        <h3>บทคัดย่อ</h3>
+        <p id="abstract-div">-</p>
+
+        <h3>ไฟล์งานวิจัย</h3>
+        <div id="research-files" class="file-grid">-</div>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="content"></div>
-
+<!-- เชื่อม OnlineMMM.js -->
 <script src="js/OnlineMMM.js"></script>
 
 </body>
