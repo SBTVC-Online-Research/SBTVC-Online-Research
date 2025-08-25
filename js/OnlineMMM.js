@@ -11,9 +11,17 @@ function createDownloadLink(url, name) {
   a.target = "_blank";
   a.download = "";
   a.className = "file-link";
-  a.innerHTML = `<i class="fa fa-file-pdf"></i> ${name}`;
+  
+  // เลือกไอคอนตามชนิดไฟล์
+  let iconClass = 'fa-file';
+  if(url.endsWith('.pdf')) iconClass = 'fa-file-pdf';
+  else if(url.endsWith('.doc') || url.endsWith('.docx')) iconClass = 'fa-file-word';
+  else if(url.endsWith('.xls') || url.endsWith('.xlsx')) iconClass = 'fa-file-excel';
+  
+  a.innerHTML = `<i class="fa-solid ${iconClass}"></i> ${name}`;
   return a;
 }
+
 
 function renderResearch(research) {
   if (!research) {
@@ -21,17 +29,22 @@ function renderResearch(research) {
     return;
   }
 
+  // รูปหน้าปกใหญ่
   const coverDiv = document.getElementById("cover-image");
   coverDiv.innerHTML = "";
   if (research["Image URL"] && research["Image URL"].trim() !== "") {
     const img = document.createElement("img");
     img.src = research["Image URL"];
     img.alt = research.Title || "Cover Image";
+    img.style.width = "100%";
+    img.style.borderRadius = "12px";
+    img.style.objectFit = "cover";
     coverDiv.appendChild(img);
   } else {
     coverDiv.textContent = "ไม่มีรูปหน้าปก";
   }
 
+  // ข้อมูลอื่นๆ
   document.getElementById("title-h1").textContent = research.Title || "-";
   document.getElementById("category-badge").textContent = research.Category || "-";
   document.getElementById("year-span").textContent = `${research.Year || "-"} (${research["Academic Year"] || "-"})`;
@@ -40,18 +53,21 @@ function renderResearch(research) {
   document.getElementById("advisor-span").textContent = research.Advisor || "-";
   document.getElementById("abstract-div").textContent = research.Abstract || "ไม่มีบทคัดย่อ";
 
+  // ไฟล์งานวิจัย
   const filesDiv = document.getElementById("research-files");
   filesDiv.innerHTML = "";
   if (research["Research File URLs"]) {
     const urls = research["Research File URLs"].split(",").map(u => u.trim());
     urls.forEach((url, i) => {
-      const link = createDownloadLink(url, `ไฟล์ ${i + 1}`);
+      const fileName = url.split('/').pop(); // ใช้ชื่อไฟล์จริง
+      const link = createDownloadLink(url, fileName);
       filesDiv.appendChild(link);
     });
   } else {
     filesDiv.textContent = "ไม่มีไฟล์แนบ";
   }
 }
+
 
 async function fetchResearch() {
   const id = getQueryParam("id");
