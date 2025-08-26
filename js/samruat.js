@@ -37,18 +37,20 @@ function openFullAbstractModal(button) {
 // Function to create a single research card
 function createResearchCard(research) {
     const cardDiv = document.createElement('div');
-    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition';
+    cardDiv.className = 'research-card bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer';
 
-    // FIX: Use capitalized keys to match Google Sheet headers
+    // ลิงก์ไปยังหน้า OnlineMMM.html โดยใช้ Id ของงานวิจัย
+    const link = document.createElement('a');
+    link.href = `OnlineMMM.html?id=${research.Id}`;
+    link.className = 'block';
+
     const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
     const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
 
-    cardDiv.innerHTML = `
-     <a href="OnlineMMM.html?id=${research.Id}">
-            <div class="h-40 overflow-hidden">
-                <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
-            </div>
-        </a>
+    link.innerHTML = `
+        <div class="h-40 overflow-hidden">
+            <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
+        </div>
         <div class="p-6">
             <div class="flex justify-between mb-2">
                 <span class="px-3 py-1 bg-orange-100 text-orange-700 text-sm rounded-full">${research['Category'] || 'ไม่ระบุ'}</span>
@@ -56,18 +58,10 @@ function createResearchCard(research) {
             </div>
             <h3 class="text-lg font-semibold mb-2">${research['Title'] || 'ไม่มีชื่อเรื่อง'}</h3>
             <p class="text-gray-600 mb-4">${truncatedAbstract}</p>
-            <button class="read-more-btn px-4 py-2 text-sm font-bold text-white bg-orange-500 rounded-md hover:bg-orange-600 transition" 
-                    data-title="${research['Title']}" 
-                    data-abstract="${abstractText}"
-                    onclick="openFullAbstractModal(this)">อ่านต่อ</button>
-            <div class="flex justify-between items-center mt-4">
-                <div class="flex items-center">
-                    <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white font-bold">${(research['Authors'] && research['Authors'].charAt(0)) || '?'}</div>
-                    <span class="ml-2 text-gray-700">${research['Authors'] || 'ไม่ระบุผู้จัดทำ'}</span>
-                </div>
-            </div>
         </div>
     `;
+
+    cardDiv.appendChild(link);
     return cardDiv;
 }
 
@@ -148,9 +142,9 @@ function filterResearch() {
     const filteredResearch = allResearch.filter(research => {
         // FIX: Use capitalized keys for filtering and ensure robust comparison
         const matchesSearch = searchTerm === '' || 
-                                     (research['Title'] && String(research['Title']).toLowerCase().includes(searchTerm)) ||
-                                     (research['Abstract'] && String(research['Abstract']).toLowerCase().includes(searchTerm)) ||
-                                     (research['Authors'] && String(research['Authors']).toLowerCase().includes(searchTerm));
+                             (research['Title'] && String(research['Title']).toLowerCase().includes(searchTerm)) ||
+                             (research['Abstract'] && String(research['Abstract']).toLowerCase().includes(searchTerm)) ||
+                             (research['Authors'] && String(research['Authors']).toLowerCase().includes(searchTerm));
         const matchesLevel = level === '' || (research['Level'] && String(research['Level']).trim().toLowerCase().includes(String(level).trim().toLowerCase()));
         const matchesAcademicYear = academicYear === '' || (research['Academic Year'] && String(research['Academic Year']).trim() === String(academicYear).trim());
         const matchesDepartment = department === '' || (research['Department'] && String(research['Department']).trim() === String(department).trim());
