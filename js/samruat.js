@@ -44,7 +44,7 @@ function createResearchCard(research) {
     const truncatedAbstract = abstractText.length > 100 ? abstractText.substring(0, 100) + '...' : abstractText;
 
     cardDiv.innerHTML = `
-        <a href="${research['Research File URL'] || '#'}">
+     <a href="OnlineMMM.html?id=${research.Id}">
             <div class="h-40 overflow-hidden">
                 <img src="${research['Image URL'] || 'https://via.placeholder.com/400x200?text=No+Image'}" alt="ภาพประกอบ" class="w-full h-full object-cover transition hover:opacity-90" />
             </div>
