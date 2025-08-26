@@ -41,7 +41,7 @@ function createResearchCard(research) {
 
     // ลิงก์ไปยังหน้า OnlineMMM.html โดยใช้ Id ของงานวิจัย
     const link = document.createElement('a');
-    link.href = `OnlineMMM.html?id=${research.Id}`;
+   link.href = `../OnlineMMM.html?id=${research.Id}`;
     link.className = 'block';
 
     const abstractText = research['Abstract'] || 'ไม่มีคำอธิบาย';
