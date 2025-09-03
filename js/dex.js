@@ -147,6 +147,7 @@ async function fetchResearchData() {
         filteredResearchData = [...allResearchData];
 
         renderPage(1);
+        renderStats();
         renderPagination();
 
     } catch (error) {
@@ -162,13 +163,16 @@ function filterResearch() {
     const selectedYear = academicYearSelect.value;
 
     filteredResearchData = allResearchData.filter(item => {
-        const matchesText = 
+        // ดึงปีการศึกษาให้แน่ใจว่ามีค่า
+        const academicYear = item["Academic Year"] || item.AcademicYear || item.Year || "";
+
+        const matchesText =
             item.Title?.toLowerCase().includes(searchText) ||
             item.Author?.toLowerCase().includes(searchText) ||
             item.Keywords?.toLowerCase().includes(searchText);
 
         const matchesCategory = selectedCategory ? item.Category === selectedCategory : true;
-        const matchesYear = selectedYear ? item.AcademicYear === selectedYear : true;
+        const matchesYear = selectedYear ? academicYear.toString() === selectedYear.toString() : true;
 
         return matchesText && matchesCategory && matchesYear;
     });
@@ -199,18 +203,26 @@ function renderPage(page) {
         cardLink.href = `OnlineMMM.html?id=${research.Id}`;
         cardLink.className = "block h-full";
 
+        // ดึงปีการศึกษา (ลองรองรับหลาย key เผื่อโครงสร้าง sheet ไม่เหมือนกัน)
+        const academicYear = research["Academic Year"] || research.AcademicYear || research.Year || "ไม่ระบุปีการศึกษา";
+
         cardLink.innerHTML = `
             <div class="image-container">
                 <img src="${research["Image URL"] || 'https://via.placeholder.com/400'}" alt="Research Image">
             </div>
             <div class="research-card-content">
-                <h3 class="text-xl font-bold mb-2">${research.Title}</h3>
+                <h3 class="text-xl font-bold mb-2">${research.Title || "ไม่มีชื่อเรื่อง"}</h3>
                 <p class="text-gray-600 text-sm mb-3">
                     ${research.Abstract ? research.Abstract.substring(0, 150) + "..." : "ไม่มีบทคัดย่อ"}
                 </p>
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
-                    ${research.Category || "ไม่ระบุหมวดหมู่"}
-                </span>
+                <div class="flex justify-between items-center">
+                    <span class="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full">
+                        ${research.Category || "ไม่ระบุหมวดหมู่"}
+                    </span>
+                    <span class="text-gray-500 text-sm">
+                        ปี ${academicYear}
+                    </span>
+                </div>
                 <div class="mt-3">
                     <button class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                         อ่านต่อ →
@@ -253,3 +265,41 @@ document.addEventListener('DOMContentLoaded', () => {
     attachLoginFormListener();
     fetchResearchData();
 });
+// ฟังก์ชันแสดงสถิติผลงานวิจัย
+function renderStats() {
+    const statsContainer = document.getElementById("statsContainer");
+    if (!statsContainer) return;
+
+    // นับรวมทั้งหมด
+    const total = allResearchData.length;
+
+    // นับตามหมวดหมู่
+    const categories = {};
+    allResearchData.forEach(item => {
+        const cat = item.Category || "ไม่ระบุหมวดหมู่";
+        categories[cat] = (categories[cat] || 0) + 1;
+    });
+
+    // เคลียร์เก่า
+    statsContainer.innerHTML = "";
+
+    // การ์ด: รวมทั้งหมด
+    const totalCard = document.createElement("div");
+    totalCard.className = "bg-gradient-to-r from-orange-400 to-red-500 text-white rounded-xl shadow-lg p-6 text-center";
+    totalCard.innerHTML = `
+        <h3 class="text-lg font-semibold">ผลงานทั้งหมด</h3>
+        <p class="text-3xl font-bold mt-2">${total} เรื่อง</p>
+    `;
+    statsContainer.appendChild(totalCard);
+
+    // การ์ด: ตามหมวดหมู่
+    Object.keys(categories).forEach(cat => {
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-xl shadow-md p-6 text-center hover:shadow-xl transition";
+        card.innerHTML = `
+            <h3 class="text-lg font-semibold text-gray-700">${cat}</h3>
+            <p class="text-2xl font-bold text-blue-600 mt-2">${categories[cat]} เรื่อง</p>
+        `;
+        statsContainer.appendChild(card);
+    });
+}
