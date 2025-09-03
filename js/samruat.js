@@ -135,25 +135,26 @@ async function fetchAndDisplayCategoryResearch() {
 // Function to filter research
 function filterResearch() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const level = document.getElementById('levelFilter').value;
     const academicYear = document.getElementById('academicYearFilter').value;
-    const department = document.getElementById('departmentFilter').value;
 
     const filteredResearch = allResearch.filter(research => {
-        // FIX: Use capitalized keys for filtering and ensure robust comparison
-        const matchesSearch = searchTerm === '' || 
-                             (research['Title'] && String(research['Title']).toLowerCase().includes(searchTerm)) ||
-                             (research['Abstract'] && String(research['Abstract']).toLowerCase().includes(searchTerm)) ||
-                             (research['Authors'] && String(research['Authors']).toLowerCase().includes(searchTerm));
-        const matchesLevel = level === '' || (research['Level'] && String(research['Level']).trim().toLowerCase().includes(String(level).trim().toLowerCase()));
-        const matchesAcademicYear = academicYear === '' || (research['Academic Year'] && String(research['Academic Year']).trim() === String(academicYear).trim());
-        const matchesDepartment = department === '' || (research['Department'] && String(research['Department']).trim() === String(department).trim());
+        // ค้นหาทุกฟิลด์ที่มีค่า
+        const matchesSearch = searchTerm === '' || Object.values(research).some(val =>
+            val && String(val).toLowerCase().includes(searchTerm)
+        );
 
-        return matchesSearch && matchesLevel && matchesAcademicYear && matchesDepartment;
+        // กรองตามปีการศึกษา
+        const researchYear = research['Academic Year'] || research.AcademicYear || research.Year || '';
+        const matchesAcademicYear = academicYear === '' || String(researchYear).trim() === String(academicYear).trim();
+
+        return matchesSearch && matchesAcademicYear;
     });
 
     renderResearchCards(filteredResearch);
 }
+
+
+
 
 // Initial load and event listeners
 document.addEventListener('DOMContentLoaded', () => {
