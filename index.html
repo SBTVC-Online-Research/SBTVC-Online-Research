@@ -44,7 +44,13 @@
         @media (max-width: 768px) { .hero-content h2 { font-size: 2rem; } .hero-content p { font-size: 0.9rem; } .research-card .image-container { height: 150px; } }
         .glow-hover:hover { color: #000000; text-shadow: 0 0 8px #000000, 0 0 16px #000000; }
     </style>
+    <script>
+    tailwind.config = {
+        darkMode: 'class'
+    }
+</script>
 </head>
+
 
 <body class="bg-gray-50">
     <div id="toast" class="toast"></div>
@@ -76,6 +82,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
+                    
                     <div class="dropdown-content">
                         <div class="p-4 border-b border-gray-200">
                             <p class="text-sm text-gray-500">ยินดีต้อนรับ</p>
@@ -92,39 +99,73 @@
                 </div>
             </div>
         </div>
-        <div class="w-full bg-white text-center overflow-hidden">
-            <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752736202/LINE_ALBUM_2023.12.18_231223_39_vvlcwd.jpg" alt="แบนเนอร์เว็บไซต์" class="w-full h-[300px] object-cover"/>
-        </div>
+        <div class="relative w-full h-[300px] overflow-hidden bg-white">
+    <!-- รูปแบนเนอร์ -->
+    <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752736202/LINE_ALBUM_2023.12.18_231223_39_vvlcwd.jpg" 
+         alt="แบนเนอร์เว็บไซต์" 
+         class="w-full h-full object-cover"/>
+
+    <!-- ข้อความตรงกลาง -->
+    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-30 text-white px-4 text-center">
+        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h1>
+        <p class="text-lg md:text-xl mb-1">วิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
+        <p class="text-xl md:text-2xl font-semibold">SBTVC Online Research</p>
+    </div>
+</div>
+
     </header>
 
     <!-- Main -->
     <main class="container mx-auto px-6 py-12">
         <section class="bg-white p-10 rounded-lg shadow-md mb-8">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">ค้นหางานวิจัย</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <input type="text" id="searchInput" placeholder="ค้นหาด้วยชื่อเรื่อง, ผู้แต่ง, คำสำคัญ..." class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                <select id="categorySelect" class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
-                    <option value="">เลือกหมวดหมู่</option>
-                    <option value="สำรวจ">สำรวจ</option>
-                    <option value="ทฤษฎี">ทฤษฎี</option>
-                    <option value="ทดลอง">ทดลอง</option>
-                    <option value="ประดิษฐ์">ประดิษฐ์</option>
-                </select>
-                <select id="academic-year" name="academicYear" class="w-full border rounded-lg px-3 py-2 focus:ring-blue-500" required>
-                    <option value="" enable selected>เลือกปีการศึกษา</option>
-                    <option>2568</option><option>2567</option><option>2566</option><option>2565</option><option>2564</option>
-                </select>
-            </div>
-            <div class="text-center mt-4">
-                <button id="searchButton" class="bg-orange-primary text-white px-6 py-3 rounded-md hover:bg-orange-secondary transition">
-                    <i class="fas fa-search mr-2"></i> ค้นหา
-                </button>
-            </div>
-        </section>
+  <h3 class="text-xl font-semibold text-gray-800 mb-6">ค้นหางานวิจัย</h3>
+
+  <div class="flex flex-col lg:flex-row items-center gap-4">
+    <input type="text" id="searchInput"
+      placeholder="ค้นหาด้วยชื่อเรื่อง, ผู้แต่ง, คำสำคัญ..."
+      class="flex-1 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+
+    <select id="categorySelect"
+      class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+      <option value="">เลือกหมวดหมู่</option>
+      <option value="สำรวจ">สำรวจ</option>
+      <option value="ทฤษฎี">ทฤษฎี</option>
+      <option value="ทดลอง">ทดลอง</option>
+      <option value="ประดิษฐ์">ประดิษฐ์</option>
+    </select>
+
+    <select id="academic-year" name="academicYear"
+      class="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-primary">
+      <option value="" enable selected>เลือกปีการศึกษา</option>
+      <option>2568</option>
+      <option>2567</option>
+      <option>2566</option>
+      <option>2565</option>
+      <option>2564</option>
+    </select>
+
+    <!-- ปุ่มค้นหา -->
+    <button id="searchButton"
+      class="group relative inline-flex items-center justify-center px-6 py-3
+             font-medium tracking-wide text-white rounded-md
+             bg-gradient-to-r from-orange-500 to-red-500 shadow-lg
+             transition-all duration-300 ease-out hover:scale-105 hover:shadow-xl">
+      <i class="fas fa-search mr-2"></i> ค้นหา
+    </button>
+  </div>
+</section>
+<section class="mb-12">
+  <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">สถิติผลงานวิจัย</h2>
+  <div id="statsContainer" 
+       class="flex flex-wrap justify-center gap-6">
+  </div>
+</section>
+
 
         <section class="mb-12">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
             <div id="categoryButtons" class="flex flex-wrap my-4 justify-center"></div>
+            
             <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
         </section>
