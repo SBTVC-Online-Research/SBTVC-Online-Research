@@ -55,7 +55,6 @@
 <body class="bg-gray-50">
     <div id="toast" class="toast"></div>
 
-    <!-- Header -->
     <header class="bg-white shadow-md">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center">
@@ -67,7 +66,7 @@
             <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
                 <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อผู้ดูแล</a>
-                <a href="upload.html" id="upload-link-desktop" class="hidden text-gray-700 hover:text-orange-primary font-medium">
+                <a href="upload.html" id="upload-link-desktop" class="text-gray-700 hover:text-orange-primary font-medium">
                     <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
                 </a>
             </div>
@@ -100,17 +99,14 @@
             </div>
         </div>
         <div class="relative w-full h-[300px] overflow-hidden bg-white">
-    <!-- รูปแบนเนอร์ -->
     <img src="https://res.cloudinary.com/dbg4bygej/image/upload/v1752736202/LINE_ALBUM_2023.12.18_231223_39_vvlcwd.jpg" 
-         alt="แบนเนอร์เว็บไซต์" 
-         class="w-full h-full object-cover"/>
+          alt="แบนเนอร์เว็บไซต์" 
+          class="w-full h-full object-cover"/>
 
-   <!-- ข้อความตรงกลาง -->
-<div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white px-4 text-center">
+    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white px-4 text-center">
   <div class="flex flex-col md:flex-row items-center gap-6">
     
 
-    <!-- ข้อความ -->
     <div>
       <h1 class="text-3xl md:text-4xl font-extrabold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h1>
       <p class="text-lg md:text-xl mb-1">วิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
@@ -123,7 +119,6 @@
 
     </header>
 
-    <!-- Main -->
     <main class="container mx-auto px-6 py-12">
         <section class="bg-white p-10 rounded-lg shadow-md mb-8">
   <h3 class="text-xl font-semibold text-gray-800 mb-6">ค้นหางานวิจัย</h3>
@@ -152,7 +147,6 @@
       <option>2564</option>
     </select>
 
-    <!-- ปุ่มค้นหา -->
     <button id="searchButton"
       class="group relative inline-flex items-center justify-center px-6 py-3
              font-medium tracking-wide text-white rounded-md
@@ -202,11 +196,9 @@
         </section>
     </main>
 
-<!-- ปุ่มไปยังหน้าจัดการ -->
 <section class="mb-12 text-center">
   <h2 class="text-2xl font-bold text-gray-800 mb-6">จัดการข้อมูล</h2>
   <div class="flex flex-wrap justify-center gap-6">
-    <!-- ปุ่มอนุมัติ แสดงเฉพาะเมื่อเข้าสู่ระบบ -->
     <a href="approve.html" id="approve-link"
        class="hidden px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 
               text-white rounded-xl shadow-lg hover:scale-105 
@@ -214,7 +206,6 @@
       <i class="fas fa-check-circle text-lg"></i> อนุมัติผลงานวิจัย
     </a>
 
-    <!-- ปุ่มฐานข้อมูล แสดงได้ตลอด -->
     <a href="database.html"
        class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 
               text-white rounded-xl shadow-lg hover:scale-105 
@@ -225,7 +216,6 @@
 </section>
 
 
-    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-4 text-center">
             <p>&copy; 2025 SBTVC Online Research. All rights reserved.</p>
@@ -237,7 +227,6 @@
         </div>
     </footer>
 
-    <!-- Login Modal -->
     <div id="loginModal" class="modal fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden opacity-0">
         <div class="modal-content bg-white p-8 rounded-lg shadow-xl w-11/12 md:w-1/3 relative">
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">เข้าสู่ระบบ</h2>
@@ -254,10 +243,8 @@
         </div>
     </div>
 
-    <!-- Full PDF Modal -->
     <div id="pdfModalContainer"></div>
 
-    <!-- Scripts -->
     <script src="js/dex.js"></script>
 </body>
 </html>
