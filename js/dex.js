@@ -31,6 +31,55 @@ function showToast(message, type = 'info') {
         }, 3000);
     }
 }
+// Update UI based on login status
+// Update UI based on login status
+function updateLoginUI() {
+    const userProfileSection = document.getElementById('user-profile');
+    const authButtonsSection = document.getElementById('auth-buttons');
+    const studentidDisplay = document.getElementById('studentid-display');
+    const fullnameDisplay = document.getElementById('fullname-display');
+    const uploadLinkDesktop = document.getElementById('upload-link-desktop');
+    const approveLink = document.getElementById('approve-link'); // ปุ่มอนุมัติ
+
+    const user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+    if (user && userProfileSection && authButtonsSection) {
+        // ✅ แสดงส่วนโปรไฟล์
+        userProfileSection.classList.remove('hidden');
+        userProfileSection.classList.add('flex');
+        authButtonsSection.classList.add('hidden');
+
+        if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
+        if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
+        if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
+
+        // ✅ โชว์ปุ่มอนุมัติหลังจาก login
+        if (approveLink) approveLink.classList.remove('hidden');
+
+    } else {
+        // ❌ ซ่อนส่วนโปรไฟล์
+        userProfileSection.classList.add('hidden');
+        userProfileSection.classList.remove('flex');
+        authButtonsSection.classList.remove('hidden');
+        if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
+
+        // ❌ ซ่อนปุ่มอนุมัติถ้าไม่ได้ login
+        if (approveLink) approveLink.classList.add('hidden');
+    }
+}
+
+
+// Logout
+function logout() {
+    localStorage.removeItem('loggedInUser');
+    showToast('ออกจากระบบสำเร็จ', 'info');
+    updateLoginUI();
+
+    // เผื่อไว้ บังคับซ่อนปุ่มอนุมัติ
+    const approveLink = document.getElementById('approve-link');
+    if (approveLink) approveLink.classList.add('hidden');
+}
+
 
 // Modal Functions
 function openModal(modalId) {
@@ -85,31 +134,7 @@ async function handleLogin(event) {
     }
 }
 
-// Update UI based on login status
-function updateLoginUI() {
-    const userProfileSection = document.getElementById('user-profile');
-    const authButtonsSection = document.getElementById('auth-buttons');
-    const studentidDisplay = document.getElementById('studentid-display');
-    const fullnameDisplay = document.getElementById('fullname-display');
-    const uploadLinkDesktop = document.getElementById('upload-link-desktop');
 
-    const user = JSON.parse(localStorage.getItem('loggedInUser'));
-
-    if (user && userProfileSection && authButtonsSection) {
-        userProfileSection.classList.remove('hidden');
-        userProfileSection.classList.add('flex');
-        authButtonsSection.classList.add('hidden');
-
-        if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
-        if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.remove('hidden');
-    } else if (userProfileSection && authButtonsSection) {
-        userProfileSection.classList.add('hidden');
-        userProfileSection.classList.remove('flex');
-        authButtonsSection.classList.remove('hidden');
-        if (uploadLinkDesktop) uploadLinkDesktop.classList.add('hidden');
-    }
-}
 
 // Logout
 function logout() {
