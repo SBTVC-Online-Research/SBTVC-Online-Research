@@ -66,7 +66,7 @@
             </div>
             <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
-                <a href="Category/Category.html" class="text-gray-700 hover:text-orange-primary font-medium">หมวดหมู่</a>
+                <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อผู้ดูแล</a>
                 <a href="upload.html" id="upload-link-desktop" class="hidden text-gray-700 hover:text-orange-primary font-medium">
                     <i class="fas fa-upload mr-1"></i> อัปโหลดงานวิจัย
                 </a>
@@ -105,13 +105,21 @@
          alt="แบนเนอร์เว็บไซต์" 
          class="w-full h-full object-cover"/>
 
-    <!-- ข้อความตรงกลาง -->
-    <div class="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-30 text-white px-4 text-center">
-        <h1 class="text-3xl md:text-4xl font-extrabold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h1>
-        <p class="text-lg md:text-xl mb-1">วิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
-        <p class="text-xl md:text-2xl font-semibold">SBTVC Online Research</p>
+   <!-- ข้อความตรงกลาง -->
+<div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 text-white px-4 text-center">
+  <div class="flex flex-col md:flex-row items-center gap-6">
+    
+
+    <!-- ข้อความ -->
+    <div>
+      <h1 class="text-3xl md:text-4xl font-extrabold mb-2">ระบบเว็บไซต์จัดเก็บผลงานวิจัย</h1>
+      <p class="text-lg md:text-xl mb-1">วิทยาลัยอาชีวศึกษาเทคโนโลยีฐานวิทยาศาสตร์ (ชลบุรี)</p>
+      <p class="text-xl md:text-2xl font-semibold">SBTVC Online Research</p>
     </div>
+
+  </div>
 </div>
+
 
     </header>
 
@@ -193,6 +201,29 @@
             </div>
         </section>
     </main>
+
+<!-- ปุ่มไปยังหน้าจัดการ -->
+<section class="mb-12 text-center">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">จัดการข้อมูล</h2>
+  <div class="flex flex-wrap justify-center gap-6">
+    <!-- ปุ่มอนุมัติ แสดงเฉพาะเมื่อเข้าสู่ระบบ -->
+    <a href="approve.html" id="approve-link"
+       class="hidden px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 
+              text-white rounded-xl shadow-lg hover:scale-105 
+              transform transition duration-300 ease-out flex items-center gap-2">
+      <i class="fas fa-check-circle text-lg"></i> อนุมัติผลงานวิจัย
+    </a>
+
+    <!-- ปุ่มฐานข้อมูล แสดงได้ตลอด -->
+    <a href="database.html"
+       class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 
+              text-white rounded-xl shadow-lg hover:scale-105 
+              transform transition duration-300 ease-out flex items-center gap-2">
+      <i class="fas fa-database text-lg"></i> ฐานข้อมูลผลงานวิจัย
+    </a>
+  </div>
+</section>
+
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white py-8">
