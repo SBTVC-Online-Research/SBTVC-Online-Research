@@ -107,7 +107,7 @@
         if (!submitBtn) return; 
 
         const isImageUploaded = uploadedImageUrlInput && uploadedImageUrlInput.value !== '';
-        const areFilesUploaded = uploadedResearchFilesUrlInput && JSON.parse(uploadedResearchFilesUrlInput.value || '[]').length > 0;
+        const areFilesUploaded = uploadedResearchFilesUrlInput && JSON.parse(uploadedResearchFilesUrlInput.value || ).length > 0;
 
         const hasFormError = formMessage && !formMessage.classList.contains('hidden') && formMessage.classList.contains('error');
         const hasImageUploadError = imageUploadMessage && !imageUploadMessage.classList.contains('hidden') && imageUploadMessage.classList.contains('error');
