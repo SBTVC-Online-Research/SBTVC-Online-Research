@@ -149,11 +149,41 @@ async function fetchResearchData() {
         renderPage(1);
         renderStats();
         renderPagination();
+        
+        // **เพิ่มโค้ดนี้เข้ามา**
+        populateAcademicYears();
 
     } catch (error) {
         console.error("Error fetching data:", error);
         cardContainer.innerHTML = `<div class="p-6 bg-white rounded-lg shadow text-red-600">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</div>`;
     }
+}
+
+// **ฟังก์ชันใหม่: สร้างตัวเลือกปีการศึกษาแบบไดนามิก**
+function populateAcademicYears() {
+    const years = new Set();
+    allResearchData.forEach(item => {
+        const academicYear = item["Academic Year"] || item.AcademicYear || item.Year;
+        if (academicYear) {
+            years.add(academicYear.toString());
+        }
+    });
+
+    // เรียงปีจากมากไปน้อย
+    const sortedYears = Array.from(years).sort((a, b) => b - a);
+
+    // ลบตัวเลือกเก่าทั้งหมด ยกเว้นตัวแรก
+    while (academicYearSelect.options.length > 1) {
+        academicYearSelect.remove(1);
+    }
+
+    // เพิ่มตัวเลือกปีใหม่
+    sortedYears.forEach(year => {
+        const option = document.createElement("option");
+        option.value = year;
+        option.textContent = year;
+        academicYearSelect.appendChild(option);
+    });
 }
 
 // ฟังก์ชันค้นหา / กรองข้อมูล
