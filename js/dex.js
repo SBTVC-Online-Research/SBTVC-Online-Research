@@ -196,10 +196,11 @@ function filterResearch() {
         // ดึงปีการศึกษาให้แน่ใจว่ามีค่า
         const academicYear = item["Academic Year"] || item.AcademicYear || item.Year || "";
 
+        // ส่วนที่แก้ไขเพื่อป้องกันข้อผิดพลาด
         const matchesText =
-            item.Title?.toLowerCase().includes(searchText) ||
-            item.Author?.toLowerCase().includes(searchText) ||
-            item.Keywords?.toLowerCase().includes(searchText);
+            String(item.Title || "").toLowerCase().includes(searchText) ||
+            String(item.Author || "").toLowerCase().includes(searchText) ||
+            String(item.Keywords || "").toLowerCase().includes(searchText);
 
         const matchesCategory = selectedCategory ? item.Category === selectedCategory : true;
         const matchesYear = selectedYear ? academicYear.toString() === selectedYear.toString() : true;
