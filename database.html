@@ -9,9 +9,13 @@
 </head>
 <body class="bg-gray-50 font-['Prompt']">
 
-<header class="bg-white shadow-md p-4">
+<header class="bg-white shadow-md p-4 flex justify-between items-center">
     <h1 class="text-2xl font-bold text-gray-800">ฐานข้อมูลผลงานวิจัย</h1>
+    <a href="index.html" class="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600 transition">
+        หน้าแรก
+    </a>
 </header>
+
 
 <main class="container mx-auto p-6">
     <div class="flex flex-col md:flex-row gap-4 mb-6">
@@ -36,63 +40,27 @@
 
     <div class="overflow-x-auto bg-white rounded shadow">
         <table class="min-w-full text-left divide-y divide-gray-200">
-            <thead class="bg-orange-500 text-white">
-                <tr>
-                    <th class="px-4 py-2">ชื่อเรื่อง</th>
-                    <th class="px-4 py-2">ผู้แต่ง</th>
-                    <th class="px-4 py-2">หมวดหมู่</th>
-                    <th class="px-4 py-2">ปีการศึกษา</th>
-                    <th class="px-4 py-2">ไฟล์</th>
-                </tr>
-            </thead>
+           <thead class="bg-orange-500 text-white">
+    <tr>
+        <th class="px-4 py-2">ลำดับ</th>
+        <th class="px-4 py-2">ชื่อเรื่อง</th>
+        <th class="px-4 py-2">ผู้แต่ง</th>
+        <th class="px-4 py-2">หมวดหมู่</th>
+        <th class="px-4 py-2">ปีการศึกษา</th>
+        <th class="px-4 py-2">ไฟล์</th>
+    </tr>
+</thead>
+
             <tbody id="researchTableBody" class="divide-y divide-gray-200">
                 <!-- ข้อมูลจะถูกเติมด้วย JS -->
             </tbody>
         </table>
     </div>
-</main>
-
-<script src="js/dex.js"></script>
-<script>
-    // ฟังก์ชันแสดงข้อมูลเป็นตาราง
-    function renderDatabaseTable(data) {
-        const tbody = document.getElementById('researchTableBody');
-        tbody.innerHTML = "";
-
-        if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center p-4 text-gray-500">ไม่พบข้อมูล</td></tr>`;
-            return;
-        }
-
-        data.forEach(item => {
-            const academicYear = item["Academic Year"] || item.AcademicYear || item.Year || "ไม่ระบุปีการศึกษา";
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="px-4 py-2">${item.Title || "ไม่มีชื่อเรื่อง"}</td>
-                <td class="px-4 py-2">${item.Author || "ไม่ระบุผู้แต่ง"}</td>
-                <td class="px-4 py-2">${item.Category || "ไม่ระบุหมวดหมู่"}</td>
-                <td class="px-4 py-2">${academicYear}</td>
-                <td class="px-4 py-2">${item.Keywords || "-"}</td>
-            `;
-            tbody.appendChild(row);
-        });
-    }
-
-    // ใช้ filter จาก dex.js
-    document.getElementById('searchButton').addEventListener('click', () => {
-        filterResearch();
-        renderDatabaseTable(filteredResearchData);
-    });
-
-    // โหลดข้อมูลเริ่มต้น
-    document.addEventListener('DOMContentLoaded', () => {
-        fetchResearchData().then(() => {
-            renderDatabaseTable(allResearchData);
-        });
-    });
 
     
-</script>
+</main>
+
+
 <script src="js/database.js"></script>
 
 </body>
