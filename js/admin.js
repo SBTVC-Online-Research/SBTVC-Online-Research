@@ -22,7 +22,7 @@ function closeModal() {
 
 // 5. ฟังก์ชันส่งอีเมล
 function sendEmail(form) {
-    emailjs.sendForm('service_sk3tbys', 'template_5fbfzne', form)
+    emailjs.sendForm('service_nk3ynbc', 'template_5fbfzne', form)
         .then(function() {
             // แสดง modal ส่งสำเร็จ
             document.getElementById('successModal').classList.remove('hidden');
