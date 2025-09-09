@@ -1,0 +1,271 @@
+
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ติดต่อผู้ดูแล - SBTVC Online Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'orange-primary': '#FF6B35',
+                        'orange-secondary': '#FF8C42',
+                        'orange-light': '#FFB366',
+                        'orange-dark': '#E55A2B'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #FF6B35 0%, #FF8C42 50%, #FFB366 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+        .form-input:focus {
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+        .demo-notice {
+            background: linear-gradient(45deg, #FFF3E0, #FFE0B2);
+            border: 2px dashed #FF8C42;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-orange-50 to-orange-100 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-6 shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="bg-white bg-opacity-20 p-3 rounded-full">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">SBTVC Online Research</h1>
+                        <p class="text-orange-100">แจ้งปัญหาและติดต่อผู้ดูแลระบบ</p>
+                    </div>
+                </div>
+                <a href="index.html" class="bg-white bg-opacity-20 hover:bg-opacity-30 px-6 py-2 rounded-full transition-all duration-300 btn-hover flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                    <span>กลับหน้าหลัก</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Contact Options -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                        <svg class="w-6 h-6 text-orange-primary mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        ช่องทางติดต่อ
+                    </h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
+                            <div class="bg-orange-primary p-2 rounded-full">
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">อีเมล</p>
+                                <p class="text-sm text-gray-600">sbtvcresearch68@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
+                            <div class="bg-orange-primary p-2 rounded-full">
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">โทรศัพท์</p>
+                                <p class="text-sm text-gray-600">095-973-5552</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-3 p-3 bg-orange-50 rounded-lg">
+                            <div class="bg-orange-primary p-2 rounded-full">
+                                <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-800">เวลาทำการ</p>
+                                <p class="text-sm text-gray-600">จ-ศ 8:00-16:30</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-xl card-shadow p-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">การดำเนินการด่วน</h3>
+                    <div class="space-y-3">
+                        <button onclick="setContactType('problem')" class="w-full text-left p-3 bg-red-50 hover:bg-red-100 rounded-lg transition-colors duration-200 border border-red-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-red-500 p-2 rounded-full">
+                                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-red-700">แจ้งปัญหา</span>
+                            </div>
+                        </button>
+                        <button onclick="setContactType('inquiry')" class="w-full text-left p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 border border-blue-200">
+                            <div class="flex items-center space-x-3">
+                                <div class="bg-blue-500 p-2 rounded-full">
+                                    <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                    </svg>
+                                </div>
+                                <span class="font-medium text-blue-700">สอบถามข้อมูล</span>
+                            </div>
+                        </button>
+                        <a href="upload.html" class="block w-full text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors duration-200 border border-green-200">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    <div class="bg-green-500 p-2 rounded-full">
+                                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-medium text-green-700">อัปโหลดงานวิจัย</span>
+                                </div>
+                                <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+                                </svg>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-xl card-shadow p-8">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                        <svg class="w-7 h-7 text-orange-primary mr-3" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        ฟอร์มติดต่อผู้ดูแล
+                    </h2>
+
+                    <form id="contactForm" class="space-y-6">
+                        <!-- Contact Type -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">ประเภทการติดต่อ *</label>
+                            <select id="contactType" name="contactType" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200" required>
+                                <option value="">เลือกประเภทการติดต่อ</option>
+                                <option value="problem">แจ้งปัญหาระบบ</option>
+                                <option value="inquiry">สอบถามข้อมูล</option>
+                                <option value="other">อื่นๆ</option>
+                            </select>
+                        </div>
+
+                        <!-- Personal Information -->
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ-นามสกุล *</label>
+                                <input type="text" id="fullName" name="fullName" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200" placeholder="กรอกชื่อ-นามสกุล" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">อีเมล *</label>
+                                <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200" placeholder="example@email.com" required>
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="phone" name="phone" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200" placeholder="08X-XXX-XXXX">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">สถานะ</label>
+                                <select id="status" name="status" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200">
+                                    <option value="">เลือกสถานะ</option>
+                                    <option value="student">นักเรียน/นักศึกษา</option>
+                                    <option value="teacher">อาจารย์/ครู</option>
+                                    <option value="other">อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Subject -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">หัวข้อ *</label>
+                            <input type="text" id="subject" name="subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200" placeholder="กรอกหัวข้อที่ต้องการติดต่อ" required>
+                        </div>
+
+                        <!-- Message -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียด *</label>
+                            <textarea id="message" name="message" rows="6" class="w-full px-4 py-3 border border-gray-300 rounded-lg form-input focus:outline-none transition-all duration-200 resize-none" placeholder="กรอกรายละเอียดที่ต้องการติดต่อ..." required></textarea>
+                        </div>
+                        <!-- Submit Button -->
+                        <div class="flex justify-end space-x-4 pt-4">
+                            <button type="button" onclick="resetForm()" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200">
+                                ล้างข้อมูล
+                            </button>
+                            <button type="submit" class="px-8 py-3 bg-gradient-to-r from-orange-primary to-orange-secondary text-white rounded-lg hover:from-orange-dark hover:to-orange-primary transition-all duration-200 btn-hover font-medium">
+                                ส่งข้อความ
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
+            <div class="bg-green-100 rounded-full p-3 w-16 h-16 mx-auto mb-4">
+                <svg class="w-10 h-10 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">ส่งข้อความสำเร็จ!</h3>
+            <p class="text-gray-600 mb-6">ข้อความของคุณถูกส่งเรียบร้อยแล้ว เราจะติดต่อกลับภายใน 24 ชั่วโมง</p>
+            <button onclick="closeModal()" class="px-6 py-2 bg-orange-primary text-white rounded-lg hover:bg-orange-dark transition-colors duration-200">
+                ปิด
+            </button>
+        </div>
+    </div>
+
+    <!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script type="text/javascript">
+    (function(){
+        emailjs.init('8wx8bWgo4qP1YT_Nt'); // ใส่ User ID จาก EmailJS
+    })();
+</script>
+
+<!-- แทนที่ script ด้านใน -->
+<script src="js/admin.js"></script>
+
+</body>
+</html>
