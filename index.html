@@ -65,7 +65,7 @@
             </div>
             <div class="hidden md:flex items-center space-x-6">
                 <a href="index.html" class="text-gray-700 hover:text-orange-primary font-medium">หน้าหลัก</a>
-                <a href="admin.html" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อผู้ดูแล</a>
+                <a href="admin.html" class="text-gray-700 hover:text-orange-primary font-medium">ติดต่อผู้ดูแล/อัปโหลดงานวิจัย</a>
                 </a>
             </div>
             <div id="auth-buttons" class="flex items-center space-x-3">
@@ -162,13 +162,21 @@
 </section>
 
 
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">งานวิจัยยอดนิยม</h2>
-            <div id="categoryButtons" class="flex flex-wrap my-4 justify-center"></div>
-            
-            <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
-        </section>
+<section class="mb-12">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">งานวิจัยยอดนิยม</h2>
+        <a href="database.html" class="flex items-center space-x-2 text-orange-600 font-semibold hover:text-orange-800 transition-colors">
+            <span>ดูทั้งหมด</span>
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.95 2.95L19 9l-6.05 6.05L11.5 13.5l3.5-3.5H4V8h11.5l-3.5-3.5L12.95 2.95zM12 20.95L5.95 14.9 12 8.85l1.45 1.45L9.9 13.9H20v2.05H9.9l3.55 3.55-1.5 1.45z"/>
+            </svg>
+        </a>
+    </div>
+
+    <div id="categoryButtons" class="flex flex-wrap my-4 justify-center"></div>
+    <div id="featuredResearchContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    <p id="noFeaturedResearchMessage" class="hidden text-center col-span-full text-gray-500 mt-8">ไม่มีงานวิจัยแนะนำในขณะนี้</p>
+</section>
         <div id="pagination" class="flex justify-center mt-6 flex-wrap gap-2"></div>
 
         <section class="mb-12 bg-white p-6 rounded-lg shadow-md">
@@ -194,25 +202,24 @@
         </section>
     </main>
 
-<section class="mb-12 text-center">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">จัดการข้อมูล</h2>
-  <div class="flex flex-wrap justify-center gap-6">
-    <a href="approve.html" id="approve-link"
-       class="hidden px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 
-              text-white rounded-xl shadow-lg hover:scale-105 
-              transform transition duration-300 ease-out flex items-center gap-2">
-      <i class="fas fa-check-circle text-lg"></i> อนุมัติผลงานวิจัย
-    </a>
+<section id="managementSection" class="mb-12 text-center hidden">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">จัดการข้อมูล</h2>
+  <div class="flex flex-wrap justify-center gap-6">
+    <a href="approve.html"
+       class="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 
+              text-white rounded-xl shadow-lg hover:scale-105 
+              transform transition duration-300 ease-out flex items-center gap-2">
+      <i class="fas fa-check-circle text-lg"></i> อนุมัติผลงานวิจัย
+    </a>
 
-    <a href="database.html"
-       class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 
-              text-white rounded-xl shadow-lg hover:scale-105 
-              transform transition duration-300 ease-out flex items-center gap-2">
-      <i class="fas fa-database text-lg"></i> ฐานข้อมูลผลงานวิจัย
-    </a>
-  </div>
+    <a href="database.html"
+       class="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 
+              text-white rounded-xl shadow-lg hover:scale-105 
+              transform transition duration-300 ease-out flex items-center gap-2">
+      <i class="fas fa-database text-lg"></i> ฐานข้อมูลผลงานวิจัย
+    </a>
+  </div>
 </section>
-
 
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-4 text-center">
