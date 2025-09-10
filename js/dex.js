@@ -1,5 +1,4 @@
 // dex.js
-
 const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbyvQHoEuzS17lbKWBEZgMzp3u8Yc34HFG7NmLozO2_v10MEF6M4eMvRmSp06PjybwbK/exec";
 const LOGIN_API_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
 
@@ -91,6 +90,11 @@ function updateLoginUI() {
     const authButtonsSection = document.getElementById('auth-buttons');
     const studentidDisplay = document.getElementById('studentid-display');
     const fullnameDisplay = document.getElementById('fullname-display');
+    
+    const approveLink = document.getElementById('approve-link'); 
+    
+    // **เพิ่มส่วนนี้**
+    const managementSection = document.getElementById('managementSection');
 
     const user = JSON.parse(localStorage.getItem('loggedInUser'));
 
@@ -101,10 +105,33 @@ function updateLoginUI() {
 
         if (studentidDisplay) studentidDisplay.textContent = user.studentId || 'ไม่ระบุเลขประจำตัว';
         if (fullnameDisplay) fullnameDisplay.textContent = user.fullname || 'ไม่ระบุชื่อ';
+
+        // ถ้าผู้ใช้ล็อกอินแล้ว
+        if (approveLink) {
+            approveLink.classList.remove('hidden');
+        }
+        
+        // **ส่วนที่เพิ่ม/แก้ไข**
+        // ถ้าผู้ใช้ล็อกอินแล้ว ให้แสดงส่วนจัดการข้อมูล
+        if (managementSection) {
+            managementSection.classList.remove('hidden');
+        }
+
     } else if (userProfileSection && authButtonsSection) {
         userProfileSection.classList.add('hidden');
         userProfileSection.classList.remove('flex');
         authButtonsSection.classList.remove('hidden');
+        
+        // ถ้าผู้ใช้ไม่ได้ล็อกอิน
+        if (approveLink) {
+            approveLink.classList.add('hidden');
+        }
+
+        // **ส่วนที่เพิ่ม/แก้ไข**
+        // ถ้าผู้ใช้ไม่ได้ล็อกอิน ให้ซ่อนส่วนจัดการข้อมูล
+        if (managementSection) {
+            managementSection.classList.add('hidden');
+        }
     }
 }
 
