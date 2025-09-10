@@ -28,6 +28,7 @@ async function fetchResearchData() {
         if (!result.success) throw new Error(result.message || "ไม่สามารถดึงข้อมูลได้");
 
         allResearchData = result.data.map(item => ({
+            id: safeString(item.id), // Ensure the id is included
             Title: safeString(item.Title),
             Authors: safeString(item.Authors || item.Author),
             Category: safeString(item.Category),
@@ -65,6 +66,45 @@ function filterResearch() {
 }
 
 // แสดงตาราง
+// database.js
+
+// ... (โค้ดส่วนบนเหมือนเดิม)
+
+// ดึงข้อมูลจาก Google Sheet
+async function fetchResearchData() {
+    try {
+        const response = await fetch(SHEET_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "action=getResearchData"
+        });
+
+        const result = await response.json();
+        if (!result.success) throw new Error(result.message || "ไม่สามารถดึงข้อมูลได้");
+
+        // แก้ไขส่วนนี้ให้เป็น item.Id แทน item.id
+        allResearchData = result.data.map(item => ({
+            id: safeString(item.Id), // แก้ไขตรงนี้จาก item.id เป็น item.Id
+            Title: safeString(item.Title),
+            Authors: safeString(item.Authors || item.Author),
+            Category: safeString(item.Category),
+            AcademicYear: safeString(item["Academic Year"] || item.Year),
+            Field: safeString(item.Field),
+            ResearchFileURL: safeString(item["Research File URLs"])
+        }));
+
+        filteredResearchData = [...allResearchData];
+        renderDatabaseTable(filteredResearchData);
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        researchTableBody.innerHTML = `<tr><td colspan="6" class="text-center text-red-600 p-4">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${error.message}</td></tr>`;
+    }
+}
+
+// ... (โค้ดส่วนอื่น ๆ เหมือนเดิม)
+
+// แสดงตาราง
 function renderDatabaseTable(data) {
     researchTableBody.innerHTML = "";
 
@@ -74,10 +114,17 @@ function renderDatabaseTable(data) {
     }
 
     data.forEach((item, index) => {
+        // Construct the URL for the detail page using the item's ID
+        const detailUrl = `OnlineMMM.html?id=${item.id}`; // ตรงนี้ใช้ item.id ได้ปกติ เพราะเรากำหนดค่าในฟังก์ชัน fetchResearchData แล้ว
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td class="px-4 py-2 text-center">${index + 1}</td>
-            <td class="px-4 py-2">${item.Title || "ไม่มีชื่อเรื่อง"}</td>
+            <td class="px-4 py-2">
+                <a href="${detailUrl}" class="text-orange-600 hover:underline font-medium">
+                    ${item.Title || "ไม่มีชื่อเรื่อง"}
+                </a>
+            </td>
             <td class="px-4 py-2">${item.Authors || "ไม่ระบุผู้แต่ง"}</td>
             <td class="px-4 py-2">${item.Category || "ไม่ระบุหมวดหมู่"}</td>
             <td class="px-4 py-2">${item.AcademicYear || "ไม่ระบุปีการศึกษา"}</td>
@@ -88,6 +135,8 @@ function renderDatabaseTable(data) {
         researchTableBody.appendChild(row);
     });
 }
+
+// ... (โค้ดส่วนล่างเหมือนเดิม)
 
 // Event listener
 function doFilter() {
