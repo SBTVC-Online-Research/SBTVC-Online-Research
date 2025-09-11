@@ -6,7 +6,7 @@
 
     // **Google Apps Script Web App URL** //
     // *** สำคัญมาก: URL ของคุณถูกนำมาใช้ที่นี่แล้ว ***
-    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-QTyfdSXqxmqVNoql7uRkoRZuGCHlZOJA-atzZT4ZEnIiLE_92v6dEm6iR3hBOzkp/exec';
+    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyvQHoEuzS17lbKWBEZgMzp3u8Yc34HFG7NmLozO2_v10MEF6M4eMvRmSp06PjybwbK/exec';
 
     // ตัวแปรสำหรับ Element HTML ต่างๆ จะถูกประกาศและกำหนดค่าภายใน DOMContentLoaded
     let categoryItems;
@@ -591,53 +591,53 @@
             formData.append('submittedBy', submittedByUsername);
             formData.append('status', 'Pending');
 
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: formData,
-                });
+try {
+    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: formData,
+    });
 
-                const result = await response.json();
+    const result = await response.json();
 
-                if (result.status === 'success') {
-                    showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว! ข้อมูลจะถูกตรวจสอบและอนุมัติโดยผู้ดูแลระบบ', 'success');
-                    document.getElementById('research-form').reset();
-                    categoryItems.forEach(i => i.classList.remove('selected'));
-                    selectedCategoryInput.value = '';
+    // แก้ไขบรรทัดนี้: เปลี่ยนจาก 'true' (string) เป็น true (boolean)
+    if (result.success === true) { 
+        showFormMessage('ส่งข้อมูลผลงานวิจัยสำเร็จแล้ว! ข้อมูลจะถูกตรวจสอบและอนุมัติโดยผู้ดูแลระบบ', 'success');
+        document.getElementById('research-form').reset();
+        categoryItems.forEach(i => i.classList.remove('selected'));
+        selectedCategoryInput.value = '';
 
-                    authorsContainer.innerHTML = '';
-                    const initialAuthorInput = createAuthorInput();
-                    authorsContainer.appendChild(initialAuthorInput);
-                    const removeBtn = initialAuthorInput.querySelector('.remove-author');
-                    if (removeBtn) removeBtn.replaceWith(createAddButton());
+        authorsContainer.innerHTML = '';
+        const initialAuthorInput = createAuthorInput();
+        authorsContainer.appendChild(initialAuthorInput);
+        const removeBtn = initialAuthorInput.querySelector('.remove-author');
+        if (removeBtn) removeBtn.replaceWith(createAddButton());
 
-                    uploadedImageUrlInput.value = '';
-                    coverImagePreviewContainer.classList.add('hidden');
-                    uploadedImageDisplay.src = '';
-                    imageUrlDisplay.textContent = '';
-                    coverImageInputFile.value = '';
+        uploadedImageUrlInput.value = '';
+        coverImagePreviewContainer.classList.add('hidden');
+        uploadedImageDisplay.src = '';
+        imageUrlDisplay.textContent = '';
+        coverImageInputFile.value = '';
 
-                    uploadedResearchFilesUrlInput.value = '';
-                    researchFileListDiv.innerHTML = '';
-                    researchFileInput.value = '';
+        uploadedResearchFilesUrlInput.value = '';
+        researchFileListDiv.innerHTML = '';
+        researchFileInput.value = '';
 
-                    hideImageUploadMessage();
-                    hideFileUploadMessage();
-                    pendingFileUploads = 0;
-                } else {
-                    showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
-                }
-            } catch (error) {
-                console.error('Error submitting research to Google Apps Script:', error);
-                // แก้ไขบรรทัดนี้ให้แสดงข้อความผิดพลาดที่ถูกต้อง
-                showFormMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
-            } finally {
-                document.getElementById('submit-btn').disabled = false;
-                updateSubmitButtonState();
-                setTimeout(() => {
-                    hideFormMessage();
-                }, 7000);    
-            }
+        hideImageUploadMessage();
+        hideFileUploadMessage();
+        pendingFileUploads = 0;
+    } else {
+        showFormMessage(`เกิดข้อผิดพลาด: ${result.message || 'ไม่สามารถส่งข้อมูลได้'}`, 'error');
+    }
+} catch (error) {
+    console.error('Error submitting research to Google Apps Script:', error);
+    showFormMessage('เกิดข้อผิดพลาดในการส่งข้อมูล', 'error');
+} finally {
+    document.getElementById('submit-btn').disabled = false;
+    updateSubmitButtonState();
+    setTimeout(() => {
+        hideFormMessage();
+    }, 7000);    
+}
         });
 
         // Initialize state on page load
