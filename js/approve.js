@@ -56,8 +56,8 @@
             </div>
             <div class="flex gap-3 mt-4 justify-end">
                 <a href="${item['Research File URLs']}" target="_blank" class="bg-orange-500 text-white text-sm px-4 py-2 rounded hover:bg-orange-600 transition-colors duration-200">ดูเอกสาร</a>
-                <button onclick="approveResearch(${index + 2})" class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition-colors duration-200">อนุมัติ</button>
-                <button onclick="rejectResearch(${index + 2})" class="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700 transition-colors duration-200">ปฏิเสธ</button>
+                <button onclick="approveResearch(${item.rowId})" class="bg-green-600 text-white text-sm px-4 py-2 rounded hover:bg-green-700 transition-colors duration-200">อนุมัติ</button>
+                <button onclick="rejectResearch(${item.rowId})" class="bg-red-600 text-white text-sm px-4 py-2 rounded hover:bg-red-700 transition-colors duration-200">ปฏิเสธ</button>
             </div>
             `;
             container.appendChild(card);
